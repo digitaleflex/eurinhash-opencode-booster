@@ -2,12 +2,27 @@
 // Coordinates the full cross-repository lifecycle: issue → context → authority → routing → plan → approval → execution → validation → report
 
 import { RepositoryRegistry, CrossRepoWriteRequest, getRegistry } from "./registry";
-import { AuthorizationGate, AuthorizationInput, AuthorizationResult, getAuthorizationGate } from "./authorization-gate";
+import {
+  AuthorizationGate,
+  AuthorizationInput,
+  AuthorizationResult,
+  getAuthorizationGate,
+} from "./authorization-gate";
 import { IssueParser, ParsedIssue, getIssueParser } from "./issue-parser";
 import { PolicyEngine, getPolicyEngine } from "./policy-engine";
 import { GuardOverrides } from "./guard-overrides";
 import { ProofVerifier } from "./proof-verifier";
-import { TaskSpec, TaskType, RiskLevel, PolicyDecision, ProofChain, EvidenceBundle, ExecutionResult, OperationType, TaskComplexity } from "./types";
+import {
+  TaskSpec,
+  TaskType,
+  RiskLevel,
+  PolicyDecision,
+  ProofChain,
+  EvidenceBundle,
+  ExecutionResult,
+  OperationType,
+  TaskComplexity,
+} from "./types";
 import { classifyTask } from "./classifier";
 import { assessRisk } from "./risk-assessor";
 import { MerkleAuditTrail } from "./merkle-audit";
@@ -71,11 +86,14 @@ export class CrossRepoOrchestrator {
   /**
    * Execute the full cross-repository orchestration lifecycle for an issue
    */
-  async orchestrate(issueBody: string, evidence: EvidenceBundle = {}): Promise<OrchestrationResult> {
+  async orchestrate(
+    issueBody: string,
+    evidence: EvidenceBundle = {}
+  ): Promise<OrchestrationResult> {
     // Phase 1: Parse issue
     const issue = this.parser.parseIssueBody(issueBody);
     const executableCheck = this.parser.isExecutable(issue);
-    
+
     if (!executableCheck.executable) {
       return {
         success: false,
@@ -93,11 +111,13 @@ export class CrossRepoOrchestrator {
     // Phase 3: Execute each step
     const results: ExecutionResult[] = [];
     const auditTrail: string[] = [];
-    
+
     for (const step of plan.steps) {
       const stepResult = await this.executeStep(step, issue, evidence);
       results.push(stepResult);
-      auditTrail.push(`Step ${step.step}: ${step.action} in ${step.repository} - ${stepResult.verdict}`);
+      auditTrail.push(
+        `Step ${step.step}: ${step.action} in ${step.repository} - ${stepResult.verdict}`
+      );
 
       if (stepResult.verdict === "BLOCKED" || stepResult.verdict === "REJECTED") {
         return {
@@ -125,11 +145,18 @@ export class CrossRepoOrchestrator {
           risk: RiskLevel.HIGH,
           actor_agent: "cross-repo-orchestrator",
           requested_capability: "cross_repo_write",
-          working_tree_state: { clean: true, dirty_files: [], untracked_files: [], conflicted_files: [] },
+          working_tree_state: {
+            clean: true,
+            dirty_files: [],
+            untracked_files: [],
+            conflicted_files: [],
+          },
         });
-        
-        auditTrail.push(`Cross-repo write ${write.target_repo}:${write.target_path} - ${authResult.decision}`);
-        
+
+        auditTrail.push(
+          `Cross-repo write ${write.target_repo}:${write.target_path} - ${authResult.decision}`
+        );
+
         if (authResult.decision === "DENY") {
           return {
             success: false,
@@ -145,7 +172,7 @@ export class CrossRepoOrchestrator {
 
     // Phase 5: Final validation
     const validationPassed = this.validateResults(results, issue);
-    
+
     return {
       success: validationPassed,
       issue_id: `issue-${issue.identity.issue_number}`,
@@ -165,22 +192,22 @@ export class CrossRepoOrchestrator {
 
     for (const implStep of issue.implementation_steps) {
       const isCrossRepo = implStep.repository !== "config"; // Assuming orchestration originates from config
-      
+
       const step: OrchestrationStep = {
         step: implStep.step,
         repository: implStep.repository,
         action: implStep.action,
         owner: implStep.owner,
         depends_on: implStep.depends_on,
-        validation: implStep.validation,
+        validation: implStep.validation ?? "",
       };
-      
+
       steps.push(step);
 
       // Track cross-repo writes from implementation boundary
       if (isCrossRepo) {
         const matchingChanges = issue.implementation_boundary.must_change.filter(
-          c => c.repository === implStep.repository
+          (c) => c.repository === implStep.repository
         );
         for (const change of matchingChanges) {
           crossRepoWrites.push({
@@ -195,10 +222,12 @@ export class CrossRepoOrchestrator {
       }
     }
 
-    const requiresHumanApproval = issue.acceptance_criteria.some(c => 
-      c.criterion.toLowerCase().includes("approval") || 
-      c.criterion.toLowerCase().includes("human")
-    ) || crossRepoWrites.length > 0;
+    const requiresHumanApproval =
+      issue.acceptance_criteria.some(
+        (c) =>
+          c.criterion.toLowerCase().includes("approval") ||
+          c.criterion.toLowerCase().includes("human")
+      ) || crossRepoWrites.length > 0;
 
     return {
       issue_id: `issue-${issue.identity.issue_number}`,
@@ -217,7 +246,7 @@ export class CrossRepoOrchestrator {
     evidence: EvidenceBundle
   ): Promise<ExecutionResult> {
     const taskId = `task-${issue.identity.issue_number}-${step.step}-${randomUUID().slice(0, 8)}`;
-    
+
     // Build task spec from issue context
     const task: TaskSpec = {
       id: taskId,
@@ -241,7 +270,7 @@ export class CrossRepoOrchestrator {
     // Proof chain
     let proofChain: ProofChain | null = null;
     let proofStatus: "PASS" | "FAIL" | "PENDING" = "PENDING";
-    
+
     if (policyDecision.policy) {
       proofChain = this.proofVerifier.generateProofChain(task, policyDecision.policy, evidence);
       proofStatus = this.proofVerifier.verifyProofChain(proofChain, task, evidence);
@@ -253,14 +282,19 @@ export class CrossRepoOrchestrator {
       repository: step.repository,
       branch: "main",
       target_paths: issue.implementation_boundary.must_change
-        .filter(c => c.repository === step.repository)
-        .map(c => c.path),
+        .filter((c) => c.repository === step.repository)
+        .map((c) => c.path),
       operation: "UPDATE",
       tool_command: step.action,
       risk: riskLevel,
       actor_agent: step.owner,
       requested_capability: step.repository === "config" ? "filesystem.write" : "cross_repo_write",
-      working_tree_state: { clean: true, dirty_files: [], untracked_files: [], conflicted_files: [] },
+      working_tree_state: {
+        clean: true,
+        dirty_files: [],
+        untracked_files: [],
+        conflicted_files: [],
+      },
       policy_decision: policyDecision,
       proof_chain: proofChain || undefined,
       guard_decision: guardResult.decision,
@@ -353,7 +387,7 @@ export class CrossRepoOrchestrator {
    */
   private validateResults(results: ExecutionResult[], issue: ParsedIssue): boolean {
     // Check all steps approved
-    const allApproved = results.every(r => r.verdict === "APPROVED");
+    const allApproved = results.every((r) => r.verdict === "APPROVED");
     if (!allApproved) return false;
 
     // Check acceptance criteria mapped to evidence

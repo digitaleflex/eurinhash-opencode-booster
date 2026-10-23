@@ -115,7 +115,10 @@ export async function callWorker(
     return { ok: true, output };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "erreur";
-    return { ok: false, error: err instanceof Error && err.name === "AbortError" ? "timeout" : msg };
+    return {
+      ok: false,
+      error: err instanceof Error && err.name === "AbortError" ? "timeout" : msg,
+    };
   } finally {
     clearTimeout(timer);
   }
@@ -131,7 +134,8 @@ export async function executeWithWorkers(
   opts?: { workers?: WorkerCall[]; call?: typeof callWorker; timeoutMs?: number }
 ): Promise<WorkerExecution> {
   const workers = opts?.workers ?? WORKER_CALLS;
-  const call = opts?.call ?? ((w: WorkerCall, p: string) => callWorker(w, p, opts?.timeoutMs ?? 30000));
+  const call =
+    opts?.call ?? ((w: WorkerCall, p: string) => callWorker(w, p, opts?.timeoutMs ?? 30000));
   let lastError = "aucun worker configuré";
   let lastProvider: string | undefined;
   for (const worker of workers) {

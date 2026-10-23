@@ -52,7 +52,7 @@ export class RetryLogic {
   async execute<T>(
     fn: () => Promise<T>,
     isRetryable: (error: unknown) => boolean,
-    idempotencyKey?: string,
+    idempotencyKey?: string
   ): Promise<T> {
     // Idempotency store: if we have a cached result, return it immediately
     if (idempotencyKey && this.opt.idempotencyTtlMs > 0) {
@@ -156,6 +156,5 @@ export function createHttpRetryableChecker(): (error: unknown) => boolean {
  * Generate a random idempotency key.
  */
 export function generateIdempotencyKey(): string {
-  return Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }

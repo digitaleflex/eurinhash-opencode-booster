@@ -114,7 +114,9 @@ export class RepositoryRegistry {
    * Load and parse the registry from YAML file
    */
   load(): RegistrySchema {
-    const path = this.registryPath || join(process.cwd(), "orchestration", "repositories", "repository-map.yaml");
+    const path =
+      this.registryPath ||
+      join(process.cwd(), "orchestration", "repositories", "repository-map.yaml");
     const content = readFileSync(path, "utf-8");
     const parsed = parseYaml(content) as RegistrySchema;
 
@@ -293,7 +295,9 @@ export class RepositoryRegistry {
     return {
       repository: targetRepo,
       decision: requiresApproval ? "REQUIRES_APPROVAL" : "ALLOW",
-      reason: requiresApproval ? "Cross-repository write requires human approval" : "Authority resolved",
+      reason: requiresApproval
+        ? "Cross-repository write requires human approval"
+        : "Authority resolved",
       matched_paths: matchedPaths,
       matched_operations: matchedOps,
       requires_approval: requiresApproval,

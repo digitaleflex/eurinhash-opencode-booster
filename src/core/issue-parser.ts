@@ -34,7 +34,16 @@ export interface IssueIdentity {
   status: IssueStatus;
 }
 
-export type IssueType = "feature" | "bug" | "ux" | "architecture" | "configuration" | "maintenance" | "security" | "performance" | "capability-gap";
+export type IssueType =
+  | "feature"
+  | "bug"
+  | "ux"
+  | "architecture"
+  | "configuration"
+  | "maintenance"
+  | "security"
+  | "performance"
+  | "capability-gap";
 export type IssuePriority = "critical" | "high" | "medium" | "low";
 export type IssueStatus = "open" | "in_progress" | "blocked" | "review" | "closed";
 
@@ -226,7 +235,8 @@ export class IssueParser {
    * Load the JSON schema for validation
    */
   loadSchema(): IssueSchema {
-    const path = this.schemaPath || join(process.cwd(), "orchestration", "issues", "issue-schema.json");
+    const path =
+      this.schemaPath || join(process.cwd(), "orchestration", "issues", "issue-schema.json");
     const content = readFileSync(path, "utf-8");
     this.schema = JSON.parse(content) as IssueSchema;
     return this.schema;
@@ -313,15 +323,24 @@ export class IssueParser {
     }
 
     // Repository scope must be explicit
-    if (!issue.repository_scope.read_repositories || issue.repository_scope.read_repositories.length === 0) {
+    if (
+      !issue.repository_scope.read_repositories ||
+      issue.repository_scope.read_repositories.length === 0
+    ) {
       reasons.push("No read repositories specified");
     }
-    if (!issue.repository_scope.write_repositories || issue.repository_scope.write_repositories.length === 0) {
+    if (
+      !issue.repository_scope.write_repositories ||
+      issue.repository_scope.write_repositories.length === 0
+    ) {
       reasons.push("No write repositories specified");
     }
 
     // Implementation boundary must have at least MUST CHANGE
-    if (!issue.implementation_boundary.must_change || issue.implementation_boundary.must_change.length === 0) {
+    if (
+      !issue.implementation_boundary.must_change ||
+      issue.implementation_boundary.must_change.length === 0
+    ) {
       reasons.push("No MUST CHANGE entries — nothing to implement");
     }
 
@@ -368,7 +387,11 @@ export class IssueParser {
 
   // --- Private parsing helpers ---
 
-  private parseIdentity(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueIdentity {
+  private parseIdentity(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueIdentity {
     return {
       issue_number: this.asNumber(raw.issue_number, 0),
       title: this.asString(raw.title, "UNKNOWN"),
@@ -378,7 +401,11 @@ export class IssueParser {
     };
   }
 
-  private parseObjective(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueObjective {
+  private parseObjective(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueObjective {
     return {
       problem: this.asString(raw.problem, "UNKNOWN"),
       desired_outcome: this.asString(raw.desired_outcome, "UNKNOWN"),
@@ -386,7 +413,11 @@ export class IssueParser {
     };
   }
 
-  private parseSourceOfTruth(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueSourceOfTruth {
+  private parseSourceOfTruth(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueSourceOfTruth {
     return {
       engineering_specs: this.asStringArray(raw.engineering_specs),
       architecture_refs: this.asStringArray(raw.architecture_refs),
@@ -395,7 +426,11 @@ export class IssueParser {
     };
   }
 
-  private parseRepositoryScope(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueRepositoryScope {
+  private parseRepositoryScope(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueRepositoryScope {
     const read = this.asRepoArray(raw.read_repositories, errors, "read_repositories");
     const write = this.asRepoArray(raw.write_repositories, errors, "write_repositories");
 
@@ -409,7 +444,11 @@ export class IssueParser {
     return { read_repositories: read, write_repositories: write };
   }
 
-  private parseImplementationBoundary(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueImplementationBoundary {
+  private parseImplementationBoundary(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueImplementationBoundary {
     return {
       must_change: this.asChangeArray(raw.must_change, true, errors),
       may_change: this.asChangeArray(raw.may_change, false, errors),
@@ -417,7 +456,11 @@ export class IssueParser {
     };
   }
 
-  private parseDataContract(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueDataContract {
+  private parseDataContract(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueDataContract {
     return {
       inputs: this.asDataFieldArray(raw.inputs, errors),
       outputs: this.asDataFieldArray(raw.outputs, errors),
@@ -426,7 +469,11 @@ export class IssueParser {
     };
   }
 
-  private parseEventContract(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueEventContract {
+  private parseEventContract(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueEventContract {
     return {
       consumed_events: this.asEventArray(raw.consumed_events, errors),
       emitted_events: this.asEventArray(raw.emitted_events, errors),
@@ -434,7 +481,11 @@ export class IssueParser {
     };
   }
 
-  private parseStateContract(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueStateContract {
+  private parseStateContract(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueStateContract {
     return {
       lifecycle_states: this.asStringArray(raw.lifecycle_states),
       transitions: this.asTransitionArray(raw.transitions, errors),
@@ -442,19 +493,31 @@ export class IssueParser {
     };
   }
 
-  private parseDependencies(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueDependencies {
+  private parseDependencies(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueDependencies {
     return {
       blocking_issues: this.asBlockingIssueArray(raw.blocking_issues, errors),
       required_capabilities: this.asRequiredCapabilityArray(raw.required_capabilities, errors),
     };
   }
 
-  private parseImplementationSteps(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueImplementationStep[] {
+  private parseImplementationSteps(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueImplementationStep[] {
     const steps = this.asStringArray(raw.implementation_steps);
     return steps.map((s, i) => this.parseStepLine(s, i + 1, errors));
   }
 
-  private parseValidation(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueValidation {
+  private parseValidation(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueValidation {
     return {
       commands: this.asValidationCommandArray(raw.validation_commands, errors),
       runtime_checks: this.asRuntimeCheckArray(raw.runtime_checks, errors),
@@ -463,17 +526,29 @@ export class IssueParser {
     };
   }
 
-  private parseAcceptanceCriteria(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueAcceptanceCriterion[] {
+  private parseAcceptanceCriteria(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueAcceptanceCriterion[] {
     const criteria = this.asStringArray(raw.acceptance_criteria);
     return criteria.map((c) => this.parseCriterionLine(c, errors));
   }
 
-  private parseFailureStopConditions(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueFailureStopCondition[] {
+  private parseFailureStopConditions(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueFailureStopCondition[] {
     const conditions = this.asStringArray(raw.failure_stop_conditions);
     return conditions.map((c) => this.parseConditionLine(c, errors));
   }
 
-  private parseDocumentationReporting(raw: Record<string, unknown>, errors: string[], warnings: string[]): IssueDocumentationReporting {
+  private parseDocumentationReporting(
+    raw: Record<string, unknown>,
+    errors: string[],
+    warnings: string[]
+  ): IssueDocumentationReporting {
     return {
       update_docs: this.asDocUpdateArray(raw.update_docs, errors),
       report_format: this.asReportFormat(raw.report_format, "markdown"),
@@ -487,14 +562,26 @@ export class IssueParser {
     const parts = line.split("|").map((p) => p.trim());
     if (parts.length < 5) {
       errors.push(`Step ${lineNum}: expected 5+ fields, got ${parts.length}: "${line}"`);
-      return { step: lineNum, repository: "config", action: line, owner: "builder", depends_on: [], validation: "" };
+      return {
+        step: lineNum,
+        repository: "config",
+        action: line,
+        owner: "builder",
+        depends_on: [],
+        validation: "",
+      };
     }
     return {
       step: parseInt(parts[0], 10) || lineNum,
       repository: this.asRepoId(parts[1], errors),
       action: parts[2] || "UNKNOWN",
       owner: this.asOwner(parts[3], errors),
-      depends_on: parts[4] ? parts[4].split(",").map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n)) : [],
+      depends_on: parts[4]
+        ? parts[4]
+            .split(",")
+            .map((s) => parseInt(s.trim(), 10))
+            .filter((n) => !isNaN(n))
+        : [],
       validation: parts[5] || "",
     };
   }
@@ -541,7 +628,11 @@ export class IssueParser {
 
   private asStringArray(val: unknown): string[] {
     if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter((v) => v);
-    if (typeof val === "string") return val.split("\n").map((v) => v.trim()).filter((v) => v);
+    if (typeof val === "string")
+      return val
+        .split("\n")
+        .map((v) => v.trim())
+        .filter((v) => v);
     return [];
   }
 
@@ -565,7 +656,17 @@ export class IssueParser {
   }
 
   private asIssueType(val: unknown, errors: string[]): IssueType {
-    const types: IssueType[] = ["feature", "bug", "ux", "architecture", "configuration", "maintenance", "security", "performance", "capability-gap"];
+    const types: IssueType[] = [
+      "feature",
+      "bug",
+      "ux",
+      "architecture",
+      "configuration",
+      "maintenance",
+      "security",
+      "performance",
+      "capability-gap",
+    ];
     if (typeof val === "string" && types.includes(val as IssueType)) return val as IssueType;
     errors.push(`Invalid issue type: ${val}`);
     return "feature";
@@ -573,7 +674,8 @@ export class IssueParser {
 
   private asIssuePriority(val: unknown, fallback: IssuePriority): IssuePriority {
     const priorities: IssuePriority[] = ["critical", "high", "medium", "low"];
-    if (typeof val === "string" && priorities.includes(val as IssuePriority)) return val as IssuePriority;
+    if (typeof val === "string" && priorities.includes(val as IssuePriority))
+      return val as IssuePriority;
     return fallback;
   }
 
@@ -593,7 +695,8 @@ export class IssueParser {
       return {
         repository: this.asRepoId(parts[0] || "", errors),
         path: parts[1] || "UNKNOWN",
-        operation: (["CREATE", "UPDATE", "DELETE"].includes(parts[2]) ? parts[2] : "CREATE") as "CREATE" | "UPDATE" | "DELETE",
+        operation: (["CREATE", "UPDATE", "DELETE"].includes(parts[2]) ? parts[2] : "CREATE") as
+          "CREATE" | "UPDATE" | "DELETE",
         reason: parts[3] || "UNKNOWN",
       };
     });
@@ -625,9 +728,13 @@ export class IssueParser {
     });
   }
 
-  private asDataSource(val: string, errors: string[]): "engineering" | "config" | "product" | "external" | "user" {
+  private asDataSource(
+    val: string,
+    errors: string[]
+  ): "engineering" | "config" | "product" | "external" | "user" {
     const sources = ["engineering", "config", "product", "external", "user"];
-    if (sources.includes(val)) return val as "engineering" | "config" | "product" | "external" | "user";
+    if (sources.includes(val))
+      return val as "engineering" | "config" | "product" | "external" | "user";
     errors.push(`Invalid data source: ${val}`);
     return "config";
   }
@@ -644,7 +751,10 @@ export class IssueParser {
     });
   }
 
-  private asDefSource(val: string, errors: string[]): "engineering" | "config" | "product" | "external" {
+  private asDefSource(
+    val: string,
+    errors: string[]
+  ): "engineering" | "config" | "product" | "external" {
     const sources = ["engineering", "config", "product", "external"];
     if (sources.includes(val)) return val as "engineering" | "config" | "product" | "external";
     errors.push(`Invalid definition source: ${val}`);
@@ -683,7 +793,10 @@ export class IssueParser {
     });
   }
 
-  private asEventSource(val: string, errors: string[]): "engineering" | "config" | "product" | "external" {
+  private asEventSource(
+    val: string,
+    errors: string[]
+  ): "engineering" | "config" | "product" | "external" {
     const sources = ["engineering", "config", "product", "external"];
     if (sources.includes(val)) return val as "engineering" | "config" | "product" | "external";
     errors.push(`Invalid event source: ${val}`);
@@ -703,9 +816,19 @@ export class IssueParser {
     });
   }
 
-  private asUnknownSemantics(val: unknown, fallback: "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE"): "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE" {
-    const valid: ("BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE")[] = ["BLOCK", "ESCALATE", "DEFAULT_TO_SAFE"];
-    if (typeof val === "string" && valid.includes(val as "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE")) {
+  private asUnknownSemantics(
+    val: unknown,
+    fallback: "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE"
+  ): "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE" {
+    const valid: ("BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE")[] = [
+      "BLOCK",
+      "ESCALATE",
+      "DEFAULT_TO_SAFE",
+    ];
+    if (
+      typeof val === "string" &&
+      valid.includes(val as "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE")
+    ) {
       return val as "BLOCK" | "ESCALATE" | "DEFAULT_TO_SAFE";
     }
     return fallback;
@@ -772,28 +895,43 @@ export class IssueParser {
     });
   }
 
-  private asEvidenceType(val: string, errors: string[]): "test_output" | "review_hash" | "scan_report" | "approval_token" | "build_artifact" {
+  private asEvidenceType(
+    val: string,
+    errors: string[]
+  ): "test_output" | "review_hash" | "scan_report" | "approval_token" | "build_artifact" {
     const types = ["test_output", "review_hash", "scan_report", "approval_token", "build_artifact"];
-    if (types.includes(val)) return val as "test_output" | "review_hash" | "scan_report" | "approval_token" | "build_artifact";
+    if (types.includes(val))
+      return val as
+        "test_output" | "review_hash" | "scan_report" | "approval_token" | "build_artifact";
     errors.push(`Invalid evidence type: ${val}`);
     return "test_output";
   }
 
-  private asEvidenceSource(val: string, errors: string[]): "ci" | "human" | "scanner" | "orchestrator" {
+  private asEvidenceSource(
+    val: string,
+    errors: string[]
+  ): "ci" | "human" | "scanner" | "orchestrator" {
     const sources = ["ci", "human", "scanner", "orchestrator"];
     if (sources.includes(val)) return val as "ci" | "human" | "scanner" | "orchestrator";
     errors.push(`Invalid evidence source: ${val}`);
     return "ci";
   }
 
-  private asOwner(val: string, errors: string[]): "planner" | "architect" | "builder" | "reviewer" | "security" | "human" {
+  private asOwner(
+    val: string,
+    errors: string[]
+  ): "planner" | "architect" | "builder" | "reviewer" | "security" | "human" {
     const owners = ["planner", "architect", "builder", "reviewer", "security", "human"];
-    if (owners.includes(val)) return val as "planner" | "architect" | "builder" | "reviewer" | "security" | "human";
+    if (owners.includes(val))
+      return val as "planner" | "architect" | "builder" | "reviewer" | "security" | "human";
     errors.push(`Invalid owner: ${val}`);
     return "builder";
   }
 
-  private asStopAction(val: string, fallback: "STOP" | "ESCALATE" | "BLOCK" | "REQUIRE_HUMAN"): "STOP" | "ESCALATE" | "BLOCK" | "REQUIRE_HUMAN" {
+  private asStopAction(
+    val: string,
+    fallback: "STOP" | "ESCALATE" | "BLOCK" | "REQUIRE_HUMAN"
+  ): "STOP" | "ESCALATE" | "BLOCK" | "REQUIRE_HUMAN" {
     const actions = ["STOP", "ESCALATE", "BLOCK", "REQUIRE_HUMAN"];
     if (actions.includes(val)) return val as "STOP" | "ESCALATE" | "BLOCK" | "REQUIRE_HUMAN";
     return fallback;
@@ -811,9 +949,13 @@ export class IssueParser {
     });
   }
 
-  private asReportFormat(val: unknown, fallback: "markdown" | "json" | "yaml"): "markdown" | "json" | "yaml" {
+  private asReportFormat(
+    val: unknown,
+    fallback: "markdown" | "json" | "yaml"
+  ): "markdown" | "json" | "yaml" {
     const formats = ["markdown", "json", "yaml"];
-    if (typeof val === "string" && formats.includes(val)) return val as "markdown" | "json" | "yaml";
+    if (typeof val === "string" && formats.includes(val))
+      return val as "markdown" | "json" | "yaml";
     return fallback;
   }
 

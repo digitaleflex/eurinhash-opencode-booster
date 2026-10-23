@@ -1,10 +1,5 @@
 import { describe, test, expect } from "vitest";
-import {
-  executeWithWorkers,
-  callWorker,
-  WORKER_CALLS,
-  type WorkerCall,
-} from "./worker-client";
+import { executeWithWorkers, callWorker, WORKER_CALLS, type WorkerCall } from "./worker-client";
 
 const W1: WorkerCall = { name: "w1", url: "https://x.test/1", keyFile: ".groq-key", model: "m1" };
 const W2: WorkerCall = { name: "w2", url: "https://x.test/2", keyFile: ".groq-key", model: "m2" };
