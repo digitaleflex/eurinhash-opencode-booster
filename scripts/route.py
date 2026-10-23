@@ -29,9 +29,10 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timezone
+from _paths import config_dir
 
 HOME = os.path.expanduser("~")
-CFG = os.path.join(HOME, ".config", "opencode")
+CFG = config_dir()
 FREE_MODELS = os.path.join(CFG, "free-models.json")
 PROBE = os.path.join(CFG, "scripts", "free-probe.py")
 USAGE_LOG = os.path.join(CFG, "route-usage.json")

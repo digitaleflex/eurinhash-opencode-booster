@@ -12,7 +12,7 @@
 // ne doivent jamais être un effet de bord implicite d'une librairie.
 
 import { join } from "node:path";
-import { homedir } from "node:os";
+import { configDir } from "./paths";
 import { readFileSync } from "node:fs";
 
 export interface WorkerCall {
@@ -61,7 +61,7 @@ export const WORKER_CALLS: WorkerCall[] = [
 ];
 
 export function workerKeysDir(): string {
-  return join(homedir(), ".config", "opencode");
+  return configDir();
 }
 
 export function readWorkerKey(keyFile: string): string {

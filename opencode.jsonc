@@ -14,13 +14,13 @@
   //     → workers gratuits → feedback loop bayésien
   //
   // Fichiers clés :
-  //   - ~/.config/opencode/scripts/route.py     → routage EV + feedback
-  //   - ~/.config/opencode/scripts/quota.py      → dashboard quotas
-  //   - ~/.config/opencode/scripts/free-probe.py → probe workers
-  //   - ~/.config/opencode/free-models.json      → statut live workers
-  //   - ~/.config/opencode/route-usage.json      → historique succès/échec
-  //   - ~/.config/opencode/plugin/auto-compact.ts → compaction intelligente
-  //   - ~/.config/opencode/agent/tollfree.md    → superviseur pipeline
+  //   - scripts/route.py     → routage EV + feedback
+  //   - scripts/quota.py      → dashboard quotas
+  //   - scripts/free-probe.py → probe workers
+  //   - free-models.json      → statut live workers
+  //   - route-usage.json      → historique succès/échec
+  //   - plugin/auto-compact.ts → compaction intelligente
+  //   - agent/tollfree.md    → superviseur pipeline
   //
   // ═══════════════════════════════════════════════════════════════════
 
@@ -36,10 +36,8 @@
   // ├─────────────────────────────────────────────────────────────┤
   // │ better-compact          │ Pruning par étapes, préservation   │
   // │                         │ de l'intention utilisateur, TUI.     │
-  // │                         │ ⚠️ Bug Windows fsync (EPERM) →     │
-  // │                         │ patché dans le cache npm (voir     │
-  // │                         │ ~/.config/opencode/scripts/        │
-  // │                         │ patch-better-compact.py).          │
+  // │                         │ ⚠️ Bug Windows fsync (EPERM) connu │
+  // │                         │ côté plugin (voir son dépôt).      │
   // ├─────────────────────────────────────────────────────────────┤
   // │ auto-compact.ts (local) │ Directive de préservation context. │
   // │                         │ + reprise AUTOMATIQUE après        │
@@ -294,7 +292,7 @@
   //   - coût : latence mesurée (ms/1000 + 1)
   //   - Feedback : route.py record <worker> success|fail → ajuste les poids
   //
-  // Workers actifs (statut live : ~/.config/opencode/free-models.json) :
+  // Workers actifs (statut live : free-models.json) :
   //   worker-opencode      → deepseek-v4-flash (intégré, 0 quota)
   //   worker-opencode-heavy → glm-5 (intégré, 0 quota, raisonnement)
   //   worker-groq          → qwen3.8-27b (245ms, FREE tier)
@@ -311,7 +309,7 @@
       "name": "Z.AI GLM (FREE)",
       "options": {
         "baseURL": "https://api.z.ai/api/paas/v4",
-        "apiKey": "{file:~/.config/opencode/.zhipu-key}",
+        "apiKey": "{file:./.zhipu-key}",
       },
       "models": {
         "glm-4.7-flash": { "name": "GLM 4.7 Flash (FREE)" },
@@ -323,7 +321,7 @@
       "npm": "@ai-sdk/google",
       "name": "Google Gemini (FREE)",
       "options": {
-        "apiKey": "{file:~/.config/opencode/.gemini-key}",
+        "apiKey": "{file:./.gemini-key}",
         "timeout": 300000,
         "headerTimeout": 90000,
         "chunkTimeout": 60000,
@@ -360,7 +358,7 @@
       "name": "Groq (FREE)",
       "options": {
         "baseURL": "https://api.groq.com/openai/v1",
-        "apiKey": "{file:~/.config/opencode/.groq-key}",
+        "apiKey": "{file:./.groq-key}",
       },
       "models": {
         "qwen/qwen3.8-27b": { "name": "Qwen 3.8 27B (FREE tier, 1K req/jour chat-models)" },
@@ -379,7 +377,7 @@
       "name": "OpenRouter (FREE)",
       "options": {
         "baseURL": "https://openrouter.ai/api/v1",
-        "apiKey": "{file:~/.config/opencode/.openrouter-key}",
+        "apiKey": "{file:./.openrouter-key}",
       },
       "models": {
         "openrouter/free": {
@@ -407,7 +405,7 @@
       "name": "Hugging Face (FREE)",
       "options": {
         "baseURL": "https://router.huggingface.co/v1",
-        "apiKey": "{file:~/.config/opencode/.hf-key}",
+        "apiKey": "{file:./.hf-key}",
       },
       "models": {
         "Qwen/Qwen3-Coder-480B-A35B-Instruct:cheapest": { "name": "Qwen3 Coder 480B (FREE)" },
@@ -420,7 +418,7 @@
       "name": "Novita AI (bon marché + gratuit)",
       "options": {
         "baseURL": "https://api.novita.ai/openai/v1",
-        "apiKey": "{file:~/.config/opencode/.novita-key}",
+        "apiKey": "{file:./.novita-key}",
       },
       "models": {
         "deepseek-ai/DeepSeek-V4-Flash": { "name": "DeepSeek V4 Flash ($0.14/M input, $0.03/M cached, 1M ctx)" },
@@ -465,7 +463,7 @@
       "options": {
         "baseURL": "https://integrate.api.nvidia.com/v1",
         // Clé API NVIDIA (gratuit, 1000 req/jour).
-        // "apiKey": "{file:~/.config/opencode/.nvidia-key}",
+        // "apiKey": "{file:./.nvidia-key}",
       },
       "models": {
         "nvidia/nemotron-3-ultra-550b-a55b:free": {
@@ -525,10 +523,10 @@
   //   - mistral/mistral-large     → $4/M in, $12/M out
   //
   // Fichiers clés :
-  //   - ~/.config/opencode/agent/worker-pro-openrouter.md
-  //   - ~/.config/opencode/agent/worker-pro-opencode-go.md
-  //   - ~/.config/opencode/command/mode.md
-  //   - ~/.config/opencode/scripts/quota.py
+  //   - agent/worker-pro-openrouter.md
+  //   - agent/worker-pro-opencode-go.md
+  //   - command/mode.md
+  //   - scripts/quota.py
   //
   "pro": {
     "enabled": false,
@@ -544,7 +542,7 @@
 
     // ── OpenRouter (PAYG) ──────────────────────────────────────────
     "openrouter": {
-      "api_key": "{file:~/.config/opencode/.openrouter-key}",
+      "api_key": "{file:./.openrouter-key}",
       "base_url": "https://openrouter.ai/api/v1/chat/completions",
       "models": {
         "openai/gpt-4o-mini": {

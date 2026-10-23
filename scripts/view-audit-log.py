@@ -10,8 +10,9 @@ import sys
 import argparse
 from datetime import datetime, timedelta
 from pathlib import Path
+from _paths import config_dir
 
-LOG_DIR = Path.home() / ".config" / "opencode" / "logs"
+LOG_DIR = Path(config_dir()) / "logs"
 
 EMOJI_MAP = {
     "ok": "[OK]",

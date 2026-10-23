@@ -13,9 +13,9 @@ and advise.
 
 ## Protocol (run before any external delegation)
 
-1. Run `python ~/.config/opencode/scripts/quota.py` and read the output:
+1. Run `python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/quota.py"` and read the output:
    - Mode (FREE/PRO), dépense du jour, état des workers, conseil du moment.
-2. Read `~/.config/opencode/free-models.json` for live status + latencies.
+2. Read `free-models.json` (dossier de config) for live status + latencies.
 3. Decide, in this order of preference:
    - **Integrated opencode/*-free models** (0 quota, no external rate limit)
      → `opencode/deepseek-v4-flash` (workhorse), `opencode/glm-5` (heavy)

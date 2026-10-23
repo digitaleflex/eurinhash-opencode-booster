@@ -173,7 +173,7 @@ Backup des agents : historique git (`git log -- agent/`).
 
 ### Protocole TOLLFREE (obligatoire)
 
-1. **Vérification temps réel** : lire `~/.config/opencode/free-models.json` ; s'il manque ou date de +30 min → lancer `python ~/.config/opencode/scripts/free-probe.py` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
+1. **Vérification temps réel** : lire `free-models.json` (dossier de config) ; s'il manque ou date de +30 min → lancer `python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/free-probe.py"` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
 2. **Ordre selon la tâche** (statuts live dans `free-models.json`, sauter tout worker ≠ `ok`) :
    - Code → `worker-codestral` → `worker-groq` → `worker-novita` → `worker-zhipu` → `worker-google` → `worker-ollama` → `worker-pollinations`
    - Discussion/Résumé/Rédaction → `worker-groq` → `worker-zhipu` → `worker-novita` → `worker-codestral` → `worker-google` → `worker-ollama` → `worker-pollinations`

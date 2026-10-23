@@ -1,7 +1,7 @@
 // src/core/governance-events.ts — Governance Audit Stream (D3)
 //
 // Émet les décisions de gouvernance dans le MÊME flux que le plugin
-// audit-logger (`~/.config/opencode/logs/audit-YYYY-MM-DD.jsonl`) :
+// audit-logger (`<config dir>/logs/audit-YYYY-MM-DD.jsonl`) :
 // une seule timeline outil-executions + décisions de gouvernance,
 // corrélable par taskId/sessionId.
 //
@@ -18,7 +18,7 @@
 
 import { mkdir, appendFile } from "node:fs/promises";
 import { join } from "node:path";
-import { homedir } from "node:os";
+import { logsDir } from "./paths";
 import { redactDeep } from "./secret-redactor";
 
 export type GovernanceEventName =
@@ -51,7 +51,7 @@ const SENSITIVE_PATTERNS: RegExp[] = [
 ];
 
 export function governanceLogDir(): string {
-  return join(homedir(), ".config", "opencode", "logs");
+  return logsDir();
 }
 
 function isSensitive(value: unknown): boolean {

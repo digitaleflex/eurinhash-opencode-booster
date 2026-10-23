@@ -86,13 +86,8 @@ TOLLFREE is a governance layer for AI coding agents. It automatically selects th
 │   ├── view-audit-log.py         # Audit log display
 │   ├── route.py                  # EV routing + Bayesian feedback
 │   ├── models-free.py            # Free model inventory
-│   ├── patch-better-compact.py   # Windows fsync patch
 │   ├── session-review.mjs        # Session review
-│   ├── cleanup-opencode-db.mjs   # Database cleanup
 │   └── verify-golden.ts          # Golden test verification
-│   └── windows/                  # PowerShell scripts (Windows-only)
-│       ├── compact-docker-vhdx.ps1
-│       └── finish-cleanup.ps1
 ├── 📁 skills/                    # 30+ skills
 │   ├── tollfree-agent-matrix/        # L1-L4 routing
 │   ├── tollfree-code-navigation/     # Efficient codebase search
@@ -203,7 +198,7 @@ User
 
 | OS | Shell | Notes |
 |----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | `direct.py` wrapper bypasses SDK bug. PowerShell scripts in `scripts/windows/`. |
+| **Windows** | WSL2 / Git Bash / PowerShell | `direct.py` wrapper bypasses SDK bug. |
 | **macOS** | bash / zsh | Everything works natively. `opencode run` works without wrapper. |
 | **Linux** | bash | Everything works natively. No workaround needed. |
 
