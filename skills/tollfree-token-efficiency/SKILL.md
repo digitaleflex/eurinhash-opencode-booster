@@ -1,5 +1,5 @@
 ---
-name: hash-token-efficiency
+name: tollfree-token-efficiency
 description: Load at the start of any non-trivial coding task to enforce token-efficient methods. Triggers on multi-step work, big explorations, long outputs. Teaches search-before-read, no rereads, batched tools, minimal diffs.
 ---
 

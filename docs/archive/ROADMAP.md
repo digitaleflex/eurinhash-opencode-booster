@@ -1,4 +1,4 @@
-# ROADMAP — EURINHASH Governance Engine
+# ROADMAP — TOLLFREE Governance Engine
 
 Detailed improvement plan following the v0.3.1 agentic hardening.
 Ordering and dependencies are noted per item.
@@ -55,7 +55,7 @@ L2+ approuvable uniquement avec preuves vérifiables.
 ### 4. HMAC sur la chaîne d'audit — ~1j · dép. #1
 - `merkle-audit.ts`: clé HMAC-SHA256 optionnelle (leaves + noeuds internes),
   `verifyChain(key)`; `exportHead()` externe + détection de troncature.
-- Clé via `EURINHASH_AUDIT_KEY` ou `.morph-key`.
+- Clé via `TOLLFREE_AUDIT_KEY` ou `.morph-key`.
 - Acceptation: altération 1 octet → false; troncature détectée par ancre.
 
 ### 5. État persistant (anomaly/drift/FSM) — ~1j · dép. #1

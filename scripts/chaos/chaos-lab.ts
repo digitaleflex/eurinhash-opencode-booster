@@ -1,4 +1,4 @@
-// scripts/chaos/chaos-lab.ts — EURINHASH Governance Engine — Chaos Lab (TS side)
+// scripts/chaos/chaos-lab.ts — TOLLFREE Governance Engine — Chaos Lab (TS side)
 // Safely exercises the REAL src/core engine against the 20 chaos scenarios.
 // No network, no destructive side-effects. Mocks only.
 //

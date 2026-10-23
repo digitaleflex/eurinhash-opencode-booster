@@ -1,5 +1,5 @@
 ---
-description: Worker générique du mode free-router (GLM 4.7 Flash gratuit). Appelé par @eurinhash, pas directement.
+description: Worker générique du mode free-router (GLM 4.7 Flash gratuit). Appelé par @tollfree, pas directement.
 mode: subagent
 model: zhipu/glm-4.7-flash
 ---

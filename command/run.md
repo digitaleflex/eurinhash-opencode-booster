@@ -1,9 +1,9 @@
 ---
-description: Contourne le bug opencode run en appelant directement les providers via hash-direct. Utilise le fallback EURINHASH.
-agent: eurinhash
+description: Contourne le bug opencode run en appelant directement les providers via direct. Utilise le fallback TOLLFREE.
+agent: tollfree
 ---
 
-`python "$HOME/.config/opencode/scripts/hash-direct-wrapper.py" run $ARG`
+`python "$HOME/.config/opencode/scripts/direct-wrapper.py" run $ARG`
 
 **Exemples :**
 - `/run "explique la loi d'Ohm"` → fallback automatique Groq → Mistral → ...
@@ -15,7 +15,7 @@ agent: eurinhash
 - `/run --status` → état quota + circuit breakers
 
 **Alias pratique :**  
-Bash : `alias opencode-run='python "$HOME/.config/opencode/scripts/hash-direct-wrapper.py" run'`
+Bash : `alias opencode-run='python "$HOME/.config/opencode/scripts/direct-wrapper.py" run'`
 
 **Notes :**
 - Si `opencode run` est planté (bug Windows SDK), utilise `/run` à la place.

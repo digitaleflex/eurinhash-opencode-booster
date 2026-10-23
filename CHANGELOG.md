@@ -1,4 +1,9 @@
-# CHANGELOG — EURINHASH Governance Engine
+# CHANGELOG — Tollfree
+
+> **Renamed (Tollfree).** This project was previously called EURINHASH. Entries below keep the
+> original names. Renames: agent `eurinhash` → `tollfree`, `/hash-direct` → `/direct`,
+> `/myfree-eurinhash` → `/free-test`, skills `hash-*` → `tollfree-*`, env vars `EURINHASH_*` →
+> `TOLLFREE_*` (the old `EURINHASH_MODE`, `_PROOFS_DIR`, `_AUDIT_KEY`, `_APPROVAL_KEY` still work as fallback).
 
 ## [0.10.0] - 2026-09-10 — Modes FREE / PRO : jamais bloqué, jamais de surprise
 

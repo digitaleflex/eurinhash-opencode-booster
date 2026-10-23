@@ -1,4 +1,4 @@
-# Documentation de Sécurité — opencode-config EURINHASH
+# Documentation de Sécurité — opencode-config TOLLFREE
 
 ## Table des matières
 1. [Sécurité des clés API](#1-sécurité-des-clés-api)
@@ -126,7 +126,7 @@ Le plugin `audit-logger.ts` enregistre tous les événements dans `logs/audit-YY
 ```jsonl
 {
   "timestamp": "2026-09-06T12:00:00Z",
-  "agent": "eurinhash",
+  "agent": "tollfree",
   "tool": "bash",
   "command": "ls -la",
   "status": "success",
@@ -238,7 +238,7 @@ Le `.gitignore` exclut les fichiers sensibles :
 .env            # Variables d'environnement
 provider_*.json # Fichiers d'état
 free-models.json
-myfree-eurinhash-report.json
+free-test-report.json
 logs/           # Journaux
 __pycache__/    # Cache Python
 ```
@@ -387,4 +387,4 @@ git checkout HEAD~1 -- opencode.jsonc
 ---
 
 *Documentation sécurité générée le $(date)*
-*Pour toute question de sécurité, contacter l'équipe EURINHASH*
+*Pour toute question de sécurité, contacter l'équipe TOLLFREE*

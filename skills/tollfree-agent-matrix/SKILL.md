@@ -1,11 +1,11 @@
 ---
-name: hash-agent-matrix
-description: Matrice officielle de l'équipe HASH Engineering. Définit pour chaque type de tâche : agents déclenchés, niveau de risque, skills requis, permissions, et niveau de validation. Utilisée par EURINHASH et le routage intelligent.
+name: tollfree-agent-matrix
+description: Matrice officielle de l'équipe HASH Engineering. Définit pour chaque type de tâche : agents déclenchés, niveau de risque, skills requis, permissions, et niveau de validation. Utilisée par TOLLFREE et le routage intelligent.
 ---
 
 # Matrice HASH_AGENT_MATRIX — Équipe HASH Engineering
 
-Cette matrice définit **quelle équipe d'agents** déclencher selon le **type de tâche**, son **niveau de risque**, et le **pipeline optimal**. Elle est utilisée par le routage intelligent (AGENTS.md) et par le superviseur `eurinhash`.
+Cette matrice définit **quelle équipe d'agents** déclencher selon le **type de tâche**, son **niveau de risque**, et le **pipeline optimal**. Elle est utilisée par le routage intelligent (AGENTS.md) et par le superviseur `tollfree`.
 
 ---
 
@@ -47,7 +47,7 @@ Cette matrice définit **quelle équipe d'agents** déclencher selon le **type d
 
 | Agent | Skills | Validation |
 |---|---|---|
-| `@builder` | `hash-verification`, `hash-enterprise-development` | Smoke test rapide |
+| `@builder` | `tollfree-verification`, `tollfree-enterprise-development` | Smoke test rapide |
 
 ---
 
@@ -68,11 +68,11 @@ Cette matrice définit **quelle équipe d'agents** déclencher selon le **type d
 
 | Agent | Skills | Validation |
 |---|---|---|
-| `@planner` | `writing-plans`, `hash-code-navigation` | Plan approuvé par utilisateur |
-| `@builder` | `hash-enterprise-development`, `hash-verification` | - |
-| `@tester` | `hash-verification` | Tests ciblés uniquement |
-| `@quality-engineer` | `hash-enterprise-development`, `simplify` | Quality report |
-| `@reviewer` | `code-review-skill`, `hash-verification` | SHIP/FIX |
+| `@planner` | `writing-plans`, `tollfree-code-navigation` | Plan approuvé par utilisateur |
+| `@builder` | `tollfree-enterprise-development`, `tollfree-verification` | - |
+| `@tester` | `tollfree-verification` | Tests ciblés uniquement |
+| `@quality-engineer` | `tollfree-enterprise-development`, `simplify` | Quality report |
+| `@reviewer` | `code-review-skill`, `tollfree-verification` | SHIP/FIX |
 
 ---
 
@@ -99,13 +99,13 @@ Cette matrice définit **quelle équipe d'agents** déclencher selon le **type d
 
 | Agent | Skills | Validation |
 |---|---|---|
-| `@planner` | `writing-plans`, `hash-code-navigation` | Plan + risques identifiés |
-| `@architect` | `writing-plans` (architecture), `hash-enterprise-development` | Décision architecturale documentée |
-| `@builder` | `hash-enterprise-development`, `hash-verification` | - |
-| `@security` | `hash-enterprise-development`, `cybersecurity` | Security audit |
-| `@tester` | `hash-verification` | Tests module + consumers |
-| `@quality-engineer` | `hash-enterprise-development`, `simplify` | Quality report |
-| `@reviewer` | `code-review-skill`, `hash-verification` | SHIP/FIX |
+| `@planner` | `writing-plans`, `tollfree-code-navigation` | Plan + risques identifiés |
+| `@architect` | `writing-plans` (architecture), `tollfree-enterprise-development` | Décision architecturale documentée |
+| `@builder` | `tollfree-enterprise-development`, `tollfree-verification` | - |
+| `@security` | `tollfree-enterprise-development`, `cybersecurity` | Security audit |
+| `@tester` | `tollfree-verification` | Tests module + consumers |
+| `@quality-engineer` | `tollfree-enterprise-development`, `simplify` | Quality report |
+| `@reviewer` | `code-review-skill`, `tollfree-verification` | SHIP/FIX |
 
 ---
 
@@ -134,13 +134,13 @@ Cette matrice définit **quelle équipe d'agents** déclencher selon le **type d
 
 | Agent | Skills | Validation |
 |---|---|---|
-| `@planner` | `writing-plans`, `hash-code-navigation` | Plan complet + risques |
-| `@architect` | `writing-plans`, `hash-enterprise-development`, `simplify` | Risk assessment écrit |
-| `@security` | `cybersecurity`, `hash-enterprise-development` | Security audit complet |
-| `@builder` | `hash-enterprise-development`, `hash-verification`, `verification-before-completion` | - |
-| `@tester` | `hash-verification`, `systematic-debugging` | Tests exhaustifs |
-| `@quality-engineer` | `hash-enterprise-development`, `simplify` | Quality report deep |
-| `@reviewer` | `code-review-skill`, `hash-verification`, `systematic-debugging` | SHIP/FIX + independent |
+| `@planner` | `writing-plans`, `tollfree-code-navigation` | Plan complet + risques |
+| `@architect` | `writing-plans`, `tollfree-enterprise-development`, `simplify` | Risk assessment écrit |
+| `@security` | `cybersecurity`, `tollfree-enterprise-development` | Security audit complet |
+| `@builder` | `tollfree-enterprise-development`, `tollfree-verification`, `verification-before-completion` | - |
+| `@tester` | `tollfree-verification`, `systematic-debugging` | Tests exhaustifs |
+| `@quality-engineer` | `tollfree-enterprise-development`, `simplify` | Quality report deep |
+| `@reviewer` | `code-review-skill`, `tollfree-verification`, `systematic-debugging` | SHIP/FIX + independent |
 | `@git-engineer` | `git-commit`, `verification-before-completion` | Pipeline CI/CD clean |
 
 ---
@@ -255,9 +255,9 @@ JAMAIS premium par défaut.
 
 ---
 
-## 🔑 Usage dans EURINHASH
+## 🔑 Usage dans TOLLFREE
 
-Le superviseur `eurinhash` utilise cette matrice pour :
+Le superviseur `tollfree` utilise cette matrice pour :
 1. Classifier la tâche entrante
 2. Déclencher le pipeline approprié
 3. Ordonner les workers gratuits (`worker-*`)
@@ -269,17 +269,17 @@ Le superviseur `eurinhash` utilise cette matrice pour :
 
 | Agent | Skills principaux | Skills optionnels |
 |---|---|---|
-| `@planner` | `writing-plans`, `hash-code-navigation` | `verification-planning` |
-| `@architect` | `writing-plans`, `hash-enterprise-development` | `simplify` |
+| `@planner` | `writing-plans`, `tollfree-code-navigation` | `verification-planning` |
+| `@architect` | `writing-plans`, `tollfree-enterprise-development` | `simplify` |
 | `@design-lead` | `12ui-design`, `web-design-guidelines` | `frontend-design` |
-| `@builder` | `hash-enterprise-development`, `hash-verification`, `hash-code-navigation` | `systematic-debugging` |
-| `@quality-engineer` | `hash-enterprise-development`, `simplify`, `hash-code-navigation` | `code-review-skill` |
-| `@tester` | `hash-verification`, `systematic-debugging` | `verification-before-completion` |
-| `@security` | `cybersecurity`, `hash-enterprise-development` | `systematic-debugging` |
-| `@reviewer` | `code-review-skill`, `hash-verification` | `systematic-debugging` |
-| `@git-engineer` | `git-commit`, `verification-before-completion` | `hash-verification` |
+| `@builder` | `tollfree-enterprise-development`, `tollfree-verification`, `tollfree-code-navigation` | `systematic-debugging` |
+| `@quality-engineer` | `tollfree-enterprise-development`, `simplify`, `tollfree-code-navigation` | `code-review-skill` |
+| `@tester` | `tollfree-verification`, `systematic-debugging` | `verification-before-completion` |
+| `@security` | `cybersecurity`, `tollfree-enterprise-development` | `systematic-debugging` |
+| `@reviewer` | `code-review-skill`, `tollfree-verification` | `systematic-debugging` |
+| `@git-engineer` | `git-commit`, `verification-before-completion` | `tollfree-verification` |
 
 ---
 
 *Dernière mise à jour : auto-générée depuis la configuration opencode*
-*Stockée dans : `~/.config/opencode/skills/hash-agent-matrix/SKILL.md`*
+*Stockée dans : `~/.config/opencode/skills/tollfree-agent-matrix/SKILL.md`*

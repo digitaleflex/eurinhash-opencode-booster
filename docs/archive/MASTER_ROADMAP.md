@@ -1,4 +1,4 @@
-# MASTER ROADMAP — EURINHASH Agent Governance Engine
+# MASTER ROADMAP — TOLLFREE Agent Governance Engine
 
 > **Note (2026-09-10)** : les effectifs cités (« 4 workers FREE ») ont grandi
 > depuis — voir `free-models.json` et `CONFIG-GUIDE.md` pour le roster actuel.
@@ -44,7 +44,7 @@ KEEP-INTEGRATE-BUILD :
    - Guard overrides (dangerous ops blocking)
 
 2. **Intégration avec existant**
-   - Wrapper autour de eurinhash agent
+   - Wrapper autour de tollfree agent
    - Utilisation des 4 workers FREE validés
    - Intégration avec audit-logger.ts
    - Respect de la matrice L1→L4 existante
@@ -88,7 +88,7 @@ KEEP-INTEGRATE-BUILD :
    - Reporting de conformité
 
 4. **Expérience développeur**
-   - Installateur npx create-eurinhash-agent
+   - Installateur npx create-tollfree
    - CLI pour gérer les politiques
    - Templates de politiques pré-définis
    - Extension VS Code
@@ -132,7 +132,7 @@ Voici les issues GitHub recommandées pour le développement du MVP :
 - `feat: implement guard overrides (dangerous ops blocking)`
 
 ### Integration
-- `feat: wrap eurinhash agent with governance engine`
+- `feat: wrap tollfree agent with governance engine`
 - `feat: integrate with existing audit-logger.ts`
 - `feat: respect existing L1-L4 matrix from AGENTS.md`
 - `feat: use FREE workers as default (codestral, groq, zhipu, novita)`
@@ -171,12 +171,12 @@ Voici les issues GitHub recommandées pour le développement du MVP :
 ### À garder (Phase 1-5)
 | Composant | Raison |
 |---|---|
-| eurinhash supervisor | Identité unique, orchestration simple |
+| tollfree supervisor | Identité unique, orchestration simple |
 | Matrice L1→L4 | Gouvernance claire des tâches |
 | Sécurité intégrée | envsitter-guard + guard.ts + audit-logger |
-| Windows wrapper | hash-direct, optimisation Windows |
+| Windows wrapper | direct, optimisation Windows |
 | 4 workers FREE validés | Valeur immédiate |
-| Documentation | CONFIG-GUIDE.md + AGENTS.md + eurinhash.md |
+| Documentation | CONFIG-GUIDE.md + AGENTS.md + tollfree.md |
 
 ## Métriques de suivi
 
@@ -206,7 +206,7 @@ Voici les issues GitHub recommandées pour le développement du MVP :
 
 Le projet sera considéré comme un succès quand :
 
-1. **Adoption** : >1000 développeurs utilisent eurinhash pour la gouvernance
+1. **Adoption** : >1000 développeurs utilisent tollfree pour la gouvernance
 2. **Valeur** : >50% des tâches utilisent au moins une gouvernance (L2+)
 3. **Sécurité** : 100% des ops dangereuses sont bloquées
 4. **Preuves** : 100% des tâches terminées ont une preuve chaîne vérifiable

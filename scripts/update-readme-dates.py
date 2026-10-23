@@ -41,8 +41,8 @@ DATE_PATTERNS = [
     (re.compile(r"(\*Documentation agents generated )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
     (re.compile(r"(\*Documentation skills générée le )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
     (re.compile(r"(\*Skills documentation generated )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
-    (re.compile(r"(\*Configuration maintenue avec amour par EurinHash\*\n\*Dernière mise à jour : )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
-    (re.compile(r"(\*Configuration maintained with love by EurinHash\*\n\*Last update: )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
+    (re.compile(r"(\*Configuration maintenue avec amour par Tollfree\*\n\*Dernière mise à jour : )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
+    (re.compile(r"(\*Configuration maintained with love by Tollfree\*\n\*Last update: )\d{4}-\d{2}-\d{2}(\*)"), r"\g<1>{date}\g<2>"),
 ]
 
 # Fichiers à scanner (README et docs)

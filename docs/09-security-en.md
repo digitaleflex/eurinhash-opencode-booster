@@ -1,4 +1,4 @@
-# Security Documentation — EURINHASH
+# Security Documentation — TOLLFREE
 
 ## Table of Contents
 1. [API Key Security](#1-api-key-security)
@@ -119,7 +119,7 @@ Each blocked op is recorded in `logs/audit-YYYY-MM-DD.jsonl`:
 ```jsonl
 {
   "timestamp": "2026-09-06T12:00:00Z",
-  "agent": "eurinhash",
+  "agent": "tollfree",
   "tool": "bash",
   "command": "ls -la",
   "status": "success",
@@ -220,7 +220,7 @@ const SECRET_PATTERNS = [
 .env            # Environment variables
 provider_*.json # State files
 free-models.json
-myfree-eurinhash-report.json
+free-test-report.json
 logs/           # Logs
 __pycache__/    # Python cache
 ```

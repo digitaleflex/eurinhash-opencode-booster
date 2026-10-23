@@ -1,4 +1,4 @@
-# SYSTEM REALITY AUDIT — EURINHASH Agent Governance Engine
+# SYSTEM REALITY AUDIT — TOLLFREE Agent Governance Engine
 
 > **Note (2026-09-10)** : snapshot historique au 2026-09-06, conservé tel quel
 > (son constat « context-summarizer BASIC » a d'ailleurs motivé son remplacement
@@ -13,7 +13,7 @@
 
 ## 1. Executive Summary
 
-The EURINHASH Governance Engine has a **well-designed architecture** (documented across 5+ architecture docs) and a **partially implemented core** (8 TypeScript files in `src/core/`). However, the system has **critical security gaps** that make it unsuitable for production use:
+The TOLLFREE Governance Engine has a **well-designed architecture** (documented across 5+ architecture docs) and a **partially implemented core** (8 TypeScript files in `src/core/`). However, the system has **critical security gaps** that make it unsuitable for production use:
 
 | Metric | Value |
 |---|---|
@@ -54,15 +54,15 @@ The EURINHASH Governance Engine has a **well-designed architecture** (documented
 │   └── context-summarizer.ts          # Context pruning (31 LOC) — BASIC
 │
 ├── agent/                             # AGENT DEFINITIONS (10 agents)
-│   ├── eurinhash.md                   # Main supervisor (118 LOC)
+│   ├── tollfree.md                   # Main supervisor (118 LOC)
 │   ├── builder.md, architect.md, ... # Specialized agents
 │   └── worker-*.md                    # Worker definitions (4)
 │
 ├── scripts/                           # PYTHON SCRIPTS (6 scripts)
 │   ├── free-probe.py                  # Worker availability probe
-│   ├── myfree-eurinhash.py            # Complete FREE router
-│   ├── hash-direct.py                 # Windows wrapper
-│   ├── hash-direct-wrapper.py         # Advanced Windows wrapper
+│   ├── free-test.py            # Complete FREE router
+│   ├── direct.py                 # Windows wrapper
+│   ├── direct-wrapper.py         # Advanced Windows wrapper
 │   ├── quota.py                       # Daily quota monitoring
 │   └── view-audit-log.py              # Audit log viewer
 │
@@ -344,7 +344,7 @@ This is a **separate safety layer** that works independently of the core engine.
 #### `scripts/free-probe.py` — ✅ WORKING
 Tests all 7 workers, outputs status + latency, writes `free-models.json`.
 
-#### `scripts/myfree-eurinhash.py` — ✅ WORKING
+#### `scripts/free-test.py` — ✅ WORKING
 Complete FREE router with worker fallback, quality/price reporting.
 
 #### `provider_circuit.json` — ✅ EXISTING
@@ -371,7 +371,7 @@ Daily usage tracking. Minimal data (1 entry).
 | Safety guard plugin | `plugin/guard.ts` | ✅ Working |
 | Audit logger plugin | `plugin/audit-logger.ts` | ✅ Working |
 | Worker probe | `scripts/free-probe.py` | ✅ Working |
-| FREE router | `scripts/myfree-eurinhash.py` | ✅ Working |
+| FREE router | `scripts/free-test.py` | ✅ Working |
 
 ### PARTIALLY IMPLEMENTED (exists but incomplete or incorrect)
 
@@ -552,7 +552,7 @@ Daily usage tracking. Minimal data (1 entry).
 
 ## 10. Conclusion
 
-The EURINHASH Governance Engine has a **solid architectural vision** but is in an **early implementation state**. The code compiles and the basic pipeline structure works, but:
+The TOLLFREE Governance Engine has a **solid architectural vision** but is in an **early implementation state**. The code compiles and the basic pipeline structure works, but:
 
 - **Security is compromised** by FAIL-OPEN defaults and inconsistent risk assessment
 - **Proof integrity is fake** (32-bit hash, not SHA-256)

@@ -1,13 +1,13 @@
-# Commands Documentation — EURINHASH
+# Commands Documentation — TOLLFREE
 
 ## Table of Contents
 1. [/run](#run)
-2. [/hash-direct](#hash-direct)
+2. [/direct](#direct)
 3. [/audit-log](#audit-log)
 4. [/commit](#commit)
 5. [/review](#review)
 6. [/quota](#quota)
-7. [/myfree-eurinhash](#myfree-eurinhash)
+7. [/free-test](#free-test)
 8. [Creating Custom Commands](#creating-custom-commands)
 
 ---
@@ -15,7 +15,7 @@
 ## 1. /run — opencode run Wrapper
 
 ### Description
-Bypasses the Windows SDK bug in `opencode run` by calling hash-direct with automatic fallback.
+Bypasses the Windows SDK bug in `opencode run` by calling direct with automatic fallback.
 
 ### Syntax
 ```
@@ -55,25 +55,25 @@ Bypasses the Windows SDK bug in `opencode run` by calling hash-direct with autom
 ```
 
 ### Why This Command?
-The `opencode run` bug on Windows (SDK) fails silently. This command uses our hash-direct wrapper instead, bypassing the bug.
+The `opencode run` bug on Windows (SDK) fails silently. This command uses our direct wrapper instead, bypassing the bug.
 
 ---
 
-## 2. /hash-direct — Direct Provider Access
+## 2. /direct — Direct Provider Access
 
 ### Description
 Direct access to AI providers with full control. Automatic fallback, circuit breaker, quota tracking.
 
 ### Syntax
 ```
-/hash-direct "your prompt"
-/hash-direct --model "qwen/qwen3.8-27b" "your prompt"
-/hash-direct --provider mistral "your prompt"
-/hash-direct --task-type code "your prompt"
-/hash-direct --json "your prompt"
-/hash-direct --status
-/hash-direct --reset-quota
-/hash-direct --reset-circuit
+/direct "your prompt"
+/direct --model "qwen/qwen3.8-27b" "your prompt"
+/direct --provider mistral "your prompt"
+/direct --task-type code "your prompt"
+/direct --json "your prompt"
+/direct --status
+/direct --reset-quota
+/direct --reset-circuit
 ```
 
 ### Options
@@ -92,25 +92,25 @@ Direct access to AI providers with full control. Automatic fallback, circuit bre
 ### Examples
 ```bash
 # Automatic fallback
-/hash-direct "Analyze this code"
+/direct "Analyze this code"
 
 # Force a provider
-/hash-direct --provider groq "Hello"
+/direct --provider groq "Hello"
 
 # Force a model
-/hash-direct --model "codestral-latest" "Code review"
+/direct --model "codestral-latest" "Code review"
 
 # JSON for automation
-/hash-direct --json "test"
+/direct --json "test"
 
 # System status
-/hash-direct --status
+/direct --status
 ```
 
 ### Advanced Usage
 ```bash
 # With all options
-/hash-direct --provider mistral --task-type code --max-tokens 4096 --temperature 0.1 "Code a sort function"
+/direct --provider mistral --task-type code --max-tokens 4096 --temperature 0.1 "Code a sort function"
 ```
 
 ---
@@ -326,16 +326,16 @@ zhipu: OPEN (failures=3, timeout in 32s)
 
 ---
 
-## 7. /myfree-eurinhash — Free Models Test
+## 7. /free-test — Free Models Test
 
 ### Description
 Runs a complete test of all free models and displays results.
 
 ### Syntax
 ```
-/myfree-eurinhash
-/myfree-eurinhash --quick
-/myfree-eurinhash --detail
+/free-test
+/free-test --quick
+/free-test --detail
 ```
 
 ### Options
@@ -347,18 +347,18 @@ Runs a complete test of all free models and displays results.
 ### Examples
 ```bash
 # Complete test
-/myfree-eurinhash
+/free-test
 
 # Quick test (1 model per provider)
-/myfree-eurinhash --quick
+/free-test --quick
 
 # Detailed test
-/myfree-eurinhash --detail
+/free-test --detail
 ```
 
 ### Output
 ```text
-=== EURINHASH Free Models Test ===
+=== TOLLFREE Free Models Test ===
 Providers tested: 8
 Models tested: 21
 OK: 17
@@ -382,7 +382,7 @@ Errors: 4
 ```markdown
 ---
 description: Short command description
-agent: eurinhash
+agent: tollfree
 ---
 
 Command to execute with $ARG

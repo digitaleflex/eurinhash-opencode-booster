@@ -1,4 +1,4 @@
-# FIX ROADMAP — EURINHASH Governance Engine
+# FIX ROADMAP — TOLLFREE Governance Engine
 
 **Date:** 2026-09-06  
 **Status:** Ready for execution  

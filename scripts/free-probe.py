@@ -270,7 +270,7 @@ with open(os.path.join(CFG, "free-models.json"), "w") as f:
     json.dump(out, f, indent=2)
 
 # Sortie console lisible
-print("=== EURINHASH Free Models Probe ===")
+print("=== TOLLFREE Free Models Probe ===")
 print(f"Updated: {out['updated_human']}")
 print()
 ok = 0

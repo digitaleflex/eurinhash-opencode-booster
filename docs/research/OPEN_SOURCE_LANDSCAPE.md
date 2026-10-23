@@ -1,4 +1,4 @@
-# OPEN SOURCE LANDSCAPE — EURINHASH
+# OPEN SOURCE LANDSCAPE — TOLLFREE
 
 ## 1. Agent Runtimes
 
@@ -15,7 +15,7 @@
 - **Architecture**: Modular plugin system with built-in agents, MCP protocol for external tool integration, JSON-based configuration
 - **Maturity**: Production (205k stars, active development, multiple releases)
 - **License**: MIT
-- **Advantages for EURINHASH**: 
+- **Advantages for TOLLFREE**: 
   - Large ecosystem and community (205k stars)
   - Mature plugin architecture for extensibility
   - Strong dual-agent design (build vs plan modes) suitable for governance workflows
@@ -39,7 +39,7 @@
 - **Architecture**: Plugin layer on OpenCode with specialized agent categories (visual-engineering, deep, quick, ultrabrain) that auto-map to appropriate models
 - **Maturity**: Stable (actively maintained, though fork shows 0 stars indicating possible transition)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Advanced agent orchestration patterns (discipline agents, team mode)
   - Sophisticated edit reliability with hash-anchoring
   - Production-focused features like Todo Enforcer and Comment Checker
@@ -63,7 +63,7 @@
 - **Architecture**: SDK-based architecture with CLI, VS Code extension, JetBrains plugin, and Kanban board all sharing core agent functionality
 - **Maturity**: Production (67.5k stars, active development, Apache 2.0 license)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - True multi-agent team coordination built-in
   - Extensive integration ecosystem (messaging platforms, scheduling)
   - Clear separation of concerns between CLI, extension, and SDK layers
@@ -84,7 +84,7 @@
 - **Architecture**: VS Code extension-based agent system with mode-driven behavior adaptation
 - **Maturity**: Archived (no longer maintained)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Mode-based agent specialization concept valuable for governance workflows
   - MCP integration patterns
 - **Limitations**:
@@ -105,11 +105,11 @@
 - **Architecture**: Multi-repository system (frontend, agent SDK, TypeScript client, automation) with clear separation of concerns
 - **Maturity**: Production (86.3k stars, active development, MIT license)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - True multi-backend orchestration capability
   - Strong automation and scheduling features
   - ACP standardization for agent interoperability
-  - Self-hosted control plane aligns with EURINHASH governance goals
+  - Self-hosted control plane aligns with TOLLFREE governance goals
 - **Limitations**:
   - More focused on automation than formal governance policies
   - Governance would need additional layers
@@ -130,7 +130,7 @@
 - **Architecture**: Terminal-focused pair programmer with repo mapping and git-native workflow
 - **Maturity**: Production (48.8k stars, active development, Apache 2.0 license)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Excellent codebase understanding through repo mapping
   - Strong Git integration for auditability
   - Language agnostic approach
@@ -151,7 +151,7 @@
 - **Architecture**: Modular extension system with shared core functionality across platforms
 - **Maturity**: Maintenance mode (read-only repository, no active development)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Historical patterns for cross-platform agent deployment
   - Lessons learned from early agent development
 - **Limitations**:
@@ -175,7 +175,7 @@
 - **Architecture**: Layered extensible design (Core API → AgentChat API → Extensions API) with clear responsibilities
 - **Maturity**: Maintenance mode (community managed, Microsoft Agent Framework recommended for new projects)
 - **License**: MIT (code) and CC-BY-4.0 (documentation)
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Proven multi-agent orchestration patterns from Microsoft Research
   - Rich ecosystem of tools and extensions
   - Clear separation between core messaging and high-level APIs
@@ -199,7 +199,7 @@
 - **Architecture**: Dual-pattern system (Crews for autonomy, Flows for control) with seamless integration
 - **Maturity**: Production (58.1k stars, active development, MIT license)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Sophisticated role-based agent specialization
   - Event-driven workflow control with Flows
   - Strong community and educational resources
@@ -224,7 +224,7 @@
 - **Architecture**: Low-level state graph orchestration with nodes (agents/tools) and edges (control flow)
 - **Maturity**: Production (41.1k stars, active development, MIT license)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Fine-grained control over agent state and execution
   - Strong durability and fault tolerance features
   - Excellent debugging and observability (LangSmith)
@@ -255,7 +255,7 @@
 - **Architecture**: Plugin system for OpenCode with specialized agent coordination, persistent state (.swarm/ directory), and gated execution pipeline
 - **Maturity**: Stable (463 stars, active development, MIT license)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Purpose-built for trust and verification in AI-generated code
   - Comprehensive gated pipeline with multiple verification stages
   - Advanced skill management and curation system
@@ -282,7 +282,7 @@
 - **Architecture**: Stateless policy evaluation engine with Rego language, designed for embedding in other systems
 - **Maturity**: Production (CNCF Graduated project, 11.5k stars)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Battle-tested policy engine with wide adoption
   - Expressive Rego language for complex governance rules
   - Strong ecosystem and integration patterns
@@ -308,7 +308,7 @@
 - **Architecture**: Policy evaluation engine with strong safety guarantees, designed for embedding
 - **Maturity**: Production (Amazon open source, 2.8k stars)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Strong safety guarantees through formal methods
   - Modern, readable policy syntax
   - Excellent performance characteristics
@@ -334,7 +334,7 @@
 - **Architecture**: Wrapper around LLM calls that validates and corrects outputs using Rail specifications
 - **Maturity**: Stable (3.2k stars, active development, Apache 2.0 license)
 - **License**: Apache 2.0
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Directly addresses LLM output reliability and safety
   - Structured validation prevents harmful or malformed outputs
   - Automatic correction reduces need for human intervention
@@ -357,7 +357,7 @@
 - **Architecture**: Minimal policy engine designed for embedding in AI workflows
 - **Maturity**: Emerging (hypothetical - based on pattern)
 - **License**: MIT (hypothetical)
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Lightweight and fast for real-time agent decisions
   - Simple to understand and implement
   - Good for common safety patterns
@@ -382,7 +382,7 @@
 - **Architecture**: Middleware layer that intercepts model calls and redirects to fallbacks on rate limits
 - **Maturity**: Stable (based on activity and issue resolution)
 - **License**: MIT (inferred)
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Solves practical problem of rate limits in free tier usage
   - Transparent operation requires minimal changes
   - Configurable fallback strategies
@@ -407,7 +407,7 @@
 - **Architecture**: Proxy layer that normalizes LLM provider APIs with intelligent routing capabilities
 - **Maturity**: Production (12.3k stars, active development, MIT license)
 - **License**: MIT
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Vendor lock-in prevention through abstraction layer
   - Intelligent routing based on cost, performance, availability
   - Built-in fallback and load balancing
@@ -433,7 +433,7 @@
 - **Architecture**: Gateway service that routes requests to appropriate LLM providers with fallback logic
 - **Maturity**: Production (actively used service, growing adoption)
 - **License**: MIT (inferred from typical usage)
-- **Advantages for EURINHASH**:
+- **Advantages for TOLLFREE**:
   - Access to vast model ecosystem through single integration
   - Automatic fallback improves reliability
   - Cost transparency and optimization

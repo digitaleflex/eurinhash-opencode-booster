@@ -1,5 +1,5 @@
 ---
-description: Worker gratuit du mode free-router (Ling 3.0 Flash Santé 100% gratuit via Novita). Appelé par @eurinhash, pas directement.
+description: Worker gratuit du mode free-router (Ling 3.0 Flash Santé 100% gratuit via Novita). Appelé par @tollfree, pas directement.
 mode: subagent
 model: novita/inclusionai/ling-3.0-flash-sante
 ---

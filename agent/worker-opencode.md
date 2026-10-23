@@ -1,5 +1,5 @@
 ---
-description: Worker gratuit du mode free-router (opencode/deepseek-v4-flash — modèle intégré, 0 quota abonnement, AUCUNE clause d'entraînement). Appelé par @eurinhash, pas directement.
+description: Worker gratuit du mode free-router (opencode/deepseek-v4-flash — modèle intégré, 0 quota abonnement, AUCUNE clause d'entraînement). Appelé par @tollfree, pas directement.
 mode: subagent
 model: opencode/deepseek-v4-flash
 ---

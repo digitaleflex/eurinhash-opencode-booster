@@ -141,7 +141,7 @@ def _humanize_error(exc: Exception) -> str:
         return "❌ Erreur inattendue → Je bascule..."
 
 class CliProgress:
-    """Friendly CLI progress UX for hash-direct.py"""
+    """Friendly CLI progress UX for direct.py"""
     
     def __init__(self, enabled: bool = False, color: bool = True, verbose: bool = False):
         self.enabled = enabled
@@ -233,7 +233,7 @@ class CliProgress:
         print(_err("   Impossible de générer une réponse."))
         print()
         print(_dim("    💡 Astuce : réessayez dans 1 minute, ou lancez"))
-        print(_dim("       `python ~/.config/opencode/scripts/hash-direct.py --status`"))
+        print(_dim("       `python ~/.config/opencode/scripts/direct.py --status`"))
         print(_dim("       pour voir l'état des providers."))
         print()
         
@@ -569,7 +569,7 @@ def detect_provider(model: str) -> Optional[str]:
 
 
 def auto_fallback_chat(messages: List[Dict], task_type: str = "code", max_tokens: int = 2048, temperature: float = 0.2, progress: Optional["CliProgress"] = None) -> Dict:
-    """EURINHASH-style: essaie providers dans l'ordre, avec circuit breaker + quota."""
+    """TOLLFREE-style: essaie providers dans l'ordre, avec circuit breaker + quota."""
     if task_type == "code":
         order = ["groq", "mistral", "zhipu", "openrouter", "novita", "together"]
     else:

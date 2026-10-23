@@ -3,14 +3,14 @@
   "shell": "bash",
 
   // ═══════════════════════════════════════════════════════════════════
-  //  EURINHASH GOVERNANCE ENGINE v2 — CONFIGURATION CANONIQUE
+  //  TOLLFREE GOVERNANCE ENGINE v2 — CONFIGURATION CANONIQUE
   // ═══════════════════════════════════════════════════════════════════
   //
   // Philosophie : 100% FREE, zéro dépense, privacy respectée.
   //   - Modèles : uniquement FREE tier / intégrés 0 quota
   //   - Privacy : interdit muse-spark-*-contributor-free, nemotron-*-free
   //     (prompts/complétions utilisés pour entraîner des modèles)
-  //   - Architecture : superviseur EURINHASH → route.py (EV scoring)
+  //   - Architecture : superviseur TOLLFREE → route.py (EV scoring)
   //     → workers gratuits → feedback loop bayésien
   //
   // Fichiers clés :
@@ -20,7 +20,7 @@
   //   - ~/.config/opencode/free-models.json      → statut live workers
   //   - ~/.config/opencode/route-usage.json      → historique succès/échec
   //   - ~/.config/opencode/plugin/auto-compact.ts → compaction intelligente
-  //   - ~/.config/opencode/agent/eurinhash.md    → superviseur pipeline
+  //   - ~/.config/opencode/agent/tollfree.md    → superviseur pipeline
   //
   // ═══════════════════════════════════════════════════════════════════
 
@@ -161,13 +161,13 @@
     },
   },
 
-  // ── Modèle par défaut : EURINHASH (superviseur FREE) ────────────
+  // ── Modèle par défaut : TOLLFREE (superviseur FREE) ────────────
   // 2026-09-12 : tous les rôles basculés sur des modèles FREE.
   //   - mistral/* → "Payment Required" (abonnement Mistral inactif)  ⇒ retiré
   //   - groq/qwen3.8-27b → free tier mais ITPM 7000 ⇒ inutilisable sur gros contexte
   //   - défaut = opencode/deepseek-v4-flash (intégré, $0, 200K ctx)
   //   - worker-zenmux (anthropic/*) reste PAYG et n'est jamais routé auto.
-  "default_agent": "eurinhash",
+  "default_agent": "tollfree",
   // 2026-09-14 : gemini-2.5-flash rate_limited (20 req/jour) → tout
   // tombait en panne. Basculé sur l'abonnement, variantes flash.
   // 2026-09-19 : opencode-go indisponible → bascule 100% FREE.
@@ -248,7 +248,7 @@
   // │ Outils : search_deals, plan_stack, compare_vendors,          │
   // │          track_changes                                       │
   // │ Utilité : trouve les meilleurs free tiers pour alimenter     │
-  // │           le système FREE-only d'EURINHASH.                  │
+  // │           le système FREE-only d'TOLLFREE.                  │
   // └─────────────────────────────────────────────────────────────┘
   "mcp": {
     "cloudflare": {
@@ -503,7 +503,7 @@
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  //  EURINHASH PRO MODE — modèles payants économiques (OpenRouter + opencode-go)
+  //  TOLLFREE PRO MODE — modèles payants économiques (OpenRouter + opencode-go)
   // ═══════════════════════════════════════════════════════════════════
   //
   // Philosophie : 100% FREE par défaut, mode PRO optionnel.

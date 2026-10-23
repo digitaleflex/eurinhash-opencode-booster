@@ -3,7 +3,7 @@
 
 Interroge https://models.dev/api.json et liste les modèles dont le coût
 d'entrée est 0 (vraiment gratuits), par provider. Utile pour enrichir la
-chaîne de fallback EURINHASH (ex. les 22 modèles :free d'OpenRouter).
+chaîne de fallback TOLLFREE (ex. les 22 modèles :free d'OpenRouter).
 
 Usage :
   python models-free.py                # tous les providers
@@ -16,7 +16,7 @@ import urllib.request
 
 API_URL = "https://models.dev/api.json"
 
-# Providers prioritaires de la config EURINHASH
+# Providers prioritaires de la config TOLLFREE
 PRIORITY = ["openrouter", "google", "groq", "huggingface", "novita", "zhipu", "pollinations", "ollama"]
 
 # Indices de modèles orientés code (dans l'ID ou le nom)
@@ -26,7 +26,7 @@ CODE_HINTS = ("coder", "code", "laguna", "devstral", "qwen", "deepseek", "glm", 
 def fetch():
     req = urllib.request.Request(
         API_URL,
-        headers={"User-Agent": "eurinhash-models-free/1.0 (opencode config)"},
+        headers={"User-Agent": "tollfree-models-free/1.0 (opencode config)"},
     )
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)

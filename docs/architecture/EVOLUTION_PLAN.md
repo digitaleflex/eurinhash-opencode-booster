@@ -1,4 +1,4 @@
-# EURINHASH Architecture Evolution Plan
+# TOLLFREE Architecture Evolution Plan
 
 **Version:** 0.2.0  
 **Date:** 2026-09-06  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document defines the evolution path from current EURINHASH implementation to a runtime-independent Governance Core. The goal is decoupled, testable, multi-runtime governance without rewriting working components.
+This document defines the evolution path from current TOLLFREE implementation to a runtime-independent Governance Core. The goal is decoupled, testable, multi-runtime governance without rewriting working components.
 
 **Current State:** OpenCode-specific governance with hardcoded patterns.  
 **Target State:** Runtime-agnostic governance with adapters for OpenCode, Claude Code, and future runtimes.
@@ -33,7 +33,7 @@ This document defines the evolution path from current EURINHASH implementation t
 **Problems:**
 1. `worker-codestral`, `worker-groq` — OpenCode subagent names hardcoded
 2. File paths like `provider_circuit.json` — Windows-specific
-3. `hash-direct.py` integration — OpenCode-specific wrapper
+3. `direct.py` integration — OpenCode-specific wrapper
 4. Audit logs to `logs/` — OpenCode directory structure
 
 ### 1.3 Current Modules

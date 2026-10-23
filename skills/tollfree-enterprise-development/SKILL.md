@@ -1,5 +1,5 @@
 ---
-name: hash-enterprise-development
+name: tollfree-enterprise-development
 description: "Use when writing or reviewing production code. Enforces enterprise-grade quality: separation of concerns, security by design, clear naming, no over-engineering."
 ---
 

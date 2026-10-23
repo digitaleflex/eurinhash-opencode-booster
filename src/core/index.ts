@@ -1,4 +1,4 @@
-// src/core/index.ts — Barrel exports for EURINHASH Governance Engine
+// src/core/index.ts — Barrel exports for TOLLFREE Governance Engine
 
 export { GovernanceOrchestrator } from "./orchestrator";
 export { PolicyEngine } from "./policy-engine";

@@ -4,7 +4,7 @@
  * EWMA latency tracking + error rate + composite health score,
  * adapted from ingridtoulotte/llm-fallback-router.
  *
- * Adapted for opencode/EURINHASH: tracks per-worker health.
+ * Adapted for opencode/TOLLFREE: tracks per-worker health.
  */
 
 export interface HealthOptions {

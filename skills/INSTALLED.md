@@ -1,6 +1,6 @@
 # Installed third-party skills — provenance & security review
 
-> Every third-party skill below was scanned with the EURINHASH
+> Every third-party skill below was scanned with the TOLLFREE
 > `InjectionDetector` before installation. Findings are listed; benign
 > documentation examples (`${...}` in shell/JS snippets) were reviewed by a
 > human and accepted. Re-scan after any update:

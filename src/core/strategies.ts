@@ -4,7 +4,7 @@
  * Pluggable selection strategies, adapted from
  * ingridtoulotte/llm-fallback-router (MIT, 0 deps).
  *
- * Adapted for opencode/EURINHASH: instead of "which LLM provider",
+ * Adapted for opencode/TOLLFREE: instead of "which LLM provider",
  * we route "which worker agent" based on task type.
  *
  * Strategies:

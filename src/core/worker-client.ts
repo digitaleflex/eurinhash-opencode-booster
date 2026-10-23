@@ -73,7 +73,7 @@ export function readWorkerKey(keyFile: string): string {
 }
 
 const SYSTEM_PROMPT =
-  "Tu es EURINHASH, un agent d'ingénierie. Réponds de façon concise et technique.";
+  "Tu es TOLLFREE, un agent d'ingénierie. Réponds de façon concise et technique.";
 
 type FetchImpl = typeof fetch;
 

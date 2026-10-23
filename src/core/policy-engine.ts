@@ -284,7 +284,7 @@ export class PolicyEngine {
 
   /**
    * Lightweight YAML parser (zero-dependency subset).
-   * Parses the EURINHASH policy YAML format: lists of objects with scalars.
+   * Parses the TOLLFREE policy YAML format: lists of objects with scalars.
    */
   private parseYaml(content: string): unknown {
     if (!content || content.trim().length === 0) {

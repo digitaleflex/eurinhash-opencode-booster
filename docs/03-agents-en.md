@@ -1,7 +1,7 @@
-# Agents Documentation — EURINHASH
+# Agents Documentation — TOLLFREE
 
 ## Table of Contents
-1. [eurinhash.md](#eurinhashmd)
+1. [tollfree.md](#tollfreemd)
 2. [planner.md](#plannermd)
 3. [architect.md](#architectmd)
 4. [design-lead.md](#design-leadmd)
@@ -13,19 +13,19 @@
 10. [git-engineer.md](#git-engineermd)
 11. [docwriter.md](#docwritermd)
 12. [Workers (fallback)](#workers-fallback)
-13. [Routing matrix (hash-agent-matrix)](#routing-matrix)
+13. [Routing matrix (tollfree-agent-matrix)](#routing-matrix)
 
 ---
 
-## 1. eurinhash.md — Supervisor
+## 1. tollfree.md — Supervisor
 
 ### Role
-EURINHASH main supervisor. Manages provider rotation, quota tracking, circuit breaker, and decides which agent/provider to use based on task type.
+TOLLFREE main supervisor. Manages provider rotation, quota tracking, circuit breaker, and decides which agent/provider to use based on task type.
 
 ### Model
 - `google/gemini-2.5-flash` (via Groq API)
 
-### EURINHASH Protocol (6 steps)
+### TOLLFREE Protocol (6 steps)
 
 **Step 1 — Probe**: Read `free-models.json`. If >30min or file missing → run `python scripts/free-probe.py`.
 
@@ -56,10 +56,10 @@ EURINHASH main supervisor. Manages provider rotation, quota tracking, circuit br
 
 ```bash
 # Via OpenCode TUI
-/agent eurinhash "Manage my session"
+/agent tollfree "Manage my session"
 
 # Via prompt
-@eurinhash Manage my session: ...
+@tollfree Manage my session: ...
 ```
 
 ### Decision Logic
@@ -466,7 +466,7 @@ Technical documentation. README, API docs, user guides.
 
 ---
 
-## 13. Routing matrix (hash-agent-matrix)
+## 13. Routing matrix (tollfree-agent-matrix)
 
 ### Levels
 | Level | Description | Example | Pipeline |

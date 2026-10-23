@@ -1,4 +1,4 @@
-# GITHUB ISSUES — EURINHASH Agent Governance Engine
+# GITHUB ISSUES — TOLLFREE Agent Governance Engine
 
 ## Comment utiliser ce fichier
 
@@ -218,17 +218,17 @@ const GUARD_OVERRIDES = {
 
 ---
 
-### issue-006.md — Eurinhash Wrapper
+### issue-006.md — Tollfree Wrapper
 
-**Title:** `feat: wrap eurinhash agent with governance engine`
+**Title:** `feat: wrap tollfree agent with governance engine`
 
 **Body:**
 ```markdown
 ## Description
-Wrap the existing eurinhash agent with the governance engine to provide governance for all agent invocations.
+Wrap the existing tollfree agent with the governance engine to provide governance for all agent invocations.
 
 ## Requirements
-- Wrap existing eurinhash agent
+- Wrap existing tollfree agent
 - Apply governance to all task invocations
 - Pass PolicySpec to agent
 - Collect proofs from agent execution
@@ -243,7 +243,7 @@ Wrap the existing eurinhash agent with the governance engine to provide governan
 - Proof Verifier → after execution
 
 ## Acceptance Criteria
-- [ ] All eurinhash tasks go through governance
+- [ ] All tollfree tasks go through governance
 - [ ] PolicySpec passed to agent
 - [ ] Proof chain returned
 - [ ] Guard overrides applied
@@ -292,7 +292,7 @@ Integrate the governance engine with the existing audit-logger.ts for consistent
 **Body:**
 ```markdown
 ## Description
-Ensure the governance engine uses FREE workers by default, following the EURINHASH strategy.
+Ensure the governance engine uses FREE workers by default, following the TOLLFREE strategy.
 
 ## Requirements
 - Use FREE workers as default: codestral, groq, zhipu, novita
@@ -545,7 +545,7 @@ Set up ESLint + Prettier for consistent code quality.
 **Body:**
 ```markdown
 ## Description
-Create an abstraction layer that allows EURINHASH to work with multiple agent runtimes.
+Create an abstraction layer that allows TOLLFREE to work with multiple agent runtimes.
 
 ## Supported Runtimes
 - OpenCode TUI
@@ -609,18 +609,18 @@ Create a dashboard to visualize governance metrics and proof chains.
 
 ### issue-020.md — npx Installer
 
-**Title:** `feat: npx create-eurinhash-agent installer`
+**Title:** `feat: npx create-tollfree installer`
 
 **Body:**
 ```markdown
 ## Description
-Create a one-command installer for EURINHASH.
+Create a one-command installer for TOLLFREE.
 
 ## Usage
 ```bash
-npx create-eurinhash-agent my-project
+npx create-tollfree my-project
 cd my-project
-eurinhash "add login feature"
+tollfree "add login feature"
 ```
 
 ## Features

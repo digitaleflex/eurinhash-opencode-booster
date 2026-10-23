@@ -1,13 +1,13 @@
-# Documentation des Slash Commands — opencode-config EURINHASH
+# Documentation des Slash Commands — opencode-config TOLLFREE
 
 ## Table des matières
 1. [/run](#run)
-2. [/hash-direct](#hash-direct)
+2. [/direct](#direct)
 3. [/audit-log](#audit-log)
 4. [/commit](#commit)
 5. [/review](#review)
 6. [/quota](#quota)
-7. [/myfree-eurinhash](#myfree-eurinhash)
+7. [/free-test](#free-test)
 8. [Création de commandes personnalisées](#création-de-commandes-personnalisées)
 
 ---
@@ -15,7 +15,7 @@
 ## 1. /run — Wrapper opencode run
 
 ### Description
-Contourne le bug Windows SDK de `opencode run` en appelant directement le wrapper hash-direct avec fallback automatique.
+Contourne le bug Windows SDK de `opencode run` en appelant directement le wrapper direct avec fallback automatique.
 
 ### Syntaxe
 ```
@@ -55,23 +55,23 @@ Contourne le bug Windows SDK de `opencode run` en appelant directement le wrappe
 ```
 
 ### Pourquoi ce command ?
-Le bug `opencode run` sous Windows (SDK) échoue silencieusement. Ce command utilise notre wrapper hash-direct à la place, contournant le bug.
+Le bug `opencode run` sous Windows (SDK) échoue silencieusement. Ce command utilise notre wrapper direct à la place, contournant le bug.
 
 ---
 
-## 2. /hash-direct — Appel direct aux providers
+## 2. /direct — Appel direct aux providers
 
 ### Description
 Accès direct aux providers AI avec contrôle complet. Fallback automatique, circuit breaker, quota tracking.
 
 ### Syntaxe
 ```
-/hash-direct "votre prompt"
-/hash-direct --model "qwen/qwen3.8-27b" "votre prompt"
-/hash-direct --provider mistral "votre prompt"
-/hash-direct --task-type code "votre prompt"
-/hash-direct --json "votre prompt"
-/hash-direct --status
+/direct "votre prompt"
+/direct --model "qwen/qwen3.8-27b" "votre prompt"
+/direct --provider mistral "votre prompt"
+/direct --task-type code "votre prompt"
+/direct --json "votre prompt"
+/direct --status
 /run --reset-quota
 /run --reset-circuit
 ```
@@ -92,25 +92,25 @@ Accès direct aux providers AI avec contrôle complet. Fallback automatique, cir
 ### Exemples
 ```bash
 # Fallback automatique
-/hash-direct "Analyse ce code"
+/direct "Analyse ce code"
 
 # Forcer un provider
-/hash-direct --provider groq "Salut"
+/direct --provider groq "Salut"
 
 # Forcer un modèle
-/hash-direct --model "codestral-latest" "Code review"
+/direct --model "codestral-latest" "Code review"
 
 # JSON pour auto-traitement
-/hash-direct --json "test"
+/direct --json "test"
 
 # État système
-/hash-direct --status
+/direct --status
 ```
 
 ### Utilisation avancée
 ```bash
 # Avec toutes les options
-/hash-direct --provider mistral --task-type code --max-tokens 4096 --temperature 0.1 "Codez une fonction de tri"
+/direct --provider mistral --task-type code --max-tokens 4096 --temperature 0.1 "Codez une fonction de tri"
 ```
 
 ---
@@ -329,16 +329,16 @@ zhipu: OPEN (failures=3, timeout dans 32s)
 
 ---
 
-## 7. /myfree-eurinhash — Test des modèles gratuits
+## 7. /free-test — Test des modèles gratuits
 
 ### Description
 Lance un test complet de tous les modèles gratuits et affiche les résultats.
 
 ### Syntaxe
 ```
-/myfree-eurinhash
-/myfree-eurinhash --quick
-/myfree-eurinhash --detail
+/free-test
+/free-test --quick
+/free-test --detail
 ```
 
 ### Options
@@ -350,18 +350,18 @@ Lance un test complet de tous les modèles gratuits et affiche les résultats.
 ### Exemples
 ```bash
 # Test complet
-/myfree-eurinhash
+/free-test
 
 # Test rapide (1 modèle par provider)
-/myfree-eurinhash --quick
+/free-test --quick
 
 # Test détaillé
-/myfree-eurinhash --detail
+/free-test --detail
 ```
 
 ### Sortie
 ```text
-=== EURINHASH Free Models Test ===
+=== TOLLFREE Free Models Test ===
 Providers testés : 8
 Modèles testés : 21
 OK : 17
@@ -385,7 +385,7 @@ Erreurs : 4
 ```markdown
 ---
 description: Description courte
-agent: eurinhash
+agent: tollfree
 ---
 
 Commande à exécuter avec $ARG

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-@myfree-eurinhash - Test all free models from configured providers,
+@free-test - Test all free models from configured providers,
 generate a sorted JSON report by quality/price, and allow setting a new default.
 
 Usage:
-    python myfree-eurinhash.py test                 # Run tests, write report + cache
-    python myfree-eurinhash.py report               # Show last report from cache
-    python myfree-eurinhash.py use <model-alias>    # Set a model as default in opencode.jsonc
+    python free-test.py test                 # Run tests, write report + cache
+    python free-test.py report               # Show last report from cache
+    python free-test.py use <model-alias>    # Set a model as default in opencode.jsonc
 """
 
 import json
@@ -24,7 +24,7 @@ CFG = os.path.join(HOME, ".config", "opencode")
 EUR_PER_USD = 0.92
 INR_PER_USD = 83.0
 
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) OpenCode/myfree-eurinhash"}
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) OpenCode/free-test"}
 
 # Quality baseline scores (0.0–1.0) assigned by model family / provider reputation
 # These are used as a proxy for expected model quality when the model is free.
@@ -403,7 +403,7 @@ def set_default_model(model_alias: str, config: dict) -> bool:
 
 def cmd_test():
     """Run the full test suite for all free models."""
-    cache_path = os.path.join(CFG, "myfree-eurinhash-report.json")
+    cache_path = os.path.join(CFG, "free-test-report.json")
     config_path = os.path.join(CFG, "opencode.jsonc")
 
     # Parse config (JSONC -> safe parsing)
@@ -438,21 +438,21 @@ def cmd_test():
     print("=" * 100)
 
     print(f"\nFull report: {cache_path}")
-    print(f"\nTo set a new default: python myfree-eurinhash.py use <model-alias>")
+    print(f"\nTo set a new default: python free-test.py use <model-alias>")
 
 
 def cmd_report():
     """Display the last report."""
-    cache_path = os.path.join(CFG, "myfree-eurinhash-report.json")
+    cache_path = os.path.join(CFG, "free-test-report.json")
 
     if not os.path.exists(cache_path):
-        print(f"No report found. Run 'python myfree-eurinhash.py test' first.")
+        print(f"No report found. Run 'python free-test.py test' first.")
         sys.exit(1)
 
     with open(cache_path, "r") as f:
         report = json.load(f)
 
-    print(f"\n=== @myfree-eurinhash Report (generated: {report['generated_at']}) ===")
+    print(f"\n=== @free-test Report (generated: {report['generated_at']}) ===")
     print(f"Total models tested: {report['total_models']}")
     print(f"Sorted by: {report['sorted_by']}\n")
 
@@ -470,7 +470,7 @@ def cmd_report():
         best = ok_models[0]  # Already sorted
         print(f"\n* BEST (quality/price): {best['alias']} ({best['provider']})")
         print(f"    quality={best['quality_score']}, latency={best['latency_ms']}ms, cost=€0 (FREE)")
-        print(f"\n    -> Run: python myfree-eurinhash.py use {best['alias']}")
+        print(f"\n    -> Run: python free-test.py use {best['alias']}")
 
     print(f"\nFull JSON report: {cache_path}")
 
@@ -478,8 +478,8 @@ def cmd_report():
 def cmd_use(model_alias: str | None):
     """Set a new default model."""
     if not model_alias:
-        print("Usage: python myfree-eurinhash.py use <model-alias>")
-        print("\nExample: python myfree-eurinhash.py use gemini-2.5-flash")
+        print("Usage: python free-test.py use <model-alias>")
+        print("\nExample: python free-test.py use gemini-2.5-flash")
         sys.exit(1)
 
     config_path = os.path.join(CFG, "opencode.jsonc")
@@ -557,10 +557,10 @@ def main():
 
 
 def print_help():
-    print("""@myfree-eurinhash - Test and benchmark all free AI models
+    print("""@free-test - Test and benchmark all free AI models
 
 Usage:
-    python myfree-eurinhash.py <command> [options]
+    python free-test.py <command> [options]
 
 Commands:
     test     Run latency + quality tests on ALL free models (writes report)
@@ -582,10 +582,10 @@ Options:
     -h, --help     Show this help
 
 Examples:
-    python myfree-eurinhash.py test
-    python myfree-eurinhash.py report
-    python myfree-eurinhash.py use gemini-2.5-flash
-    python myfree-eurinhash.py list
+    python free-test.py test
+    python free-test.py report
+    python free-test.py use gemini-2.5-flash
+    python free-test.py list
 
 Exchange rates used:
     1 USD = {:.2f} EUR

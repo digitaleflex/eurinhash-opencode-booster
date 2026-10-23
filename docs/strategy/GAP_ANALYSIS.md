@@ -1,10 +1,10 @@
-# GAP ANALYSIS — EURINHASH
+# GAP ANALYSIS — TOLLFREE
 
 ## 1. Méthodologie
 
 Comparaison :
 - **CE QUE NOUS AVONS** (projet actuel)
-- **CE QUE NOUS AVONS BESOIN** (vision EURINHASH Agent Governance Engine)
+- **CE QUE NOUS AVONS BESOIN** (vision TOLLFREE Agent Governance Engine)
 - **CE QUI EXISTE** (open source landscape)
 
 ## 2. Commodity — Fonctionnalités déjà disponibles partout
@@ -44,12 +44,12 @@ Comparaison :
 
 | Problème | État du marché | Notre solution | Priorité |
 |---|---|---|---|
-| Gouvernance des agents par risque | ❌ Aucun produit | **EURINHASH Governance Layer** | 🔥 HAUTE |
+| Gouvernance des agents par risque | ❌ Aucun produit | **TOLLFREE Governance Layer** | 🔥 HAUTE |
 | Classification tâche → policy → agents → preuve | ❌ Aucun produit | **Policy Engine L1→L4** | 🔥 HAUTE |
 | Proof model (DONE ≠ CODE GENERATED) | ❌ Rare | **Proof Verifier + chaîne hash** | 🔥 HAUTE |
 | Runtime agnostic (OpenCode + Claude Code + Codex) | ❌ Aucun | **Runtime Adapter** | 🟠 MOYENNE |
-| Installation 1-commande | ❌ Aucun | **npx create-eurinhash-agent** | 🟠 MOYENNE |
-| Windows-first experience | ❌ Peu | **hash-direct wrapper** | 🟠 MOYENNE |
+| Installation 1-commande | ❌ Aucun | **npx create-tollfree** | 🟠 MOYENNE |
+| Windows-first experience | ❌ Peu | **direct wrapper** | 🟠 MOYENNE |
 | 100% gratuit workflow | ⚠️ Dépend des clés | **4 workers FREE validés** | 🟢 EXISTANT |
 
 ## 5. Matrice KEEP / INTEGRATE / REMOVE
@@ -58,12 +58,12 @@ Comparaison :
 
 | Composant | Raison |
 |---|---|
-| **EURINHASH Supervisor** | Identité unique, orchestration simple |
+| **TOLLFREE Supervisor** | Identité unique, orchestration simple |
 | **Matrice L1→L4** | Gouvernance claire des tâches |
 | **Sécurité intégrée** | envsitter-guard + guard.ts + audit-logger |
-| **Windows wrapper** | hash-direct, optimisation Windows |
+| **Windows wrapper** | direct, optimisation Windows |
 | **4 workers FREE validés** | Valeur immédiate |
-| **Documentation** | CONFIG-GUIDE.md + AGENTS.md + eurinhash.md |
+| **Documentation** | CONFIG-GUIDE.md + AGENTS.md + tollfree.md |
 | **audit-logger.ts** | Journalisation + redaction secrets |
 
 ### 🟡 INTEGRATE (mieux ailleurs)
@@ -85,7 +85,7 @@ Comparaison :
 | ~~fallback maison~~ | Remplacé par Rate Limit Fallback |
 | ~~circuit breaker maison~~ | Remplacé par OpenCode Swarm |
 | ~~agents maison~~ | Remplacé par Oh My OpenCode |
-| ~~manual routing~~ | Automatisé par EURINHASH Governance |
+| ~~manual routing~~ | Automatisé par TOLLFREE Governance |
 
 ## 6. Résumé des gaps
 
@@ -96,7 +96,7 @@ Comparaison :
 | Fallback basique | 🟠 MOYEN | Intégrer Rate Limit Fallback |
 | Circuit breaker basique | 🟠 MOYEN | Intégrer OpenCode Swarm |
 | Pas de runtime agnostic | 🟡 MOYENNE | Construire Runtime Adapter |
-| Pas d'installateur | 🟡 MOYENNE | Construire npx create-eurinhash-agent |
+| Pas d'installateur | 🟡 MOYENNE | Construire npx create-tollfree |
 | Observabilité basique | 🟢 FAIBLE | Étendre audit-logger |
 | Pas de dashboard | 🟢 FAIBLE | Post-MVP |
 
@@ -105,7 +105,7 @@ Comparaison :
 ### Ce que nous BÂTIRONS (uniquement) :
 1. **Governance Layer** — Classification + Risk + Policy + Proof
 2. **Runtime Adapter** — Abstraction vers OpenCode / Claude Code / Codex
-3. **Installer** — npx create-eurinhash-agent
+3. **Installer** — npx create-tollfree
 
 ### Ce que nous INTÉGRERON :
 1. Oh My OpenCode (agents + LSP + AST + MCP)
@@ -114,7 +114,7 @@ Comparaison :
 4. Guardrails AI (security scanning)
 
 ### Ce que nous GARDERONS :
-1. EURINHASH Supervisor
+1. TOLLFREE Supervisor
 2. Matrice L1→L4
 3. Sécurité intégrée
 4. Windows wrapper
@@ -124,6 +124,6 @@ Comparaison :
 
 **La vraie différenciation est dans la couche de gouvernance, pas dans l'orchestration.**
 
-EURINHASH ne doit pas concurrencer Oh My OpenCode ou Cline sur l'orchestration. Il doit les utiliser et ajouter une couche de gouvernance au-dessus qui détermine QUAND, POURQUOI et COMMENT utiliser les agents.
+TOLLFREE ne doit pas concurrencer Oh My OpenCode ou Cline sur l'orchestration. Il doit les utiliser et ajouter une couche de gouvernance au-dessus qui détermine QUAND, POURQUOI et COMMENT utiliser les agents.
 
 C'est là que réside la valeur unique du projet.

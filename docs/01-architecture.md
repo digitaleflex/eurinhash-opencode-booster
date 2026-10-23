@@ -1,8 +1,8 @@
-# Architecture Technique — opencode-config EURINHASH
+# Architecture Technique — opencode-config TOLLFREE
 
 ## 1. Vue d'ensemble
 
-EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
+TOLLFREE est un superviseur intelligent pour OpenCode qui garantit :
 - **100% gratuit** : Aucun modèle payant par défaut
 - **Jamais à l'arrêt** : Rotation automatique des providers en cas de défaillance
 - **Transparent** : Logs détaillés, monitoring intégré
@@ -19,7 +19,7 @@ EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
 - **`tui.json`** : Personnalisation de l'interface TUI
 
 ### 2.2 Agents spécialisés (19)
-- **Superviseur** : `eurinhash` (rotation des providers)
+- **Superviseur** : `tollfree` (rotation des providers)
 - **Planification** : `planner` (plans avant action)
 - **Architecture** : `architect` (décisions architecturales)
 - **Design** : `design-lead` (direction UI/UX)
@@ -33,11 +33,11 @@ EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
 - **Workers** : `worker-groq`, `worker-codestral`, `worker-google`, `worker-zhipu` (fallback ciblé)
 
 ### 2.3 Scripts Python (7)
-- **`hash-direct.py`** : Wrapper principal avec circuit breaker + quota
-- **`hash-direct-wrapper.py`** : Alias pour `opencode run`
+- **`direct.py`** : Wrapper principal avec circuit breaker + quota
+- **`direct-wrapper.py`** : Alias pour `opencode run`
 - **`free-probe.py`** : Test de disponibilité des modèles gratuits
 - **`quota.py`** : Gestion manuelle des quotas
-- **`myfree-eurinhash.py`** : Test complet de tous les modèles
+- **`free-test.py`** : Test complet de tous les modèles
 - **`view-audit-log.py`** : Affichage du journal d'audit
 
 ### 2.4 Plugins TypeScript (2)
@@ -45,20 +45,20 @@ EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
 - **`guard.ts`** : Protection contre les commandes destructives (+ redaction des secrets en sortie)
 
 ### 2.5 Slash Commands (8)
-- **`/run`** : Wrapper hash-direct
-- **`/hash-direct`** : Appel direct aux providers
+- **`/run`** : Wrapper direct
+- **`/direct`** : Appel direct aux providers
 - **`/audit-log`** : Affichage du journal d'audit
 - **`/commit`** : Commit Git
 - **`/review`** : Revue de code
 - **`/quota`** : Gestion des quotas
-- **`/myfree-eurinhash`** : Test des modèles gratuits
+- **`/free-test`** : Test des modèles gratuits
 
 ### 2.6 Skills personnalisées (5)
-- **`hash-agent-matrix`** : Routage L1-L4 par complexité
-- **`hash-token-efficiency`** : Optimisation des tokens
-- **`hash-code-navigation`** : Navigation efficace dans le codebase
-- **`hash-verification`** : Vérification proportionnée au risque
-- **`hash-enterprise-development`** : Développement enterprise
+- **`tollfree-agent-matrix`** : Routage L1-L4 par complexité
+- **`tollfree-token-efficiency`** : Optimisation des tokens
+- **`tollfree-code-navigation`** : Navigation efficace dans le codebase
+- **`tollfree-verification`** : Vérification proportionnée au risque
+- **`tollfree-enterprise-development`** : Développement enterprise
 
 ---
 
@@ -73,21 +73,21 @@ EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                   OPENCODE (TUI)                            │
-│              agent: eurinhash (défaut)                     │
+│              agent: tollfree (défaut)                     │
 └─────────────────────┬───────────────────────────────────────┘
                       │
          ┌────────────┴────────────┐
          │                         │
          ▼                         ▼
 ┌──────────────────┐    ┌──────────────────┐
-│  opencode run    │    │  hash-direct     │
+│  opencode run    │    │  direct     │
 │  (NATIVE - bug)  │    │  wrapper.py     │
 │  (Windows SDK)   │    │  (WORKAROUND)   │
 └──────────────────┘    └────────┬─────────┘
                                   │
                                   ▼
                     ┌─────────────────────────┐
-                    │   hash-direct.py       │
+                    │   direct.py       │
                     │  ┌─────────────────┐  │
                     │  │ Circuit Breaker │  │
                     │  │ provider_circuit│  │
@@ -190,7 +190,7 @@ EURINHASH est un superviseur intelligent pour OpenCode qui garantit :
 
 ---
 
-## 5. Protocole EURINHASH (6 étapes)
+## 5. Protocole TOLLFREE (6 étapes)
 
 ### Étape 1 : Probe (Vérification)
 ```
@@ -207,7 +207,7 @@ Chat : groq → zhipu → mistral → openrouter → novita → together
 ### Étape 3 : Delegate (Délégation)
 ```
 Envoyer la tâche complète + contexte au 1er worker disponible
-Inclure instructions EURINHASH
+Inclure instructions TOLLFREE
 ```
 
 ### Étape 4 : Rotate (Rotation sur erreur)
@@ -229,7 +229,7 @@ Si tous les providers KO :
 ### Étape 6 : No Paid (Aucun payé par défaut)
 ```
 Jamais de modèle payant sans accord explicite
-EURINHASH Pro = only if user explicitly approves
+TOLLFREE Pro = only if user explicitly approves
 ```
 
 ---
@@ -270,7 +270,7 @@ CLOSED ──[3 failures]──► OPEN
 opencode /run --status
 
 # Réinitialiser
-opencode /hash-direct --reset-circuit
+opencode /direct --reset-circuit
 ```
 
 ---
@@ -306,7 +306,7 @@ opencode /hash-direct --reset-circuit
 opencode /run --status
 
 # Réinitialiser
-opencode /hash-direct --reset-quota
+opencode /direct --reset-quota
 ```
 
 ---
@@ -318,7 +318,7 @@ opencode /hash-direct --reset-quota
 | `free-models.json` | `~/.config/opencode/` | Cache de disponibilité des modèles |
 | `provider_usage.json` | `~/.config/opencode/` | Compteurs de quota |
 | `provider_circuit.json` | `~/.config/opencode/` | État des circuit breakers |
-| `myfree-eurinhash-report.json` | `~/.config/opencode/` | Rapport de test des modèles |
+| `free-test-report.json` | `~/.config/opencode/` | Rapport de test des modèles |
 | `logs/audit-YYYY-MM-DD.jsonl` | `~/.config/opencode/logs/` | Journal d'audit détaillé |
 
 ---
@@ -332,7 +332,7 @@ opencode /hash-direct --reset-quota
 .env            # Variables d'environnement
 provider_*.json # Fichiers d'état
 free-models.json
-myfree-eurinhash-report.json
+free-test-report.json
 logs/           # Journaux
 __pycache__/    # Cache Python
 ```
@@ -365,19 +365,19 @@ const SENSITIVE_PATTERNS = [
 
 ### 10.1 Ajouter un nouveau provider
 1. Ajouter la clé API : `echo "KEY" > .newprovider-key`
-2. Ajouter dans `hash-direct.py` :
+2. Ajouter dans `direct.py` :
    - Endpoint dans `ENDPOINTS`
    - Modèles dans `MODELS`
    - Fonction d'appel
    - Limite dans `QUOTA_LIMITS`
 3. Ajouter dans `MODELS` (keys.py)
-4. Tester avec `python scripts/hash-direct.py --provider newprovider "test"`
+4. Tester avec `python scripts/direct.py --provider newprovider "test"`
 
 ### 10.2 Ajouter un nouvel agent
 1. Créer `agent/nouveau-agent.md`
 2. Définir le modèle et les instructions
 3. Ajouter dans `opencode.jsonc` si nécessaire
-4. Mettre à jour `skills/hash-agent-matrix/SKILL.md`
+4. Mettre à jour `skills/tollfree-agent-matrix/SKILL.md`
 
 ### 10.3 Ajouter une nouvelle skill
 1. Créer `skills/nouvelle-skill/SKILL.md`
@@ -391,7 +391,7 @@ const SENSITIVE_PATTERNS = [
 ### 11.1 Latence moyenne
 | Étape | Latence |
 |-------|---------|
-| hash-direct-wrapper → hash-direct | ~0ms |
+| direct-wrapper → direct | ~0ms |
 | Circuit breaker check | ~1ms |
 | Quota check | ~1ms |
 | API Groq (qwen-32b) | ~500-2000ms |
@@ -414,10 +414,10 @@ const SENSITIVE_PATTERNS = [
 opencode /run --status
 
 # Modèles disponibles
-opencode /hash-direct --list
+opencode /direct --list
 
 # Providers configurés
-opencode /hash-direct --list-providers
+opencode /direct --list-providers
 
 # Logs d'audit
 opencode /audit-log

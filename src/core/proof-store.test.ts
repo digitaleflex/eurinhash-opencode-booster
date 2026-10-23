@@ -59,17 +59,17 @@ describe("ProofStore", () => {
     expect(h1).toMatch(/^task-[0-9a-f]{32}$/);
   });
 
-  test("helpers défaut honorent EURINHASH_PROOFS_DIR", async () => {
+  test("helpers défaut honorent TOLLFREE_PROOFS_DIR", async () => {
     const override = await mkdtemp(join(tmpdir(), "proofs-env-"));
-    const prev = process.env.EURINHASH_PROOFS_DIR;
-    process.env.EURINHASH_PROOFS_DIR = override;
+    const prev = process.env.TOLLFREE_PROOFS_DIR;
+    process.env.TOLLFREE_PROOFS_DIR = override;
     try {
       const file = await saveProofChain(fakeChain("task-env-1"));
       expect(file.startsWith(override)).toBe(true);
       expect(await loadProofChain("task-env-1")).toEqual(fakeChain("task-env-1"));
     } finally {
-      if (prev === undefined) delete process.env.EURINHASH_PROOFS_DIR;
-      else process.env.EURINHASH_PROOFS_DIR = prev;
+      if (prev === undefined) delete process.env.TOLLFREE_PROOFS_DIR;
+      else process.env.TOLLFREE_PROOFS_DIR = prev;
       await rm(override, { recursive: true, force: true });
     }
   });

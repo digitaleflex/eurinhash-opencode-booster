@@ -1,4 +1,4 @@
-# EURINHASH Proof Model
+# TOLLFREE Proof Model
 
 > `DONE ≠ CODE GENERATED`. Une tâche est terminée quand les preuves attestent que le livrable est correct, sécurisé, et prêt.
 > Reference: `docs/09-security.md`, `AGENTS.md` (verification-before-completion), `docs/architecture/GOVERNANCE_MODEL.md`.
@@ -32,7 +32,7 @@ DONE  ⟺  CODE_GENERATED  ∧  PROOFS_VALIDATED  ∧  RISK_ASSESSED
 
 ### 2.1 Tests automatisés
 
-| Type | Couverture | Outil suggéré | Intégration EURINHASH |
+| Type | Couverture | Outil suggéré | Intégration TOLLFREE |
 |---|---|---|---|
 | **Unitaires** | Fonction / classe isolée | `pytest`, `vitest`, `jest` | `logs/proofs/<id>/unit-tests.json` |
 | **Intégration** | Module ↔ module, API | `pytest + httpx`, `supertest` | `logs/proofs/<id>/integration-tests.json` |

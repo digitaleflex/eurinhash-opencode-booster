@@ -1,4 +1,4 @@
-# EURINHASH Governance Model
+# TOLLFREE Governance Model
 
 > Independence layer above heterogeneous agent runtimes (OpenCode, Claude Code, etc.).
 > Reference: `AGENTS.md`, `docs/01-architecture.md`, `docs/02-configuration.md`, `AGENTS.md` routing matrix.
@@ -21,7 +21,7 @@ TASK → Classification → Complexity (L1-L4) → Risk (LOW/HIGH/CRITICAL) → 
 | Execution | Runtime (OpenCode/Claude Code) | `ExecutionStatus` | `logs/audit-*.jsonl` |
 | Proof | Proof Verifier | `ProofReport` | `logs/proofs/<id>.json` |
 
-Chaque stage est une fonction `pure-ish` : entrée → décision → événement d'audit. La gouvernance est **orthogonale** au runtime : le runtime exécute, la couche EURINHASH décide *comment* et *avec quelles garanties*.
+Chaque stage est une fonction `pure-ish` : entrée → décision → événement d'audit. La gouvernance est **orthogonale** au runtime : le runtime exécute, la couche TOLLFREE décide *comment* et *avec quelles garanties*.
 
 ---
 
@@ -69,21 +69,21 @@ Référence : routing matrix `AGENTS.md`.
 - **Workflow** : `@builder` (exécution directe).
 - **Agents** : `builder` (ou `worker-*` directement pour code).
 - **Modèles** : gratuits par défaut (`worker-codestral → worker-groq → worker-zhipu → worker-novita → worker-google`); jamais mammouth sans accord.
-- **Skills** : `hash-verification` (targeted).
+- **Skills** : `tollfree-verification` (targeted).
 - **Preuves** : 1 (voir PROOF_MODEL.md §3).
 - **Approbation** : jamais (sauf override explicite).
 
 ### L2 — Standard
 - **Workflow** : `@planner → @builder → @reviewer`.
 - **Agents** : `planner` (plan), `builder` (implémentation), `reviewer` (revue).
-- **Modèles** : gratuits ; `hash-enterprise-development` + `hash-verification`.
+- **Modèles** : gratuits ; `tollfree-enterprise-development` + `tollfree-verification`.
 - **Preuves** : 2.
 - **Approbation** : humaine optionnelle si `HIGH`.
 
 ### L3 — Complexe
 - **Workflow** : `@planner → @architect → user-approval → @builder → @reviewer`.
 - **Agents** : `planner`, `architect`, (optionnel `design-lead` si UI), `builder`, `reviewer`.
-- **Modèles** : gratuits en priorité ; `hash-enterprise-development` + `hash-verification`; possibilité de forcer modèle plus costaud (explicite).
+- **Modèles** : gratuits en priorité ; `tollfree-enterprise-development` + `tollfree-verification`; possibilité de forcer modèle plus costaud (explicite).
 - **Preuves** : 3 + approbation humaine.
 - **Approbation** : **obligatoire** si `HIGH/CRITICAL`.
 
@@ -117,7 +117,7 @@ Référence : routing matrix `AGENTS.md`.
 
 ### 5.1 Règles de surcharge (overrides)
 - `guard.ts` bloque `DESTRUCTIVE_OP` → requiert `@architect` + `@security` + approbation humaine, **quelle que soit la complexity initiale**.
-- `provider_payant` détecté → escalade au **model router** ; bloque l'exécution tant qu'il n'y a pas validation explicite (conformément au protocole EURINHASH §6).
+- `provider_payant` détecté → escalade au **model router** ; bloque l'exécution tant qu'il n'y a pas validation explicite (conformément au protocole TOLLFREE §6).
 - `data_sensitive` → L4 minimal automatiquement.
 
 ---
@@ -125,7 +125,7 @@ Référence : routing matrix `AGENTS.md`.
 ## 6. Apprenance et drift
 
 - Chaque tâche génère `(TaskSpec, Policy, ProofReport)` enregistrés dans `logs/`.
-- Le `Skill Selector` (EURINHASH Pro / future) peut réajuster la classification L-niveau via feedback loop `logs/policies/<id>.feedback.json`.
+- Le `Skill Selector` (TOLLFREE Pro / future) peut réajuster la classification L-niveau via feedback loop `logs/policies/<id>.feedback.json`.
 - Les décisions anormales (ex: L1 → L4) sont signalées à `security` et journalisées (`agent.invoked`).
 
 ---

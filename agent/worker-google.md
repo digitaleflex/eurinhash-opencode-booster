@@ -1,5 +1,5 @@
 ---
-description: Worker polyvalent du mode free-router (Gemini 2.5 Flash gratuit). Appelé par @eurinhash, pas directement.
+description: Worker polyvalent du mode free-router (Gemini 2.5 Flash gratuit). Appelé par @tollfree, pas directement.
 mode: subagent
 model: google/gemini-2.5-flash
 ---

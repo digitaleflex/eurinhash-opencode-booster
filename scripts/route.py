@@ -37,7 +37,7 @@ PROBE = os.path.join(CFG, "scripts", "free-probe.py")
 USAGE_LOG = os.path.join(CFG, "route-usage.json")
 
 # ── Qualité baseline par worker (0-1) — famille de modèle + réputation ──
-# Source : myfree-eurinhash.py QUALITY_BASELINE + connaissance des familles.
+# Source : free-test.py QUALITY_BASELINE + connaissance des familles.
 QUALITY = {
     # FREE workers
     "worker-opencode": 0.90,        # deepseek-v4-flash — workhorse éprouvé

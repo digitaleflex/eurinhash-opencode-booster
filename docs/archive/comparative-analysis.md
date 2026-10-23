@@ -1,4 +1,4 @@
-# Analyse Comparative : OpenCode EURINHASH vs Concurrents (Sept 2026)
+# Analyse Comparative : OpenCode TOLLFREE vs Concurrents (Sept 2026)
 
 > **Note (2026-09-10)** : analyse datée — les effectifs cités (« 4 workers »)
 > ont grandi depuis (voir `free-models.json` et `CONFIG-GUIDE.md` pour le
@@ -17,7 +17,7 @@
 | **Roo Code** | Extension VS Code (fork de Cline) | Multi | Variable | Gratuit / payant selon provider |
 | **Sourcegraph Cody** | IDE intégrée | Mixte (OpenAI, Anthropic, Claude) | Variable | Payant (Copilot + Cody) |
 | **OpenCode (anomalyco)** | Agent terminal open source | Multi-gratuits | Groq, Mistral, Zhipu, OpenRouter, etc. | **Gratuit** (configurable) |
-| **OpenCode EURINHASH** | Agent terminal configuré | 7 providers gratuits | Groq/Mistral/Zhipu/OpenRouter/HuggingFace/Novita/Together | **Gratuit** |
+| **OpenCode TOLLFREE** | Agent terminal configuré | 7 providers gratuits | Groq/Mistral/Zhipu/OpenRouter/HuggingFace/Novita/Together | **Gratuit** |
 
 ### Points communs :
 - Tous opèrent en mode terminal/IDE
@@ -27,7 +27,7 @@
 
 ### Différences clés :
 - **Cursor/Claude Code/Copilot** : Expérience "clé en main", UI soignée, mais coût élevé
-- **OpenCode/EURINHASH** : Configurable, open source, gratuit, mais nécessite configuration
+- **OpenCode/TOLLFREE** : Configurable, open source, gratuit, mais nécessite configuration
 - **Cline/Roo Code** : Plus légers, multi-providers, mais moins de fonctionnalités "integrated"
 
 ---
@@ -45,16 +45,16 @@
 | **khanglvm/llm-router** | 1 | Unified gateway multi-providers | Node.js | **Oui** |
 | **shahzain-al/claude-code-llm-router-setup** | 0 | Routage Claude Code via multiples providers | Guide de setup | **Oui** |
 | **elara-labs/code-context-engine** | 410 | Optimisation tokens, recherche dans codebase | Python | **Oui** |
-| **OpenCode EURINHASH** | 0 | 7 providers gratuits + circuit breaker | Config OpenCode | **Oui** |
+| **OpenCode TOLLFREE** | 0 | 7 providers gratuits + circuit breaker | Config OpenCode | **Oui** |
 
-### Pattern EURINHASH (notre config) :
+### Pattern TOLLFREE (notre config) :
 - **4 workers gratuits** : Groq (qwen3.8-27b), Mistral (codestral), Zhipu (glm-4.7-flash), OpenRouter (catch-all)
 - **Rotation automatique** en cas de quota/erreur (429, timeout)
 - **Tracking local des quotas** dans `provider_usage.json`
 - **Circuit breakers** (état CLOSED/OPEN/HALF_OPEN) pour éviter les boucles
-- **Wrapper hash-direct** pour contourner le bug Windows `opencode run`
+- **Wrapper direct** pour contourner le bug Windows `opencode run`
 
-### Points forts EURINHASH comme router :
+### Points forts TOLLFREE comme router :
 - Setup minimal (8 fichiers .key à créer)
 - Pas de dépendance à un service tiers pour le routing
 - Métriques journalières dans `provider_usage.json`
@@ -69,12 +69,12 @@
 | Plateforme | Agents | Plugins | Modèles gratuits | Étoiles GitHub |
 |------------|--------|---------|-----------------|---------------|
 | **OpenCode (anomalyco)** | 2 (build, plan) + general | Divers (envsitter, audit-logger, etc.) | 75+ providers configurables | 205k |
-| **OpenCode EURINHASH** | 9 spécialisés (planner, architect, design-lead, builder, quality-engineer, tester, security, reviewer, git-engineer) | 7 plugins (@felipegenef/opencode-lazy-skills, envsitter-guard, guard.ts, audit-logger.ts, etc.) | 7 gratuits (Groq/Mistral/Zhipu/OpenRouter/HuggingFace/Novita/Together) | 0 (personnel) |
+| **OpenCode TOLLFREE** | 9 spécialisés (planner, architect, design-lead, builder, quality-engineer, tester, security, reviewer, git-engineer) | 7 plugins (@felipegenef/opencode-lazy-skills, envsitter-guard, guard.ts, audit-logger.ts, etc.) | 7 gratuits (Groq/Mistral/Zhipu/OpenRouter/HuggingFace/Novita/Together) | 0 (personnel) |
 | **agentes-roues / multica** | Divers via orchestrateur | Variable | Variable | Varie |
 | **herdr** | Multi-agents (Codex, Claude, OpenCode, etc.) | Plugin ecosystem | Multi-provider via adapters | 34k |
 | **Orca** | Flotte d'agents parallèle | Worktree management | Multi-models | 58k |
 
-### L'originalité EURINHASH :
+### L'originalité TOLLFREE :
 - **9 agents spécialisés** avec modèles dédiés (contrairement aux 2 d'OpenCode classique)
 - **Matrix de compétences L1-L4** pour routage intelligent des tâches
 - **14 plugins** (dont envsitter-guard pour la sécurité des .env, audit-logger pour la journalisation)
@@ -102,16 +102,16 @@
 | **redstone-md/ConfAI** | 3 | Éditeur unique pour config de tous les AI coding agents (Codex, Claude Code, opencode) | **Oui** |
 | **leic8959-sudo/llmhub-configs** | 1 | Recettes OpenAI-compatible pour Codex, Cursor, Cline, Dify, n8n | **Partiellement** ($0.50 credit) |
 
-#### Notre config EURINHASH vs ces outils :
+#### Notre config TOLLFREE vs ces outils :
 - **Supérieur** : Circuit breaker, quota tracking journalier, 9 agents spécialisés, audit logger
 - **Similaire** : Le but est le même (gérer providers multiples gratuits)
 - **Moins complexe** que llmhub-configs (qui inclut Dify, n8n payants)
 
 ---
 
-## 5. Forces et faiblesses vs EURINHASH (4 workers gratuits + 14 plugins + 12 agents)
+## 5. Forces et faiblesses vs TOLLFREE (4 workers gratuits + 14 plugins + 12 agents)
 
-### Forces EURINHASH
+### Forces TOLLFREE
 
 | Domaine | Forces |
 |---------|--------|
@@ -119,13 +119,13 @@
 | **Disponibilité** | Rotation automatique des 4 workers principaux ; circuit breakers évitent les boucles infinies |
 | **Spécialisation** | 9 agents dédiés par rôle (planner → architect → builder → tester...) avec modèles adaptés |
 | **Sécurité** | envsitter-guard pour éviter l'exposition des clés, audit logger avec redaction de secrets |
-| **Productivité** | Matrix L1-L4 pour routage selon complexité ; optimisation des tokens (hash-token-efficiency) |
-| **Portabilité** | Wrapper hash-direct pour bug Windows `opencode run` ; configuration portable via fichiers .key |
+| **Productivité** | Matrix L1-L4 pour routage selon complexité ; optimisation des tokens (tollfree-token-efficiency) |
+| **Portabilité** | Wrapper direct pour bug Windows `opencode run` ; configuration portable via fichiers .key |
 | **Monitoring** | Fichiers `provider_usage.json`, `provider_circuit.json`, `logs/audit-YYYY-MM-DD.jsonl` |
 | **Extensibilité** | Architecture plugin-based (7 plugins actuels, facile d'en ajouter) |
 | **Open source** | Total transparence, pas de lock-invendor |
 
-### Faiblesses EURINHASH (par rapport aux alternatives)
+### Faiblesses TOLLFREE (par rapport aux alternatives)
 
 | Domaine | Limitations |
 |---------|-------------|
@@ -139,7 +139,7 @@
 
 ### Tableau comparatif complet
 
-| Critère | EURINHASH | Cursor | Claude Code | Copilot | Cline/Roo Code |
+| Critère | TOLLFREE | Cursor | Claude Code | Copilot | Cline/Roo Code |
 |---------|-----------|--------|-------------|---------|----------------|
 | **Prix** | **Gratuit** | Payant | Payant | Payant | Gratuit (selon provider) |
 | **Workers gratuits** | **4 (Groq/Mistral/Zhipu/OpenRouter)** | 0 | 0 | 0 | Variables |
@@ -154,7 +154,7 @@
 
 ### Conclusion
 
-**EURINHASH se distingue par :**
+**TOLLFREE se distingue par :**
 1. **Le seul modèle 100% gratuit avec routing automatique** parmi les agents de codage sérieux
 2. **La spécialisation par 9 agents** dédiés à des rôles précis (pas généraliste)
 3. **L'infrastructure de sécurité** (envsitter, audit logger, circuit breakers)
@@ -166,6 +166,6 @@
 - Intégration IDE fluide
 - Support et stabilité
 
-**EURINHASH est idéal pour :** développeurs budgets-serrés, projets open source, entreprises souhaitant éviter les coûts d'API propriétaires, utilisateurs confortables en ligne de commande.
+**TOLLFREE est idéal pour :** développeurs budgets-serrés, projets open source, entreprises souhaitant éviter les coûts d'API propriétaires, utilisateurs confortables en ligne de commande.
 
-**EURINHASH est moins adapté pour :** équipes nécessitant des modèles de pointe payants, utilisateurs préférant une interface graphique, workflows nécessitant des agents autonomes à très haut niveau de sophistication.
+**TOLLFREE est moins adapté pour :** équipes nécessitant des modèles de pointe payants, utilisateurs préférant une interface graphique, workflows nécessitant des agents autonomes à très haut niveau de sophistication.

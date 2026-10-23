@@ -1,11 +1,11 @@
-# EURINHASH — Model Intelligence, Economy & Mission Verification
+# TOLLFREE — Model Intelligence, Economy & Mission Verification
 
 > Version 1.0 — 2026-09-19
 > FR/EN design contract
 
 ## FR
 
-Ce document formalise les capacités qui distinguent EurinHash d'un simple gateway ou routeur.
+Ce document formalise les capacités qui distinguent Tollfree d'un simple gateway ou routeur.
 
 ## 1. Model Intelligence
 
@@ -140,7 +140,7 @@ Les résultats observés peuvent alimenter des estimations futures, mais le syst
 
 ## EN
 
-This document defines the capabilities that make EurinHash more than a gateway or model router.
+This document defines the capabilities that make Tollfree more than a gateway or model router.
 
 ### Model intelligence
 

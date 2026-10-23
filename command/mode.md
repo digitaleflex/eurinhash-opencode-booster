@@ -19,7 +19,7 @@ agent: build
 
 ## Garde-fous à rappeler à l'utilisateur
 - FREE est le défaut ; fichier absent ou illisible = FREE (fail-closed).
-- `EURINHASH_MODE=pro|free` en variable d'environnement surcharge temporairement le fichier.
+- `TOLLFREE_MODE=pro|free` en variable d'environnement surcharge temporairement le fichier.
 - Passer en PRO n'achète rien tout seul : chaque provider payant garde ses propres clés/quotas.
 
 Contexte : $ARGUMENTS
