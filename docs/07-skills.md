@@ -131,7 +131,7 @@ Skill qui optimise l'utilisation des tokens pendant les interactions avec les pr
 /quota --detail
 
 # Voir l'état des tokens
-/scripts/direct.py --status
+tollfree direct --status
 ```
 
 ### Exemple d'optimisation
@@ -234,7 +234,7 @@ Skill qui définit le niveau de vérification requis selon la criticité de la t
 /run "Corrige la typo"
 
 # Manuellement
-/scripts/direct.py "test"
+tollfree direct "test"
 ```
 
 #### V2 - Vérification complète

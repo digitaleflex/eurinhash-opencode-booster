@@ -24,7 +24,7 @@ We applied three advanced recommendations to strengthen the system:
 - Allows a test request after timeout (HALF_OPEN)
 - Automatically closes on success
 
-**Implementation**: `scripts/direct.py` with `provider_circuit.json` state file.
+**Implementation**: `tollfree direct` with `provider_circuit.json` state file.
 
 **Impact**: Prevents cascading failures, saves quota, improves reliability.
 
@@ -36,7 +36,7 @@ We applied three advanced recommendations to strengthen the system:
 
 **Solution**: Local tracking of calls per provider/model per day.
 
-**Implementation**: `scripts/direct.py` with `provider_usage.json`. Each call increments a counter. Providers have defined limits (groq: 50, mistral: 30, etc.).
+**Implementation**: `tollfree direct` with `provider_usage.json`. Each call increments a counter. Providers have defined limits (groq: 50, mistral: 30, etc.).
 
 **Impact**: Prevents quota exhaustion, enables informed decisions, provides usage statistics.
 
@@ -46,9 +46,9 @@ We applied three advanced recommendations to strengthen the system:
 
 **Problem**: `opencode run` hangs on Windows due to SDK bug, blocking all automation.
 
-**Solution**: Created `direct-wrapper.py` and `/run` command that bypasses the bug by calling providers directly.
+**Solution**: Created `tollfree direct` and `/run` command that bypasses the bug by calling providers directly.
 
-**Implementation**: `scripts/direct-wrapper.py` + `command/run.md`.
+**Implementation**: `tollfree direct` + `command/run.md`.
 
 **Impact**: Restores automation capability on Windows, provides `/run`, `/direct`, `/audit-log` commands.
 
@@ -61,7 +61,7 @@ opencode
 ├── agent/              # 11 role agents + 10 workers
 ├── command/            # 7 slash commands
 ├── plugin/            # audit-logger.ts, guard.ts
-├── scripts/            # direct.py, direct-wrapper.py, etc.
+├── scripts/            # tollfree direct, tollfree direct, etc.
 ├── skills/             # tollfree-agent-matrix, tollfree-token-efficiency, etc.
 ├── docs/               # 10 English documentation files
 ├── logs/               # Audit logs (JSONL)
@@ -90,12 +90,12 @@ opencode
 
 ### Scripts (7)
 
-- `direct.py` - Main wrapper with circuit breaker + quota tracking
-- `direct-wrapper.py` - Alias for opencode run
-- `free-probe.py` - Test model availability
-- `quota.py` - Manual quota management
-- `free-test.py` - Complete model test
-- `view-audit-log.py` - Display audit log
+- `tollfree direct` - Main wrapper with circuit breaker + quota tracking
+- `tollfree direct` - Alias for opencode run
+- `tollfree probe` - Test model availability
+- `tollfree quota` - Manual quota management
+- `tollfree free-test` - Complete model test
+- `tollfree audit-log` - Display audit log
 
 ### Plugins (7 active)
 

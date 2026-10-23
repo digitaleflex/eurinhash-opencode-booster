@@ -33,7 +33,7 @@ This document defines the evolution path from current TOLLFREE implementation to
 **Problems:**
 1. `worker-codestral`, `worker-groq` — OpenCode subagent names hardcoded
 2. File paths like `provider_circuit.json` — Windows-specific
-3. `direct.py` integration — OpenCode-specific wrapper
+3. `tollfree direct` integration — OpenCode-specific wrapper
 4. Audit logs to `logs/` — OpenCode directory structure
 
 ### 1.3 Current Modules

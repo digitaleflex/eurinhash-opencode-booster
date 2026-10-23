@@ -130,7 +130,7 @@ Skill that optimizes token usage during interactions with AI providers. Reduces 
 /quota --detail
 
 # View token state
-/scripts/direct.py --status
+tollfree direct --status
 ```
 
 ### Optimization Example
@@ -233,7 +233,7 @@ Skill that defines the verification level required based on task criticality. Ba
 /run "Fix the typo"
 
 # Manually
-/scripts/direct.py "test"
+tollfree direct "test"
 ```
 
 #### V2 - Full Verification

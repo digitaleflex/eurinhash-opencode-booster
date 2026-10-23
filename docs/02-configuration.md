@@ -43,7 +43,7 @@ echo "votre-cle-mistral" > .mistral-key
 # ... autres clés
 
 # 2. Vérifier l'installation
-python scripts/direct.py --list-providers
+tollfree direct --list-providers
 
 # 3. Tester
 opencode /run "test"
@@ -248,7 +248,7 @@ cat .groq-key
 # 3. La stocker :
 echo "votre-cle-sambanova" > ~/.config/opencode/.sambanova-key
 chmod 600 ~/.config/opencode/.sambanova-key
-# 4. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 4. Vérifier : tollfree probe
 ```
 Modèles configurés : `DeepSeek-V3.1`, `Meta-Llama-3.3-70B-Instruct`,
 `gpt-oss-120b`. Quotas gratuits : 20 req/min, 20 req/jour, 200K tokens/jour
@@ -263,7 +263,7 @@ echo "votre-cle-pollinations" > ~/.config/opencode/.pollinations-key
 # puis dans opencode.jsonc, provider pollinations :
 # "apiKey": "{file:~/.config/opencode/.pollinations-key}"
 ```
-Vérifier : `python ~/.config/opencode/scripts/free-probe.py` (aucune clé
+Vérifier : `tollfree probe` (aucune clé
 requise pour le probe anonyme).
 
 #### Cerebras (trial $5, ultra-rapide)
@@ -296,7 +296,7 @@ comme futur rôle juge local. Limité par ta RAM/VRAM.
 # 2. Créer une TRIAL key sur https://dashboard.cohere.com/api-keys
 echo "votre-cle-cohere" > ~/.config/opencode/.cohere-key
 chmod 600 ~/.config/opencode/.cohere-key
-# 3. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 3. Vérifier : tollfree probe
 ```
 Modèles configurés : `command-a-03-2025` (généraliste), `command-r-plus-08-2024`,
 `north-mini-code-1-0` (code). **Contraintes** : 1000 appels/mois TOUS
@@ -311,7 +311,7 @@ AI SDK — à valider live au premier appel réel.
 echo "votre-token-cloudflare" > ~/.config/opencode/.cloudflare-key
 echo "votre-account-id" > ~/.config/opencode/.cloudflare-account
 chmod 600 ~/.config/opencode/.cloudflare-*
-# 3. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 3. Vérifier : tollfree probe
 ```
 Modèles gratuits constatés : `@cf/zai-org/glm-4.7-flash`, `@cf/google/gemma-4-*`,
 `@cf/nvidia/nemotron-3-*` (les gros Kimi/GLM-5.2 sont passés au plan payant).
@@ -322,7 +322,7 @@ reste **à valider live** avant d'y router des workers.
 
 #### Après ajout d'un provider
 1. Quitter + relancer OpenCode (rechargement config).
-2. `python ~/.config/opencode/scripts/free-probe.py` → `free-models.json`
+2. `tollfree probe` → `free-models.json`
    passe le worker à `ok` (ou `rate_limited`/`error` avec la raison).
 3. `/models` dans OpenCode pour choisir le modèle à la main.
 
@@ -612,7 +612,7 @@ mv opencode.json.bak opencode.jsonc
 ## 10. Checklist post-installation
 
 - [ ] Clés API créées (`.groq-key`, `.mistral-key`, etc.)
-- [ ] `python scripts/direct.py --list-providers` → OK
+- [ ] `tollfree direct --list-providers` → OK
 - [ ] `opencode /run "test"` → OK
 - [ ] `opencode /audit-log` → fonctionne
 - [ ] Git initialisé (si souhaité)

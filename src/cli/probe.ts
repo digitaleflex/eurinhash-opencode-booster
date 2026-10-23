@@ -1,4 +1,4 @@
-// src/cli/probe.ts — Probes the free workers and writes free-models.json (port of scripts/free-probe.py).
+// src/cli/probe.ts — Probes the free workers and writes free-models.json (ported from the former scripts/free-probe.py).
 // One tiny call per worker (~15 tokens). Never probes HuggingFace (paid credit).
 
 import { join } from "node:path";

@@ -33,7 +33,7 @@ echo "your-mistral-key" > .mistral-key
 # ... other keys
 
 # Verify installation
-python scripts/direct.py --list-providers
+tollfree direct --list-providers
 
 # Test
 opencode /run "test"
@@ -199,7 +199,7 @@ cat .groq-key
 # 2. Create an API key in the dashboard, then:
 echo "your-sambanova-key" > ~/.config/opencode/.sambanova-key
 chmod 600 ~/.config/opencode/.sambanova-key
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Configured models: `DeepSeek-V3.1`, `Meta-Llama-3.3-70B-Instruct`,
 `gpt-oss-120b`. Free quotas: 20 req/min, 20 req/day, 200K tokens/day
@@ -243,7 +243,7 @@ ollama pull llama3.1        # general
 # 2. Create a TRIAL key at https://dashboard.cohere.com/api-keys
 echo "your-cohere-key" > ~/.config/opencode/.cohere-key
 chmod 600 ~/.config/opencode/.cohere-key
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Configured models: `command-a-03-2025`, `command-r-plus-08-2024`,
 `north-mini-code-1-0` (code). **Constraints**: 1000 calls/month across ALL
@@ -257,7 +257,7 @@ API exposed via the AI SDK adapter — validate live on first real call.
 echo "your-cloudflare-token" > ~/.config/opencode/.cloudflare-key
 echo "your-account-id" > ~/.config/opencode/.cloudflare-account
 chmod 600 ~/.config/opencode/.cloudflare-*
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Free models observed: `@cf/zai-org/glm-4.7-flash`, `@cf/google/gemma-4-*`,
 `@cf/nvidia/nemotron-3-*` (heavy Kimi/GLM-5.2 moved to paid).
@@ -268,7 +268,7 @@ live validation** before routing workers to it.
 
 #### After adding a provider
 1. Quit + restart OpenCode (config reload).
-2. `python ~/.config/opencode/scripts/free-probe.py` → `free-models.json`
+2. `tollfree probe` → `free-models.json`
    flips the worker to `ok` (or `rate_limited`/`error` with the reason).
 3. `/models` inside OpenCode to pick the model manually.
 
@@ -529,7 +529,7 @@ mv opencode.json.bak opencode.jsonc
 ## Post-Installation Checklist
 
 - [ ] API keys created (`.groq-key`, `.mistral-key`, etc.)
-- [ ] `python scripts/direct.py --list-providers` → OK
+- [ ] `tollfree direct --list-providers` → OK
 - [ ] `opencode /run "test"` → OK
 - [ ] `opencode /audit-log` → works
 - [ ] Git initialized (if desired)

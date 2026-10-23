@@ -74,14 +74,6 @@ Tollfree : configuration OpenCode — 100% gratuit, agents spécialisés, circui
 │   ├── guard.ts                  # Protection destructive + redaction secrets
 │   └── auto-compact.ts           # Compaction intelligente
 ├── 📁 scripts/                   # 10 scripts (Python, Node, PowerShell)
-│   ├── direct.py            # Wrapper principal (circuit breaker + quota)
-│   ├── direct-wrapper.py    # Alias opencode run
-│   ├── free-probe.py             # Test de disponibilité des modèles
-│   ├── quota.py                  # Gestion des quotas
-│   ├── free-test.py       # Test complet des modèles
-│   ├── view-audit-log.py         # Affichage du journal d'audit
-│   ├── route.py                  # Routage EV + feedback bayésien
-│   ├── models-free.py            # Inventaire des modèles free
 │   ├── session-review.mjs        # Revue de session
 │   ├── verify-golden.ts          # Vérification golden tests
 ├── 📁 skills/                    # 20+ compétences
@@ -100,7 +92,7 @@ Tollfree : configuration OpenCode — 100% gratuit, agents spécialisés, circui
 ```
 Utilisateur
     │
-    ├─ opencode run "prompt" ──► direct-wrapper.py ──► direct.py
+    ├─ opencode run "prompt" ──► tollfree direct ──► tollfree direct
     │                                                                    │
     │                                                                    ├─► Circuit breaker (provider_circuit.json)
     │                                                                    ├─► Quota tracking (provider_usage.json)
@@ -108,7 +100,7 @@ Utilisateur
     │
     └─ opencode agent "task" ──► Agent (tollfree/planner/etc.)
                                     │
-                                    ├─► opencode run (si bug) ──► direct.py
+                                    ├─► opencode run (si bug) ──► tollfree direct
                                     └─► opencode native (si fonctionnel)
 ```
 
@@ -190,7 +182,7 @@ Utilisateur
 
 | OS | Shell | Notes |
 |----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | Le wrapper `direct.py` contourne un bug SDK. |
+| **Windows** | WSL2 / Git Bash / PowerShell | Le wrapper `tollfree direct` contourne un bug SDK. |
 | **macOS** | bash / zsh | Tout fonctionne nativement. `opencode run` fonctionne sans wrapper. |
 | **Linux** | bash | Tout fonctionne nativement. Aucun workaround nécessaire. |
 
@@ -229,16 +221,16 @@ Utilisateur
 
 ```bash
 # Trouver le meilleur worker pour un type de tâche
-python ~/.config/opencode/scripts/route.py code
+tollfree route code
 
 # Trouver le worker de secours (fallback)
-python ~/.config/opencode/scripts/route.py code --next
+tollfree route code --next
 
 # Lister tous les workers avec leur statut
-python ~/.config/opencode/scripts/route.py list
+tollfree route list
 
 # Enregistrer un résultat (feedback bayésien)
-python ~/.config/opencode/scripts/route.py record worker-groq success
+tollfree route record worker-groq success
 ```
 
 ### Mode TOLLFREE PRO (OpenRouter + opencode-go)
@@ -268,7 +260,7 @@ opencode /mode status
 opencode /mode free
 
 # Routeur PRO
-python ~/.config/opencode/scripts/route.py code --pro
+tollfree route code --pro
 ```
 
 Budget journalier : `$50` | Budget mensuel : `$500` | Alertes à 80%

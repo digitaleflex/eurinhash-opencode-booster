@@ -152,7 +152,7 @@ Affiche le journal d'audit JSONL récent. Détecte les ops sensibles, montre les
 /audit-log --json
 
 # Stats rapides
-/audit-log | python scripts/view-audit-log.py --statistics
+/audit-log | tollfree audit-log --statistics
 ```
 
 ### Structure du journal

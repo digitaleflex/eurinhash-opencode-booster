@@ -70,14 +70,6 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 │   ├── guard.ts                  # Protection destructive (+ redaction secrets)
 │   └── auto-compact.ts           # Compaction intelligente
 ├── 📁 scripts/                   # 12 scripts (Python, Node, TypeScript)
-│   ├── direct.py            # Wrapper principal (circuit breaker + quota)
-│   ├── direct-wrapper.py    # Alias opencode run
-│   ├── free-probe.py             # Test de disponibilité des modèles
-│   ├── quota.py                  # Gestion des quotas
-│   ├── free-test.py       # Test complet des modèles
-│   ├── view-audit-log.py         # Affichage du journal d'audit
-│   ├── route.py                  # Routage EV + feedback bayésien
-│   ├── models-free.py            # Inventaire des modèles free
 │   ├── session-review.mjs        # Revue de session
 │   ├── verify-golden.ts          # Vérification golden tests
 ├── 📁 skills/                    # 30+ compétences
@@ -98,7 +90,7 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 ```
 Utilisateur
     │
-    ├─ opencode run "prompt" ──► direct-wrapper.py ──► direct.py
+    ├─ opencode run "prompt" ──► tollfree direct ──► tollfree direct
     │                                                                    │
     │                                                                    ├─► Circuit breaker (provider_circuit.json)
     │                                                                    ├─► Quota tracking (provider_usage.json)
@@ -106,7 +98,7 @@ Utilisateur
     │
     └─ opencode agent "task" ──► Agent (tollfree/planner/etc.)
                                     │
-                                    ├─► opencode run (si bug) ──► direct.py
+                                    ├─► opencode run (si bug) ──► tollfree direct
                                     └─► opencode native (si fonctionnel)
 ```
 

@@ -1,4 +1,4 @@
-// src/cli/quota.ts — Readable dashboard: today's spend, live worker state, advice (port of scripts/quota.py).
+// src/cli/quota.ts — Readable dashboard: today's spend, live worker state, advice (ported from the former scripts/quota.py).
 // Read-only and free: it never probes.
 
 import { existsSync } from "node:fs";

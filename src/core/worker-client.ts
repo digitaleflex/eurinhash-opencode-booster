@@ -1,7 +1,7 @@
 // src/core/worker-client.ts — Free Worker HTTP Client (D1-core)
 //
 // Exécution réelle des tâches APPROVED via les providers gratuits
-// (même endpoints/clés que scripts/free-probe.py : groq, zhipu,
+// (même endpoints/clés que tollfree probe : groq, zhipu,
 // openrouter, novita). Seuls les endpoints OpenAI-compatibles sont
 // couverts (google/gemini et les workers intégrés ont une autre forme
 // d'API — voir dashboard/server.ts pour le routage EV complet).

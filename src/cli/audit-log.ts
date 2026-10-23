@@ -1,4 +1,4 @@
-// src/cli/audit-log.ts — Audit log viewer (port of scripts/view-audit-log.py).
+// src/cli/audit-log.ts — Audit log viewer (ported from the former scripts/view-audit-log.py).
 
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";

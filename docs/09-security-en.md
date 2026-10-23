@@ -142,7 +142,7 @@ Each blocked op is recorded in `logs/audit-YYYY-MM-DD.jsonl`:
 /audit-log --filter blocked
 
 # Statistics
-python scripts/view-audit-log.py --statistics
+tollfree audit-log --statistics
 ```
 
 ### 3.5 Rotation

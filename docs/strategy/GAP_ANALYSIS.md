@@ -37,7 +37,7 @@ Comparaison :
 | LSP/AST | Oh My OpenCode | Oh My OpenCode | **INTÉGRER** |
 | MCP | Basique | Cline | **INTÉGRER** |
 | Security scanning | audit-logger | Guardrails AI | **INTÉGRER** |
-| Model routing | free-probe.py | LiteLLM | **INTÉGRER** |
+| Model routing | tollfree probe | LiteLLM | **INTÉGRER** |
 | Hooks | Basique | OpenCode hooks | **INTÉGRER** |
 
 ## 4. Differentiation Opportunity — Notre vraie valeur

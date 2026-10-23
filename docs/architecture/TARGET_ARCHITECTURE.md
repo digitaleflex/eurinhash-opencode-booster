@@ -112,10 +112,10 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - **Sorties** :
   - `ModelPlan { selected_provider, fallback_chain[], rationale }`
 - **Invariants** :
-  - Staleness > 30 min → trigger `scripts/free-probe.py` (refresh) avant décision.
+  - Staleness > 30 min → trigger `tollfree probe` (refresh) avant décision.
   - `OPEN` → skip provider ; `HALF_OPEN` → mode test 1 req.
   - Quota épuisé → skip ; tous KO → signaler `@tollfree` pour escalade mammouth (nécessite validation explicite).
-- **Dépendances** : `direct.py` wrapper, `scripts/free-probe.py`, `AGENTS.md` protocole (§1-6).
+- **Dépendances** : `tollfree direct` wrapper, `tollfree probe`, `AGENTS.md` protocole (§1-6).
 
 ### 2.6 Proof Verifier
 
@@ -143,7 +143,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - **Implémentations connues** :
   - `adapter/opencode.ts` — OpenCode plugin bridge (`opencode.jsonc`).
   - `adapter/claude-code.ts` — Claude Code SDK bridge.
-  - `adapter/cli.ts` — wrapper `direct-wrapper.py`-like pour CLI.
+  - `adapter/cli.ts` — wrapper `tollfree direct`-like pour CLI.
 
 ---
 
@@ -155,7 +155,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 | Risk Assessor | `plugin/guard.ts` patterns + `plugin/audit-logger.ts` secrets + env runtime |
 | Policy Engine | `docs/architecture/*` + `policy/*.yaml` + `AGENTS.md` (intelligent routing matrix) |
 | Agent Selector | `agent/*.md` + `skills/*/` + routing matrix `AGENTS.md` |
-| Model Router | `free-models.json`, `provider_circuit.json`, `provider_usage.json`, `scripts/free-probe.py` |
+| Model Router | `free-models.json`, `provider_circuit.json`, `provider_usage.json`, `tollfree probe` |
 | Proof Verifier | `docs/architecture/PROOF_MODEL.md` + `plugin/guard.ts` + `plugin/audit-logger.ts` |
 | Runtime Adapter | OpenCode plugins (`plugin/`), scripts Python (`scripts/`) |
 
@@ -190,4 +190,4 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - `docs/architecture/GOVERNANCE_MODEL.md` — pipeline décisionnel + matrice TASK→COMPLEXITY→RISK→POLICY.
 - `docs/architecture/PROOF_MODEL.md` — taxonomie & niveaux de preuves, chaîne d'intégrité.
 - `plugin/guard.ts`, `plugin/audit-logger.ts` — implémentations concrètes sécurité/audit.
-- `scripts/free-probe.py`, `scripts/direct.py` — probe disponibilité + fallback.
+- `tollfree probe`, `tollfree direct` — probe disponibilité + fallback.

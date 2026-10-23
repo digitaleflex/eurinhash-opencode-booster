@@ -85,7 +85,7 @@ cat logs/audit-2026-09-06.jsonl
 grep "blocked" logs/audit-2026-09-06.jsonl
 
 # Statistics
-python scripts/view-audit-log.py
+tollfree audit-log
 ```
 
 ### Log Structure

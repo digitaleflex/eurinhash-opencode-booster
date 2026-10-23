@@ -13,7 +13,7 @@ and advise.
 
 ## Protocol (run before any external delegation)
 
-1. Run `python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/quota.py"` and read the output:
+1. Run `tollfree quota` and read the output:
    - Mode (FREE/PRO), dépense du jour, état des workers, conseil du moment.
 2. Read `free-models.json` (dossier de config) for live status + latencies.
 3. Decide, in this order of preference:
@@ -21,7 +21,7 @@ and advise.
      → `opencode/deepseek-v4-flash` (workhorse), `opencode/glm-5` (heavy)
    - **External workers with status "ok"** → pick the LOWEST latency for the task type
    - **NEVER** route to a worker whose status is "rate_limited", "error" or "skipped"
-4. If the OpenRouter counter (in quota.py output) is near its limit, do NOT
+4. If the OpenRouter counter (in tollfree quota output) is near its limit, do NOT
    recommend worker-codestral (it will 429).
 
 ## Output format (concise)
@@ -37,5 +37,5 @@ QUOTA_GUARD: worker-opencode|opencode/deepseek-v4-flash|intégré 0 quota, fiabl
 ALERTE: OpenRouter à 2.7/3 req — éviter worker-codestral
 ```
 
-Never stop silently. If quota.py fails, say so and recommend the integrated
+Never stop silently. If tollfree quota fails, say so and recommend the integrated
 models (they never fail on quota).

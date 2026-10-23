@@ -1,4 +1,4 @@
-// src/cli/route.ts — Expected-value routing (port of scripts/route.py).
+// src/cli/route.ts — Expected-value routing (ported from the former scripts/route.py).
 //
 //   EV(worker) = quality x availability / cost
 //   quality      : 0-1 per model family (baseline, adjusted by a Bayesian feedback loop)

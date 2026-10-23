@@ -24,6 +24,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Build CLI
+        run: bun run build
+
+      - name: CLI smoke test (plain Node, empty config dir)
+        run: node dist/cli/index.js --help
+
       - name: Unit tests
         run: bun test src/core/core.test.ts
 

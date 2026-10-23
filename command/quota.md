@@ -3,7 +3,7 @@ description: Tableau de bord lisible (argent dépensé, état des modèles gratu
 agent: build
 ---
 
-Exécute `python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/quota.py"` (bash) et présente le résultat **en langage simple et non-technique** :
+Exécute `tollfree quota` (bash) et présente le résultat **en langage simple et non-technique** :
 
 1. **Argent** : combien dépensé aujourd'hui (normalement 0,00 $ — le dire clairement et fêter ça).
 2. **État des modèles** : pour chaque worker, une phrase simple (disponible / en pause quota / en panne / jamais testé). Ne jamais sortir de sigles sans explication.

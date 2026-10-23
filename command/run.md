@@ -3,7 +3,7 @@ description: Contourne le bug opencode run en appelant directement les providers
 agent: tollfree
 ---
 
-`python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/direct-wrapper.py" run $ARG`
+`tollfree run $ARG`
 
 **Exemples :**
 - `/run "explique la loi d'Ohm"` → fallback automatique Groq → Mistral → ...
@@ -15,7 +15,7 @@ agent: tollfree
 - `/run --status` → état quota + circuit breakers
 
 **Alias pratique :**  
-Bash : `alias opencode-run='python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/direct-wrapper.py" run'`
+Bash : `alias opencode-run='tollfree run'`
 
 **Notes :**
 - Si `opencode run` est planté (bug Windows SDK), utilise `/run` à la place.
