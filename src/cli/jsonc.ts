@@ -89,3 +89,52 @@ export function setTopLevelString(text: string, key: string, value: string): str
   }
   return undefined;
 }
+
+export interface Upsert {
+  text: string;
+  /** The exact text inserted (empty when an existing value was replaced), so it can be removed later. */
+  inserted: string;
+}
+
+/**
+ * Like setTopLevelString, but inserts `"key": "value"` right after the opening brace when the key is
+ * missing. Returns undefined when the document has no top-level object.
+ */
+export function upsertTopLevelString(text: string, key: string, value: string): Upsert | undefined {
+  const replaced = setTopLevelString(text, key, value);
+  if (replaced !== undefined) return { text: replaced, inserted: "" };
+
+  let i = 0;
+  const n = text.length;
+  while (i < n) {
+    if (text[i] === "/" && text[i + 1] === "/") {
+      while (i < n && text[i] !== "\n") i++;
+    } else if (text[i] === "/" && text[i + 1] === "*") {
+      i += 2;
+      while (i < n && !(text[i] === "*" && text[i + 1] === "/")) i++;
+      i += 2;
+    } else if (text[i] === "{") {
+      break;
+    } else if (/\s/.test(text[i])) {
+      i++;
+    } else {
+      return undefined;
+    }
+  }
+  if (text[i] !== "{") return undefined;
+
+  // Is the object empty? (next significant character is the closing brace)
+  let j = i + 1;
+  for (;;) {
+    while (j < n && /\s/.test(text[j])) j++;
+    if (text[j] === "/" && text[j + 1] === "/") while (j < n && text[j] !== "\n") j++;
+    else if (text[j] === "/" && text[j + 1] === "*") {
+      j += 2;
+      while (j < n && !(text[j] === "*" && text[j + 1] === "/")) j++;
+      j += 2;
+    } else break;
+  }
+  const empty = text[j] === "}";
+  const inserted = `\n  ${JSON.stringify(key)}: ${JSON.stringify(value)}${empty ? "" : ","}`;
+  return { text: text.slice(0, i + 1) + inserted + text.slice(i + 1), inserted };
+}

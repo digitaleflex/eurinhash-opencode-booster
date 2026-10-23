@@ -44,13 +44,52 @@ export function writeJson(path: string, value: unknown): void {
   writeFileSync(path, JSON.stringify(value, null, 2), "utf8");
 }
 
-/** Reads a one-line secret file (e.g. `.groq-key`) from the config dir; "" when missing. */
-export function readKey(dir: string, name: string): string {
+/** Environment variables that can stand in for a key file (first one set wins). */
+export const KEY_ENV: Record<string, string[]> = {
+  ".groq-key": ["GROQ_API_KEY"],
+  ".gemini-key": ["GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"],
+  ".zhipu-key": ["ZHIPU_API_KEY", "ZAI_API_KEY"],
+  ".openrouter-key": ["OPENROUTER_API_KEY"],
+  ".novita-key": ["NOVITA_API_KEY"],
+  ".mistral-key": ["MISTRAL_API_KEY"],
+  ".hf-key": ["HF_TOKEN", "HUGGINGFACE_API_KEY"],
+  ".together-key": ["TOGETHER_API_KEY"],
+  ".zenmux-key": ["ZENMUX_API_KEY"],
+  ".cloudflare-key": ["CLOUDFLARE_API_TOKEN"],
+  ".cloudflare-account": ["CLOUDFLARE_ACCOUNT_ID"],
+};
+
+/** Where a key comes from, without revealing it. */
+export function keySource(
+  dir: string,
+  name: string,
+  env: NodeJS.ProcessEnv = process.env
+): { source: "file" | "env"; detail: string } | undefined {
   try {
-    return readFileSync(join(dir, name), "utf8").trim();
+    if (readFileSync(join(dir, name), "utf8").trim())
+      return { source: "file", detail: join(dir, name) };
   } catch {
-    return "";
+    // fall through to the environment
   }
+  for (const v of KEY_ENV[name] ?? []) {
+    if (env[v]?.trim()) return { source: "env", detail: v };
+  }
+  return undefined;
+}
+
+/** Reads a secret: the one-line key file (e.g. `.groq-key`) in the config dir, else its environment variable; "" when missing. */
+export function readKey(dir: string, name: string, env: NodeJS.ProcessEnv = process.env): string {
+  try {
+    const fromFile = readFileSync(join(dir, name), "utf8").trim();
+    if (fromFile) return fromFile;
+  } catch {
+    // fall through to the environment
+  }
+  for (const v of KEY_ENV[name] ?? []) {
+    const value = env[v]?.trim();
+    if (value) return value;
+  }
+  return "";
 }
 
 export function fileExists(path: string): boolean {

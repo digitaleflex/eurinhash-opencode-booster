@@ -4,6 +4,7 @@
 import { runAuditLog } from "./audit-log";
 import { runDirect } from "./direct";
 import { runFreeTest } from "./free-test";
+import { runDoctor, runInit, runUninstall, runUpdate } from "./installer/commands";
 import { runModelsFree } from "./models-free";
 import { runProbe } from "./probe";
 import { runQuota } from "./quota";
@@ -12,6 +13,12 @@ import { runRoute } from "./route";
 const HELP = `tollfree — free-tier model routing and guardrails for OpenCode
 
 Usage: tollfree <command> [options]
+
+Setup:
+  init              Install agents, commands, skills and guard plugins (adapts to your keys)
+  update            Bring an existing install up to date (never overwrites files you edited)
+  uninstall         Remove what tollfree installed and restore what it replaced
+  doctor            Check the installation, keys, OpenCode and Ollama
 
 Commands:
   route <type>      Best worker for a task type (code, general, quick, long, heavy, review)
@@ -30,6 +37,14 @@ Environment:
 export async function main(argv: string[]): Promise<number> {
   const [cmd, ...rest] = argv;
   switch (cmd) {
+    case "init":
+      return runInit(rest);
+    case "update":
+      return runUpdate(rest);
+    case "uninstall":
+      return runUninstall(rest);
+    case "doctor":
+      return runDoctor(rest);
     case "route":
       return runRoute(rest);
     case "probe":
