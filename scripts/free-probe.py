@@ -187,7 +187,7 @@ except Exception as e:
     latencies["worker-cloudflare"] = 0
 
 # 9. Métadonnées modèles live (models.dev, cache 24h — jamais bloquant)
-# Schéma upstream vérifié dans .slim/clonedeps/repos/anomalyco__models-dev :
+# Schéma upstream (anomalyco/models.dev) :
 # providers.<p>.models.<id> -> {limit:{context,output}, cost:{input,output}($/M)}.
 # worker -> [(provider, model_id)] candidats, premier hit gagne. Un worker
 # absent de models.dev (ex. novita ling-sante) n'a simplement pas de meta :
