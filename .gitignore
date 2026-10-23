@@ -21,11 +21,8 @@ node_modules
 mode.json
 provider_circuit.json
 provider_usage.json
-free-models.json
 models-dev-cache.json
 myfree-eurinhash-report.json
-opencode-mem.jsonc
-tui.json
 opencode.json.bak
 logs/
 # Python cache
@@ -46,3 +43,9 @@ scripts/chaos/results-*.json
 # END oh-my-opencode-slim clonedeps
 route-usage.json
 .oh-my-opencode-slim/
+
+# Generated reports / runtime state
+route-usage.json
+results-governance.json
+batch-report.json
+.slim/deepwork/

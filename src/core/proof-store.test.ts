@@ -46,7 +46,9 @@ describe("ProofStore", () => {
   });
 
   test("save sans taskId → throw", async () => {
-    await expect(store.save({ taskId: "", proofs: [], verdict: "FAIL", rootHash: "x" })).rejects.toThrow();
+    await expect(
+      store.save({ taskId: "", proofs: [], verdict: "FAIL", rootHash: "x" })
+    ).rejects.toThrow();
   });
 
   test("sanitizeTaskId: sûr passe, hostile hashé stable", () => {

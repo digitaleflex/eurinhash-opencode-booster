@@ -123,38 +123,25 @@ Plugin de sécurité qui bloque les commandes destructives avant leur exécution
 
 ### Commandes bloquées
 
-| Commande | Pattern | Action |
-|----------|---------|--------|
-| `rm -rf` | `/rm\s+-rf/` | Blocage |
-| `dd` | `/dd\s+if=/` | Blocage |
-| `mkfs` | `/mkfs/` | Blocage |
-| `> /etc/` | `/>\s*\/etc/` | Blocage |
-| `chmod 777` | `/chmod\s+777/` | Blocage |
-| `sudo rm` | `/sudo\s+rm/` | Blocage |
-| `shutdown` | `/shutdown/i` | Blocage |
-| `reboot` | `/reboot/i` | Blocage |
+La détection vit dans `src/core/destructive-command.ts` (testée dans `destructive-command.test.ts`).
+La commande est d'abord canonicalisée (`$IFS`, guillemets, échappements, `$HOME` → `~`), puis découpée sur `;`, `&&`, `||`, `|`.
+Seules les commandes catastrophiques quel que soit le contexte sont bloquées ; `rm -rf node_modules` reste autorisé.
+
+| Bloqué | Exemples |
+|--------|----------|
+| Suppression récursive de `/` ou du dossier personnel | `rm -rf /`, `rm -fr /*`, `sudo rm -r -f ~`, `rm -rf $HOME`, `rm --no-preserve-root` |
+| Formatage de disque | `mkfs`, `mkfs.ext4 /dev/sda1` |
+| Écriture directe sur un disque | `dd ... of=/dev/sda` |
+| Réécriture de l'historique distant | `git push --force`, `git push -f`, `git push --force-with-lease`, `git push origin +main` |
 
 ### Configuration
-```typescript
-// Personnaliser dans guard.ts
-const BLOCKED_COMMANDS = [
-  ...SENSITIVE_PATTERNS,
-  "ma_commande_personnalisee",
-];
-```
+Ajouter un cas : modifier `checkSegment()` dans `src/core/destructive-command.ts` et ajouter le test correspondant.
 
 ### Utilisation
-Le plugin fonctionne automatiquement. Quand une commande bloquée est détectée :
-1. L'exécution est annulée
-2. Un message d'avertissement est affiché
-3. L'audit logger enregistre l'événement
+Le plugin fonctionne automatiquement. Quand une commande bloquée est détectée, l'appel d'outil échoue avec :
 
-### Exemple de sortie
 ```
-⚠️ Commande bloquée : rm -rf /tmp/test
-Raison : Opération destructive détectée
-Utilisateur : user@machine
-Time : 2026-09-06T12:00:00Z
+Bloqué par guard.ts : commande destructive interdite (suppression récursive de / ou du dossier personnel).
 ```
 
 ---

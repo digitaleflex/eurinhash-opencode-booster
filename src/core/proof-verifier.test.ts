@@ -8,9 +8,17 @@ describe("ProofVerifier", () => {
   test("L1 task generates 0 proofs", () => {
     const chain = verifier.generateProofChain(
       { description: "fix typo", complexity: TaskComplexity.L1 },
-      { name: "L1", complexity: TaskComplexity.L1, taskTypes: [], risk: RiskLevel.LOW,
-        agents: [], modelPlan: { primary: [], fallback: [] }, proofsRequired: [],
-        humanApproval: false, securityScan: false }
+      {
+        name: "L1",
+        complexity: TaskComplexity.L1,
+        taskTypes: [],
+        risk: RiskLevel.LOW,
+        agents: [],
+        modelPlan: { primary: [], fallback: [] },
+        proofsRequired: [],
+        humanApproval: false,
+        securityScan: false,
+      }
     );
     expect(chain.proofs.length).toBe(0);
     expect(chain.verdict).toBe("PASS"); // 0 proofs required = PASS
@@ -19,10 +27,17 @@ describe("ProofVerifier", () => {
   test("L2 task generates 2 proofs", () => {
     const chain = verifier.generateProofChain(
       { description: "add feature", complexity: TaskComplexity.L2 },
-      { name: "L2", complexity: TaskComplexity.L2, taskTypes: [], risk: RiskLevel.LOW,
-        agents: [], modelPlan: { primary: [], fallback: [] },
+      {
+        name: "L2",
+        complexity: TaskComplexity.L2,
+        taskTypes: [],
+        risk: RiskLevel.LOW,
+        agents: [],
+        modelPlan: { primary: [], fallback: [] },
         proofsRequired: ["tests" as any, "code_review" as any],
-        humanApproval: false, securityScan: false }
+        humanApproval: false,
+        securityScan: false,
+      }
     );
     expect(chain.proofs.length).toBe(2);
   });
@@ -37,13 +52,20 @@ describe("ProofVerifier", () => {
   test("verifyProofChain returns PENDING for human approval", () => {
     const chain = {
       taskId: "test",
-      proofs: [{ type: "human_approval" as any, status: "PENDING" as const,
-                 evidence: "", hash: "sha256:abc", timestamp: 0 }],
+      proofs: [
+        {
+          type: "human_approval" as any,
+          status: "PENDING" as const,
+          evidence: "",
+          hash: "sha256:abc",
+          timestamp: 0,
+        },
+      ],
       verdict: "PASS" as const,
       rootHash: "sha256:root",
     };
     // Le hash ne matchera pas → FAIL (pas PENDING)
-    // Mais si on mock le hash : 
+    // Mais si on mock le hash :
     expect(["PASS", "FAIL", "PENDING"]).toContain(verifier.verifyProofChain(chain));
   });
 });

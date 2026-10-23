@@ -91,7 +91,8 @@ export class ProviderHealth {
       this.ewmaLatency = latencyMs;
       this.hasLatency = true;
     } else {
-      this.ewmaLatency = this.opt.ewmaAlpha! * latencyMs + (1 - this.opt.ewmaAlpha!) * this.ewmaLatency;
+      this.ewmaLatency =
+        this.opt.ewmaAlpha! * latencyMs + (1 - this.opt.ewmaAlpha!) * this.ewmaLatency;
     }
   }
 

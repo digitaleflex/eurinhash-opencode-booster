@@ -59,7 +59,7 @@ export class ProofStore {
     try {
       const raw = await readFile(this.pathFor(taskId), "utf-8");
       const chain = JSON.parse(raw) as ProofChain;
-      if (!chain || chain.taskId !== sanitizeTaskId(taskId) && chain.taskId !== taskId) {
+      if (!chain || (chain.taskId !== sanitizeTaskId(taskId) && chain.taskId !== taskId)) {
         return null;
       }
       return chain;

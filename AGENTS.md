@@ -153,7 +153,7 @@ Règles non négociables :
 3. **Ne pas transmettre tout le contexte** aux sous-agents : donner le besoin, pas l'historique.
 4. **Un seul écrivain à la fois** sur des fichiers qui se chevauchent.
 
-Backup des agents : `~/.config/opencode/agent-backup-*`.
+Backup des agents : historique git (`git log -- agent/`).
 
 ## Cloudflare Workers
 

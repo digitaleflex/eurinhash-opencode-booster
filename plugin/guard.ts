@@ -1,5 +1,6 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { redactDeep } from "../src/core/secret-redactor";
+import { detectDestructiveCommand } from "../src/core/destructive-command";
 
 // Garde-fou global : bloque les commandes destructrices avant exécution.
 // Défense en profondeur (les règles `permission.bash` font déjà le gros).
@@ -17,15 +18,14 @@ export default (async () => {
   };
 
   return {
-    "tool.execute.before": async (input: any) => {
+    "tool.execute.before": async (input: any, output: any) => {
       if (input?.tool !== "bash") return;
-      const cmd = JSON.stringify(input?.args ?? "");
-      const blocked =
-        /(^|[\s;&|])(rm\s+-rf\s+\/|mkfs(\.|$|\s)|dd\s+[^&;|]*of=\/dev\/)/.test(cmd) ||
-        /git\s+push\s+--force/.test(cmd);
-      if (blocked) {
+      const args = output?.args ?? input?.args;
+      const cmd = typeof args?.command === "string" ? args.command : JSON.stringify(args ?? "");
+      const verdict = detectDestructiveCommand(cmd);
+      if (verdict.blocked) {
         throw new Error(
-          "Bloqué par guard.ts : commande destructive interdite (rm -rf /, mkfs, dd vers /dev, git push --force)."
+          `Bloqué par guard.ts : commande destructive interdite (${verdict.reason}).`
         );
       }
     },

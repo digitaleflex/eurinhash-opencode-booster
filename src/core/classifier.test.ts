@@ -24,6 +24,8 @@ describe("classifyTask", () => {
   });
 
   test("unknown → FEATURE_LIMITED (default)", () => {
-    expect(classifyTask({ description: "implement user dashboard" })).toBe(TaskType.FEATURE_LIMITED);
+    expect(classifyTask({ description: "implement user dashboard" })).toBe(
+      TaskType.FEATURE_LIMITED
+    );
   });
 });
