@@ -1,4 +1,4 @@
-# POLICY ENGINE DECISION — EURINHASH
+# POLICY ENGINE DECISION — TOLLFREE
 
 ## 1. Problème
 
@@ -192,6 +192,6 @@ const GUARD_OVERRIDES = {
 
 1. Créer `policies/default.yaml`
 2. Implémenter `policy-engine.ts`
-3. Intégrer dans `eurinhash.md`
+3. Intégrer dans `tollfree.md`
 4. Ajouter tests
 5. Documenter

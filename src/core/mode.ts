@@ -1,7 +1,7 @@
 // src/core/mode.ts — Engine mode (free | pro) + worker cost registry.
 // Free mode (default, fail-closed): only free/trial workers are allowed.
 // Pro mode (explicit opt-in): paid workers allowed, spend tracked against
-// an optional monthly cap. Mode resolution: EURINHASH_MODE env var >
+// an optional monthly cap. Mode resolution: TOLLFREE_MODE env var >
 // mode.json (cwd) > "free".
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -53,7 +53,7 @@ function registryPath(dir?: string): string {
 
 /** Resolve the engine mode. Never throws; defaults to "free" (fail-closed). */
 export function loadMode(dir?: string): ModeState {
-  const env = (process.env.EURINHASH_MODE || "").trim().toLowerCase();
+  const env = (process.env.TOLLFREE_MODE || process.env.EURINHASH_MODE || "").trim().toLowerCase();
   if (env === "pro" || env === "free") {
     return { mode: env };
   }

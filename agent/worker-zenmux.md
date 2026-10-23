@@ -1,5 +1,5 @@
 ---
-description: Worker ZenMux du mode free-router (ZenMux AI - PAYG). Appelé par @eurinhash, pas directement.
+description: Worker ZenMux du mode free-router (ZenMux AI - PAYG). Appelé par @tollfree, pas directement.
 mode: subagent
 model: zenmux/anthropic/claude-sonnet-5-free
 temperature: 0.2

@@ -4,7 +4,7 @@
  * Pluggable selection strategies, adapted from
  * ingridtoulotte/llm-fallback-router (MIT, 0 deps).
  *
- * Adapted for opencode/EURINHASH: instead of "which LLM provider",
+ * Adapted for opencode/TOLLFREE: instead of "which LLM provider",
  * we route "which worker agent" based on task type.
  *
  * Strategies:
@@ -59,8 +59,8 @@ export const priorityStrategy: Strategy = {
       cmpBy(
         (c) => priorityOf(c.target),
         (c) => -c.health.score(),
-        (c) => c.health.latencyMs(),
-      ),
+        (c) => c.health.latencyMs()
+      )
     );
   },
 };
@@ -69,7 +69,12 @@ export const priorityStrategy: Strategy = {
 export const latencyStrategy: Strategy = {
   name: "latency",
   order(cands) {
-    return [...cands].sort(cmpBy((c) => c.health.latencyMs(), (c) => -c.health.score()));
+    return [...cands].sort(
+      cmpBy(
+        (c) => c.health.latencyMs(),
+        (c) => -c.health.score()
+      )
+    );
   },
 };
 
@@ -77,7 +82,12 @@ export const latencyStrategy: Strategy = {
 export const costStrategy: Strategy = {
   name: "cost",
   order(cands) {
-    return [...cands].sort(cmpBy((c) => c.estCostUsd ?? 0, (c) => priorityOf(c.target)));
+    return [...cands].sort(
+      cmpBy(
+        (c) => c.estCostUsd ?? 0,
+        (c) => priorityOf(c.target)
+      )
+    );
   },
 };
 
@@ -89,7 +99,12 @@ export const balancedStrategy: Strategy = {
   name: "balanced",
   order(cands) {
     const composite = (c: Candidate) => c.health.score() - c.health.latencyMs() / 100;
-    return [...cands].sort(cmpBy((c) => -composite(c), (c) => priorityOf(c.target)));
+    return [...cands].sort(
+      cmpBy(
+        (c) => -composite(c),
+        (c) => priorityOf(c.target)
+      )
+    );
   },
 };
 
@@ -128,7 +143,7 @@ export function weightedStrategy(rng: () => number = Math.random): Strategy {
 
 export function resolveStrategy(
   s: StrategyName | Strategy | undefined,
-  rng?: () => number,
+  rng?: () => number
 ): Strategy {
   if (s === undefined) return balancedStrategy;
   if (typeof s !== "string") return s;

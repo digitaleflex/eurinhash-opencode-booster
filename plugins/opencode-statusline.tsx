@@ -214,7 +214,7 @@ const zhCN: Messages = {
     { title: "醒目", description: "数据值全高亮：费用警告色、速度成功色、分支信息色" },
     { title: "柔和", description: "统一淡灰色调，低视觉干扰" },
     { title: "素净", description: "无加粗，所有值使用默认色" },
-    { title: "EURINHASH", description: "任务控制风格：providers亮色、风险警告色、路由信息色" },
+    { title: "TOLLFREE", description: "任务控制风格：providers亮色、风险警告色、路由信息色" },
   ],
   toggleRow: (label, ln) => `第 ${ln + 1} 行`,
   mainTitle: "Statusline 配置",
@@ -284,7 +284,7 @@ const fr: Messages = {
     { title: "Vibrant", description: "Toutes les données en surbrillance : coût en avertissement, vitesse en succès" },
     { title: "Discret", description: "Gris uniforme, faible perturbation visuelle" },
     { title: "Sobre", description: "Pas de gras, toutes les valeurs en couleur par défaut" },
-    { title: "EURINHASH", description: "Télémétrie mission-control : providers verts, alertes risque, infos routage" },
+    { title: "TOLLFREE", description: "Télémétrie mission-control : providers verts, alertes risque, infos routage" },
   ],
   toggleRow: (_label, ln) => `Ligne ${ln + 1}`,
   mainTitle: "Config Statusline",
@@ -354,7 +354,7 @@ const en: Messages = {
     { title: "Vibrant", description: "All data highlighted: cost in warning, speed in success, branch in info" },
     { title: "Subtle", description: "Uniform muted gray, low visual noise" },
     { title: "Clean", description: "No bold, all values in default color" },
-    { title: "EURINHASH", description: "Mission-control telemetry: providers green, risk warnings, routing info" },
+    { title: "TOLLFREE", description: "Mission-control telemetry: providers green, risk warnings, routing info" },
   ],
   toggleRow: (_label, ln) => `Row ${ln + 1}`,
   mainTitle: "Statusline Config",
@@ -482,7 +482,7 @@ const PRESET_COLORS: NamedPreset[] = [
     },
   },
   {
-    title: "EURINHASH", description: "Mission-control telemetry: providers green, risk warnings, routing info",
+    title: "TOLLFREE", description: "Mission-control telemetry: providers green, risk warnings, routing info",
     colors: {
       model: { color: "accent", bold: true },
       "provider-health": { color: "success" },
@@ -554,15 +554,18 @@ function resolveColor(theme: TuiThemeCurrent, color?: string): RGBA | undefined 
   return undefined
 }
 
-// ─── EURINHASH runtime state polling ────────────────────────────────────
+// ─── TOLLFREE runtime state polling ────────────────────────────────────
 
-const EURINHASH_DIR = join(homedir(), ".config", "opencode")
-const CIRCUIT_PATH = join(EURINHASH_DIR, "provider_circuit.json")
-const USAGE_PATH = join(EURINHASH_DIR, "provider_usage.json")
+const TOLLFREE_DIR =
+  process.env.TOLLFREE_DIR?.trim() ||
+  process.env.OPENCODE_CONFIG_DIR?.trim() ||
+  join(process.env.XDG_CONFIG_HOME?.trim() || join(homedir(), ".config"), "opencode")
+const CIRCUIT_PATH = join(TOLLFREE_DIR, "provider_circuit.json")
+const USAGE_PATH = join(TOLLFREE_DIR, "provider_usage.json")
 
 const CIRCUIT_ORDER = ["mistral", "groq", "zhipu", "novita", "google", "openrouter", "together", "huggingface", "sambanova", "pollinations", "cerebras", "ollama", "cohere", "cloudflare", "deepseek", "mammouth"]
 
-// Priority order shared with the EURINHASH supervisor: first "ok" wins.
+// Priority order shared with the TOLLFREE supervisor: first "ok" wins.
 const ADVISOR_ORDER = ["codestral", "groq", "novita", "zhipu", "sambanova", "google", "cerebras", "cohere", "ollama", "pollinations"]
 
 // provider id (from model string) -> short worker label
@@ -580,7 +583,7 @@ interface AdvisorSuggestion { label: string; level: "ok" | "warn" | "bad" }
 
 async function readAdvisor(): Promise<AdvisorSuggestion> {
   try {
-    const raw = await readFile(join(EURINHASH_DIR, "free-models.json"), "utf-8")
+    const raw = await readFile(join(TOLLFREE_DIR, "free-models.json"), "utf-8")
     const json = JSON.parse(raw) as { models?: Record<string, string> }
     const models = json.models ?? {}
     const stateOf = (w: string): string => models[`worker-${w}`] ?? models[w] ?? "unknown"
@@ -632,12 +635,12 @@ const DANGEROUS_TOOLS = ["rm", "dd", "mkfs", "shred", "drop database", "drop tab
 async function readAuditTail(): Promise<string> {
   try {
     const { readdirSync } = await import("fs")
-    const files = readdirSync(join(EURINHASH_DIR, "logs"))
+    const files = readdirSync(join(TOLLFREE_DIR, "logs"))
       .filter((f: string) => /^audit-.*\.jsonl$/.test(f))
       .sort()
     if (files.length === 0) return ""
     const { readFileSync } = await import("fs")
-    const buf = readFileSync(join(EURINHASH_DIR, "logs", files[files.length - 1]), "utf-8")
+    const buf = readFileSync(join(TOLLFREE_DIR, "logs", files[files.length - 1]), "utf-8")
     const lines = buf.split("\n").filter(Boolean)
     if (lines.length === 0) return ""
     const last = JSON.parse(lines[lines.length - 1]) as { event?: string; tool?: string; agent?: string }
@@ -653,12 +656,12 @@ interface AuditCounts { sensitiveOps: number; dangerousOps: number }
 async function readAuditCounts(): Promise<AuditCounts> {
   try {
     const { readdirSync } = await import("fs")
-    const files = readdirSync(join(EURINHASH_DIR, "logs"))
+    const files = readdirSync(join(TOLLFREE_DIR, "logs"))
       .filter((f: string) => /^audit-.*\.jsonl$/.test(f))
       .sort()
     if (files.length === 0) return { sensitiveOps: 0, dangerousOps: 0 }
     const { readFileSync } = await import("fs")
-    const buf = readFileSync(join(EURINHASH_DIR, "logs", files[files.length - 1]), "utf-8")
+    const buf = readFileSync(join(TOLLFREE_DIR, "logs", files[files.length - 1]), "utf-8")
     let sensitiveOps = 0
     let dangerousOps = 0
     for (const raw of buf.split("\n")) {
@@ -685,7 +688,7 @@ async function readBudget(): Promise<BudgetData> {
     const today = new Date().toISOString().slice(0, 10)
     const usageRaw = await readFile(USAGE_PATH, "utf-8")
     const usage = JSON.parse(usageRaw) as Record<string, number>
-    const budgetRaw = await readFile(join(EURINHASH_DIR, "daily_budget.json"), "utf-8")
+    const budgetRaw = await readFile(join(TOLLFREE_DIR, "daily_budget.json"), "utf-8")
     const budget = JSON.parse(budgetRaw) as { limit: number; period: string }
     const limit = budget?.limit ?? 100
     let totalCalls = 0
@@ -706,10 +709,10 @@ async function readBudget(): Promise<BudgetData> {
 
 async function readEngineMode(): Promise<{ text: string; level: "free" | "pro" }> {
   try {
-    const env = (typeof process !== "undefined" ? process.env.EURINHASH_MODE : "") || ""
+    const env = (typeof process !== "undefined" ? process.env.TOLLFREE_MODE : "") || ""
     if (env.toLowerCase() === "pro") return { text: "PRO", level: "pro" }
     if (env.toLowerCase() === "free") return { text: "FREE", level: "free" }
-    const raw = await readFile(join(EURINHASH_DIR, "mode.json"), "utf-8")
+    const raw = await readFile(join(TOLLFREE_DIR, "mode.json"), "utf-8")
     const json = JSON.parse(raw) as { mode?: string }
     if (json.mode === "pro") return { text: "PRO", level: "pro" }
     return { text: "FREE", level: "free" }
@@ -718,7 +721,7 @@ async function readEngineMode(): Promise<{ text: string; level: "free" | "pro" }
   }
 }
 
-async function pollEURINHASH(): Promise<{ providerStates: Record<string, string>; fallbackCount: number; quotaToday: number; auditTail: string; sensitiveOpsToday: number; dangerousOpsToday: number; budgetPct: number; budgetLimit: number; todayCost: number; topProvider: string; advisorLabel: string; advisorLevel: "ok" | "warn" | "bad"; modeText: string; modeLevel: "free" | "pro" }> {
+async function pollTOLLFREE(): Promise<{ providerStates: Record<string, string>; fallbackCount: number; quotaToday: number; auditTail: string; sensitiveOpsToday: number; dangerousOpsToday: number; budgetPct: number; budgetLimit: number; todayCost: number; topProvider: string; advisorLabel: string; advisorLevel: "ok" | "warn" | "bad"; modeText: string; modeLevel: "free" | "pro" }> {
   const [states, quota, tail, counts, budget, advisor, engineMode] = await Promise.all([
     readCircuit(), readQuota(), readAuditTail(), readAuditCounts(), readBudget(), readAdvisor(), readEngineMode(),
   ])
@@ -1043,7 +1046,7 @@ function nextProfileName(profiles: Profiles, locale?: Locale): string {
 // ─── Export / Import ───────────────────────────────────────────────────
 
 function exportPath(): string {
-  return join(homedir(), ".config", "opencode", "statusline-config.json")
+  return join(TOLLFREE_DIR, "statusline-config.json")
 }
 
 interface WidgetItem {
@@ -1070,7 +1073,7 @@ async function tryInstallGlobal(api: TuiPluginApi, locale?: Locale) {
     }
 
     const srcPath = join(projectDir, ".opencode", "plugins", "opencode-statusline.tsx")
-    const configDir = join(homedir(), ".config", "opencode")
+    const configDir = TOLLFREE_DIR
     const pluginDir = join(configDir, "plugins")
     const pluginDest = join(pluginDir, "opencode-statusline.tsx")
 
@@ -1470,12 +1473,12 @@ function showAuditDetailsDialog(
     let options: TuiDialogSelectOption<string | null>[] = []
     try {
       const { readdirSync } = await import("fs")
-      const files = readdirSync(join(EURINHASH_DIR, "logs"))
+      const files = readdirSync(join(TOLLFREE_DIR, "logs"))
         .filter((f: string) => /^audit-.*\.jsonl$/.test(f))
         .sort()
       if (files.length > 0) {
         const { readFileSync } = await import("fs")
-        const buf = readFileSync(join(EURINHASH_DIR, "logs", files[files.length - 1]), "utf-8")
+        const buf = readFileSync(join(TOLLFREE_DIR, "logs", files[files.length - 1]), "utf-8")
         const lines = buf.split("\n").filter(Boolean)
         if (lines.length > 0) {
           lastEvent = JSON.parse(lines[lines.length - 1])
@@ -2050,7 +2053,7 @@ const tui: TuiPlugin = async (api, options, meta) => {
     setData((prev) => ({ ...prev, gitBranch: api.state.vcs?.branch }))
 
     const pollTimer = setInterval(async () => {
-      const extra = await pollEURINHASH()
+      const extra = await pollTOLLFREE()
       setData((prev) => ({ ...prev, ...extra }))
     }, 2000)
 

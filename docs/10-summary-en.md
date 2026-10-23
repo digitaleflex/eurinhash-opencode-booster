@@ -1,4 +1,4 @@
-# Summary — EURINHASH OpenCode Configuration
+# Summary — TOLLFREE OpenCode Configuration
 
 ## Overview
 
@@ -24,7 +24,7 @@ We applied three advanced recommendations to strengthen the system:
 - Allows a test request after timeout (HALF_OPEN)
 - Automatically closes on success
 
-**Implementation**: `scripts/hash-direct.py` with `provider_circuit.json` state file.
+**Implementation**: `tollfree direct` with `provider_circuit.json` state file.
 
 **Impact**: Prevents cascading failures, saves quota, improves reliability.
 
@@ -36,7 +36,7 @@ We applied three advanced recommendations to strengthen the system:
 
 **Solution**: Local tracking of calls per provider/model per day.
 
-**Implementation**: `scripts/hash-direct.py` with `provider_usage.json`. Each call increments a counter. Providers have defined limits (groq: 50, mistral: 30, etc.).
+**Implementation**: `tollfree direct` with `provider_usage.json`. Each call increments a counter. Providers have defined limits (groq: 50, mistral: 30, etc.).
 
 **Impact**: Prevents quota exhaustion, enables informed decisions, provides usage statistics.
 
@@ -46,11 +46,11 @@ We applied three advanced recommendations to strengthen the system:
 
 **Problem**: `opencode run` hangs on Windows due to SDK bug, blocking all automation.
 
-**Solution**: Created `hash-direct-wrapper.py` and `/run` command that bypasses the bug by calling providers directly.
+**Solution**: Created `tollfree direct` and `/run` command that bypasses the bug by calling providers directly.
 
-**Implementation**: `scripts/hash-direct-wrapper.py` + `command/run.md`.
+**Implementation**: `tollfree direct` + `command/run.md`.
 
-**Impact**: Restores automation capability on Windows, provides `/run`, `/hash-direct`, `/audit-log` commands.
+**Impact**: Restores automation capability on Windows, provides `/run`, `/direct`, `/audit-log` commands.
 
 ---
 
@@ -61,8 +61,8 @@ opencode
 ├── agent/              # 11 role agents + 10 workers
 ├── command/            # 7 slash commands
 ├── plugin/            # audit-logger.ts, guard.ts
-├── scripts/            # hash-direct.py, hash-direct-wrapper.py, etc.
-├── skills/             # hash-agent-matrix, hash-token-efficiency, etc.
+├── scripts/            # tollfree direct, tollfree direct, etc.
+├── skills/             # tollfree-agent-matrix, tollfree-token-efficiency, etc.
 ├── docs/               # 10 English documentation files
 ├── logs/               # Audit logs (JSONL)
 └── config/             # opencode.jsonc, provider keys, state files
@@ -72,7 +72,7 @@ opencode
 
 | Agent | Model | Provider |
 |-------|-------|----------|
-| eurinhash (supervisor) | `google/gemini-2.5-flash` | Groq |
+| tollfree (supervisor) | `google/gemini-2.5-flash` | Groq |
 | planner, architect, design-lead, docwriter | `google/gemini-2.5-flash` | Groq |
 | builder, quality-engineer, tester, security, reviewer, git-engineer | `google/gemini-2.5-flash` | Mistral |
 | worker-* | Various | Free/Paid fallback |
@@ -80,22 +80,22 @@ opencode
 ### Commands (8)
 
 - `/run` - Wrapper for opencode run (bypasses Windows bug)
-- `/hash-direct` - Direct provider access with fallback
+- `/direct` - Direct provider access with fallback
 - `/audit-log` - View JSONL audit log
 - `/commit` - Git commit with conventional message
 - `/review` - Code review by reviewer agent
 - `/quota` - View and manage quotas
-- `/myfree-eurinhash` - Test all free models
-- `/hash-direct --status/list/reset` - System management
+- `/free-test` - Test all free models
+- `/direct --status/list/reset` - System management
 
 ### Scripts (7)
 
-- `hash-direct.py` - Main wrapper with circuit breaker + quota tracking
-- `hash-direct-wrapper.py` - Alias for opencode run
-- `free-probe.py` - Test model availability
-- `quota.py` - Manual quota management
-- `myfree-eurinhash.py` - Complete model test
-- `view-audit-log.py` - Display audit log
+- `tollfree direct` - Main wrapper with circuit breaker + quota tracking
+- `tollfree direct` - Alias for opencode run
+- `tollfree probe` - Test model availability
+- `tollfree quota` - Manual quota management
+- `tollfree free-test` - Complete model test
+- `tollfree audit-log` - Display audit log
 
 ### Plugins (7 active)
 
@@ -109,11 +109,11 @@ opencode
 
 ### Skills (5)
 
-- `hash-agent-matrix` - L1-L4 task routing
-- `hash-token-efficiency` - Optimize token usage
-- `hash-code-navigation` - Efficient codebase search
-- `hash-verification` - Proportional verification levels
-- `hash-enterprise-development` - Enterprise compliance
+- `tollfree-agent-matrix` - L1-L4 task routing
+- `tollfree-token-efficiency` - Optimize token usage
+- `tollfree-code-navigation` - Efficient codebase search
+- `tollfree-verification` - Proportional verification levels
+- `tollfree-enterprise-development` - Enterprise compliance
 
 ---
 
@@ -171,7 +171,7 @@ All documentation is available in English and French:
 - 7 scripts
 - 5 skills
 - Circuit breaker + quota tracking
-- Windows workaround (/run, /hash-direct)
+- Windows workaround (/run, /direct)
 - Documentation (English + French)
 - GitHub repo pushed
 
@@ -199,4 +199,4 @@ opencode /run "test"
 ---
 
 *Summary generated $(date)*
-*By the EURINHASH team*
+*By the TOLLFREE team*

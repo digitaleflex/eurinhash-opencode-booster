@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Architecture Change — EurinHash Canonical Issue Contract
+        ## Architecture Change — Tollfree Canonical Issue Contract
         Fill in all required sections. Missing data is represented as `UNKNOWN`, never guessed.
 
   - type: input

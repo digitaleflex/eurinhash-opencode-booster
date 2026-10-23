@@ -1,8 +1,8 @@
-# Architecture — EURINHASH
+# Architecture — TOLLFREE
 
 ## Overview
 
-EURINHASH is an intelligent supervisor for OpenCode that guarantees:
+TOLLFREE is an intelligent supervisor for OpenCode that guarantees:
 - **100% free** : No paid models by default
 - **Never down** : Automatic provider rotation on failure
 - **Transparent** : Detailed logs, integrated monitoring
@@ -10,11 +10,11 @@ EURINHASH is an intelligent supervisor for OpenCode that guarantees:
 
 ---
 
-## EURINHASH Protocol (6 Steps)
+## TOLLFREE Protocol (6 Steps)
 
 ### Step 1 — Probe
 ```
-Read free-models.json (>30min = re-probe via free-probe.py)
+Read free-models.json (>30min = re-probe via tollfree probe)
 Mark providers OK/KO
 ```
 
@@ -27,7 +27,7 @@ Chat: groq → zhipu → mistral → openrouter → novita → together
 ### Step 3 — Delegate
 ```
 Send complete task + context to 1st available worker
-Include EURINHASH instructions
+Include TOLLFREE instructions
 ```
 
 ### Step 4 — Rotate
@@ -49,7 +49,7 @@ If all providers KO:
 ### Step 6 — No Paid
 ```
 Never use paid model without explicit approval
-EURINHASH Pro = only if user explicitly approves
+TOLLFREE Pro = only if user explicitly approves
 ```
 
 ---
@@ -104,18 +104,18 @@ CLOSED ──[3 failures]──► OPEN
 ```
 User
   │
-  └─► OpenCode TUI (eurinhash agent)
+  └─► OpenCode TUI (tollfree agent)
                 │
         ┌───────┴───────┐
         ▼               ▼
-  opencode run      hash-direct
+  opencode run      direct
   (NATIVE - bug)   wrapper.py
   (Windows SDK)     (WORKAROUND)
         │               │
         └───────┬───────┘
                 ▼
       ┌─────────────────┐
-      │ hash-direct.py  │
+      │ tollfree direct  │
       │ ┌─────────────┐ │
       │ │Circuit Breaker│ │
       │ │  (file)     │ │
@@ -152,7 +152,7 @@ User
 ### Agents (19)
 | Agent | Role |
 |-------|------|
-| eurinhash | Supervisor, provider rotation |
+| tollfree | Supervisor, provider rotation |
 | planner | Planning before action |
 | architect | Architecture decisions |
 | design-lead | UI/UX direction |
@@ -168,12 +168,12 @@ User
 ### Scripts (7)
 | Script | Purpose |
 |--------|---------|
-| `hash-direct.py` | Main wrapper with circuit breaker + quota |
-| `hash-direct-wrapper.py` | Alias for `opencode run` |
-| `free-probe.py` | Test free model availability |
-| `quota.py` | Manual quota management |
-| `myfree-eurinhash.py` | Complete free model test |
-| `view-audit-log.py` | Audit log display |
+| `tollfree direct` | Main wrapper with circuit breaker + quota |
+| `tollfree direct` | Alias for `opencode run` |
+| `tollfree probe` | Test free model availability |
+| `tollfree quota` | Manual quota management |
+| `tollfree free-test` | Complete free model test |
+| `tollfree audit-log` | Audit log display |
 
 ### Plugins (3)
 | Plugin | Purpose |
@@ -184,13 +184,13 @@ User
 ### Commands (8)
 | Command | Purpose |
 |---------|---------|
-| `/run` | hash-direct wrapper |
-| `/hash-direct` | Direct provider access |
+| `/run` | direct wrapper |
+| `/direct` | Direct provider access |
 | `/audit-log` | Audit log display |
 | `/commit` | Git commit |
 | `/review` | Code review |
 | `/quota` | Quota management |
-| `/myfree-eurinhash` | Test free models |
+| `/free-test` | Test free models |
 
 ---
 
@@ -259,7 +259,7 @@ User
 | `free-models.json` | `~/.config/opencode/` | Model availability cache |
 | `provider_usage.json` | `~/.config/opencode/` | Usage counters |
 | `provider_circuit.json` | `~/.config/opencode/` | Circuit breaker states |
-| `myfree-eurinhash-report.json` | `~/.config/opencode/` | Model test report |
+| `free-test-report.json` | `~/.config/opencode/` | Model test report |
 | `logs/audit-YYYY-MM-DD.jsonl` | `~/.config/opencode/logs/` | Detailed audit log |
 
 ---
@@ -268,17 +268,17 @@ User
 
 ### Add a new provider
 1. Create API key file: `echo "KEY" > .newprovider-key`
-2. Add in `hash-direct.py`:
+2. Add in `tollfree direct`:
    - Endpoint in `ENDPOINTS`
    - Models in `MODELS`
    - Call function
    - Limit in `QUOTA_LIMITS`
-3. Test: `python scripts/hash-direct.py --provider newprovider "test"`
+3. Test: `tollfree direct --provider newprovider "test"`
 
 ### Add a new agent
 1. Create `agent/my-agent.md`
 2. Define model and instructions
-3. Update `skills/hash-agent-matrix/SKILL.md`
+3. Update `skills/tollfree-agent-matrix/SKILL.md`
 
 ---
 
@@ -286,7 +286,7 @@ User
 
 | Step | Latency |
 |------|---------|
-| hash-direct-wrapper → hash-direct | ~0ms |
+| direct-wrapper → direct | ~0ms |
 | Circuit breaker check | ~1ms |
 | Quota check | ~1ms |
 | Groq API (qwen-32b) | ~500-2000ms |

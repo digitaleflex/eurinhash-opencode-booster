@@ -94,7 +94,11 @@ export class GovernanceOrchestrator {
    *   (dashboard) injects defaultWorkerExecutor() explicitly; tests inject
    *   a stub or nothing. An execution failure never changes the verdict.
    */
-  constructor(budgetOpts?: TaskBudgetOpts, stateStore?: StateStore | null, workerExecutor?: WorkerExecutor | null) {
+  constructor(
+    budgetOpts?: TaskBudgetOpts,
+    stateStore?: StateStore | null,
+    workerExecutor?: WorkerExecutor | null
+  ) {
     this.policyEngine = new PolicyEngine();
     this.proofVerifier = new ProofVerifier();
     this.merkleAudit = new MerkleAuditTrail();
@@ -136,8 +140,7 @@ export class GovernanceOrchestrator {
       budget = budgetOverride;
     } else if (
       budgetOverride &&
-      ((typeof budgetOverride.maxMs !== "undefined" &&
-        budgetOverride.maxMs !== null) ||
+      ((typeof budgetOverride.maxMs !== "undefined" && budgetOverride.maxMs !== null) ||
         typeof budgetOverride.maxTokens !== "undefined" ||
         typeof budgetOverride.maxToolCalls !== "undefined")
     ) {
@@ -225,214 +228,85 @@ export class GovernanceOrchestrator {
         startClassify = Date.now();
         taskType = classifyTask(task);
       } catch (err) {
-      classifyMs = Date.now() - startClassify;
-      const totalMs = Date.now() - startTotal;
-      budget.spend(classifyMs);
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: 0,
-        policy_evaluation_ms: 0,
-        guard_check_ms: 0,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
-        taskId,
-        taskType: TaskType.FEATURE_LIMITED,
-        riskLevel: RiskLevel.HIGH,
-        policyDecision: {
-          decision: "BLOCKED",
-          policy: null,
-          proofsRequired: [],
-          humanApproval: false,
-          reason: (err as Error).message,
-        },
-        guardDecision: "ALLOWED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-    const taskWithType = { ...task, taskType: taskType! };
-    classifyMs = Date.now() - startClassify;
-    budget.spend(classifyMs);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "classification",
-      input: task,
-      output: taskType,
-      decision: "APPROVED",
-      duration_ms: classifyMs,
-    });
-    logGovernanceEvent("governance.classify", { taskId, decision: "APPROVED", taskType });
-
-    let ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "classification");
-
-    const startRisk = Date.now();
-    riskLevel = assessRisk(taskWithType);
-    const taskWithRisk = { ...taskWithType, risk: riskLevel };
-    riskMs = Date.now() - startRisk;
-    budget.spend(riskMs);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "risk",
-      input: taskWithType,
-      output: riskLevel,
-      decision: "APPROVED",
-      duration_ms: riskMs,
-    });
-    logGovernanceEvent("governance.risk", { taskId, decision: "APPROVED", riskLevel });
-
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "risk");
-
-    // --- Injection Detection ---
-    const startInjection = Date.now();
-    const injectionReport = this.injectionDetector.scanTask(task);
-    injectionMs = Date.now() - startInjection;
-    budget.spend(injectionMs);
-    if (injectionReport.action === "BLOCK") {
-      const totalMs = Date.now() - startTotal;
-      this.merkleAudit.record({
-        timestamp: new Date().toISOString(),
-        taskId,
-        taskDescription: task.description,
-        stage: "injection",
-        decision: "BLOCKED",
-        detail: { categories: injectionReport.categories, riskScore: injectionReport.riskScore },
-      });
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: 0,
-        guard_check_ms: 0,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
-        taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: {
-          decision: "BLOCKED",
-          policy: null,
-          proofsRequired: [],
-          humanApproval: false,
-          reason: `Injection detected: ${injectionReport.categories.join(", ")}`,
-        },
-        guardDecision: "BLOCKED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "injection");
-
-    // --- Semantic intent judgment (novel phrasings that regex lists miss) ---
-    const startSemantic = Date.now();
-    const semanticResult = judgeSemantic([task.description, task.operation || ""].join(" "));
-    const semanticBlocked = semanticResult.action === "BLOCK";
-    budget.spend(Date.now() - startSemantic);
-    if (semanticBlocked) {
-      const totalMs = Date.now() - startTotal;
-      this.merkleAudit.record({
-        timestamp: new Date().toISOString(),
-        taskId,
-        taskDescription: task.description,
-        stage: "semantic",
-        decision: "BLOCKED",
-        detail: { score: semanticResult.score, reasons: semanticResult.reasons },
-      });
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: 0,
-        guard_check_ms: 0,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
-        taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: {
-          decision: "BLOCKED",
-          policy: null,
-          proofsRequired: [],
-          humanApproval: false,
-          reason: `Semantic hijack intent: ${semanticResult.reasons.join(", ")}`,
-        },
-        guardDecision: "BLOCKED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-    // Optional model-backed judge (e.g. a free-tier model) consulted only
-    // when the heuristic did not already block.
-    if (judgeProvider && !semanticBlocked) {
-      try {
-        const ext = await judgeProvider.judge([task.description, task.operation || ""].join(" "));
-        if (ext.flagged && ext.confidence >= 0.7) {
-          const totalMs = Date.now() - startTotal;
-          this.merkleAudit.record({
-            timestamp: new Date().toISOString(),
-            taskId,
-            taskDescription: task.description,
-            stage: "semantic",
+        classifyMs = Date.now() - startClassify;
+        const totalMs = Date.now() - startTotal;
+        budget.spend(classifyMs);
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: 0,
+          policy_evaluation_ms: 0,
+          guard_check_ms: 0,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: TaskType.FEATURE_LIMITED,
+          riskLevel: RiskLevel.HIGH,
+          policyDecision: {
             decision: "BLOCKED",
-            detail: { provider: true, confidence: ext.confidence, reason: ext.reason },
-          });
-          this.metrics.push({
-            classification_ms: classifyMs,
-            risk_assessment_ms: riskMs,
-            policy_evaluation_ms: 0,
-            guard_check_ms: 0,
-            proof_verification_ms: 0,
-            pipeline_total_ms: totalMs,
-          });
-          return {
-            taskId,
-            taskType: taskType!,
-            riskLevel: riskLevel!,
-            policyDecision: {
-              decision: "BLOCKED",
-              policy: null,
-              proofsRequired: [],
-              humanApproval: false,
-              reason: `Model judge flagged: ${ext.reason ?? "hijack intent"}`,
-            },
-            guardDecision: "BLOCKED",
-            proofStatus: "FAIL",
-            verdict: "BLOCKED",
-          };
-        }
-      } catch {
-        // A failing external judge must never fail the pipeline open or closed.
+            policy: null,
+            proofsRequired: [],
+            humanApproval: false,
+            reason: (err as Error).message,
+          },
+          guardDecision: "ALLOWED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
       }
-    }
+      const taskWithType = { ...task, taskType: taskType! };
+      classifyMs = Date.now() - startClassify;
+      budget.spend(classifyMs);
+      this.logAuditEntry({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "classification",
+        input: task,
+        output: taskType,
+        decision: "APPROVED",
+        duration_ms: classifyMs,
+      });
+      logGovernanceEvent("governance.classify", { taskId, decision: "APPROVED", taskType });
 
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "semantic");
+      let ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "classification");
 
-    // --- MCP Governance (tool poisoning / rug-pull) ---
-    const mcpManifest = (task.data as Record<string, unknown> | undefined)?.mcpManifest as
-      McpManifest | undefined;
-    if (mcpManifest) {
-      const mcpResult = this.getMcpGovernance().verifyManifest(mcpManifest);
-      if (!mcpResult.valid) {
+      const startRisk = Date.now();
+      riskLevel = assessRisk(taskWithType);
+      const taskWithRisk = { ...taskWithType, risk: riskLevel };
+      riskMs = Date.now() - startRisk;
+      budget.spend(riskMs);
+      this.logAuditEntry({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "risk",
+        input: taskWithType,
+        output: riskLevel,
+        decision: "APPROVED",
+        duration_ms: riskMs,
+      });
+      logGovernanceEvent("governance.risk", { taskId, decision: "APPROVED", riskLevel });
+
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "risk");
+
+      // --- Injection Detection ---
+      const startInjection = Date.now();
+      const injectionReport = this.injectionDetector.scanTask(task);
+      injectionMs = Date.now() - startInjection;
+      budget.spend(injectionMs);
+      if (injectionReport.action === "BLOCK") {
         const totalMs = Date.now() - startTotal;
         this.merkleAudit.record({
           timestamp: new Date().toISOString(),
           taskId,
           taskDescription: task.description,
-          stage: "mcp",
+          stage: "injection",
           decision: "BLOCKED",
-          detail: { reason: mcpResult.reason, changes: mcpResult.changes },
+          detail: { categories: injectionReport.categories, riskScore: injectionReport.riskScore },
         });
         this.metrics.push({
           classification_ms: classifyMs,
@@ -451,294 +325,534 @@ export class GovernanceOrchestrator {
             policy: null,
             proofsRequired: [],
             humanApproval: false,
-            reason: `MCP manifest rejected: ${mcpResult.reason}`,
+            reason: `Injection detected: ${injectionReport.categories.join(", ")}`,
           },
           guardDecision: "BLOCKED",
           proofStatus: "FAIL",
           verdict: "BLOCKED",
         };
       }
-    }
 
-    // --- Anomaly Detection ---
-    const startAnomaly = Date.now();
-    anomalyResult = this.anomalyDetector.analyze(taskWithRisk, riskLevel, taskWithType.taskType);
-    this.anomalyDetector.updateBaseline(taskWithType.taskType, riskLevel, task.description.length);
-    this.persistState();
-    anomalyMs = Date.now() - startAnomaly;
-    budget.spend(anomalyMs);
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "injection");
 
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "anomaly");
+      // --- Semantic intent judgment (novel phrasings that regex lists miss) ---
+      const startSemantic = Date.now();
+      const semanticResult = judgeSemantic([task.description, task.operation || ""].join(" "));
+      const semanticBlocked = semanticResult.action === "BLOCK";
+      budget.spend(Date.now() - startSemantic);
+      if (semanticBlocked) {
+        const totalMs = Date.now() - startTotal;
+        this.merkleAudit.record({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "semantic",
+          decision: "BLOCKED",
+          detail: { score: semanticResult.score, reasons: semanticResult.reasons },
+        });
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: 0,
+          guard_check_ms: 0,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision: {
+            decision: "BLOCKED",
+            policy: null,
+            proofsRequired: [],
+            humanApproval: false,
+            reason: `Semantic hijack intent: ${semanticResult.reasons.join(", ")}`,
+          },
+          guardDecision: "BLOCKED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
+      }
+      // Optional model-backed judge (e.g. a free-tier model) consulted only
+      // when the heuristic did not already block.
+      if (judgeProvider && !semanticBlocked) {
+        try {
+          const ext = await judgeProvider.judge([task.description, task.operation || ""].join(" "));
+          if (ext.flagged && ext.confidence >= 0.7) {
+            const totalMs = Date.now() - startTotal;
+            this.merkleAudit.record({
+              timestamp: new Date().toISOString(),
+              taskId,
+              taskDescription: task.description,
+              stage: "semantic",
+              decision: "BLOCKED",
+              detail: { provider: true, confidence: ext.confidence, reason: ext.reason },
+            });
+            this.metrics.push({
+              classification_ms: classifyMs,
+              risk_assessment_ms: riskMs,
+              policy_evaluation_ms: 0,
+              guard_check_ms: 0,
+              proof_verification_ms: 0,
+              pipeline_total_ms: totalMs,
+            });
+            return {
+              taskId,
+              taskType: taskType!,
+              riskLevel: riskLevel!,
+              policyDecision: {
+                decision: "BLOCKED",
+                policy: null,
+                proofsRequired: [],
+                humanApproval: false,
+                reason: `Model judge flagged: ${ext.reason ?? "hijack intent"}`,
+              },
+              guardDecision: "BLOCKED",
+              proofStatus: "FAIL",
+              verdict: "BLOCKED",
+            };
+          }
+        } catch {
+          // A failing external judge must never fail the pipeline open or closed.
+        }
+      }
 
-    const startPolicy = Date.now();
-    const engineMode = loadMode().mode;
-    policyDecision = this.policyEngine.evaluatePolicy(taskWithRisk, engineMode);
-    policyMs = Date.now() - startPolicy;
-    budget.spend(policyMs);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "policy",
-      input: taskWithRisk,
-      output: policyDecision.decision,
-      decision: policyDecision.decision as "APPROVED" | "BLOCKED" | "PENDING",
-      duration_ms: policyMs,
-    });
-    logGovernanceEvent("governance.policy", {
-      taskId,
-      decision: policyDecision.decision === "REQUIRES_HUMAN" ? "PENDING" : policyDecision.decision,
-      policy: policyDecision.policy?.name ?? null,
-    });
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "semantic");
 
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "policy");
+      // --- MCP Governance (tool poisoning / rug-pull) ---
+      const mcpManifest = (task.data as Record<string, unknown> | undefined)?.mcpManifest as
+        McpManifest | undefined;
+      if (mcpManifest) {
+        const mcpResult = this.getMcpGovernance().verifyManifest(mcpManifest);
+        if (!mcpResult.valid) {
+          const totalMs = Date.now() - startTotal;
+          this.merkleAudit.record({
+            timestamp: new Date().toISOString(),
+            taskId,
+            taskDescription: task.description,
+            stage: "mcp",
+            decision: "BLOCKED",
+            detail: { reason: mcpResult.reason, changes: mcpResult.changes },
+          });
+          this.metrics.push({
+            classification_ms: classifyMs,
+            risk_assessment_ms: riskMs,
+            policy_evaluation_ms: 0,
+            guard_check_ms: 0,
+            proof_verification_ms: 0,
+            pipeline_total_ms: totalMs,
+          });
+          return {
+            taskId,
+            taskType: taskType!,
+            riskLevel: riskLevel!,
+            policyDecision: {
+              decision: "BLOCKED",
+              policy: null,
+              proofsRequired: [],
+              humanApproval: false,
+              reason: `MCP manifest rejected: ${mcpResult.reason}`,
+            },
+            guardDecision: "BLOCKED",
+            proofStatus: "FAIL",
+            verdict: "BLOCKED",
+          };
+        }
+      }
 
-    if (policyDecision.decision === "BLOCKED") {
-      const totalMs = Date.now() - startTotal;
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: policyMs,
-        guard_check_ms: 0,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
-        taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision,
-        guardDecision: "ALLOWED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-
-    const startGuard = Date.now();
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "guard");
-
-    if (!task || typeof task.description !== "string" || !task.description.trim()) {
-      guardMs = Date.now() - startGuard;
-      budget.spend(guardMs);
-      const totalMs = Date.now() - startTotal;
-      this.merkleAudit.record({
-        timestamp: new Date().toISOString(),
-        taskId,
-        taskDescription: task.description,
-        stage: "guard",
-        decision: "BLOCKED",
-        detail: { reason: "blank description" },
-      });
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: policyMs,
-        guard_check_ms: guardMs,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
-        taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: policyDecision!,
-        guardDecision: "ALLOWED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-    // Guard evaluation with hard timeout (anti Guardrail-DoS)
-    const guardCheckStart = Date.now();
-    const guardResult = this.guardOverrides.checkWithBudget(
-      taskWithRisk,
-      budget,
-      GovernanceOrchestrator.GUARD_TIMEOUT_MS
-    );
-    const guardCheckElapsed = Date.now() - guardCheckStart;
-    if (guardCheckElapsed > GovernanceOrchestrator.GUARD_TIMEOUT_MS) {
-      console.warn(
-        `[GovernanceOrchestrator] guard timeout after ${guardCheckElapsed}ms (limit ${GovernanceOrchestrator.GUARD_TIMEOUT_MS}ms)`
+      // --- Anomaly Detection ---
+      const startAnomaly = Date.now();
+      anomalyResult = this.anomalyDetector.analyze(taskWithRisk, riskLevel, taskWithType.taskType);
+      this.anomalyDetector.updateBaseline(
+        taskWithType.taskType,
+        riskLevel,
+        task.description.length
       );
-      guardMs = Date.now() - startGuard;
-      budget.spend(guardMs);
-      const totalMs = Date.now() - startTotal;
-      this.merkleAudit.record({
+      this.persistState();
+      anomalyMs = Date.now() - startAnomaly;
+      budget.spend(anomalyMs);
+
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "anomaly");
+
+      const startPolicy = Date.now();
+      const engineMode = loadMode().mode;
+      policyDecision = this.policyEngine.evaluatePolicy(taskWithRisk, engineMode);
+      policyMs = Date.now() - startPolicy;
+      budget.spend(policyMs);
+      this.logAuditEntry({
         timestamp: new Date().toISOString(),
         taskId,
         taskDescription: task.description,
-        stage: "guard",
-        decision: "BLOCKED",
-        detail: { reason: "guard timeout", elapsed: guardCheckElapsed },
+        stage: "policy",
+        input: taskWithRisk,
+        output: policyDecision.decision,
+        decision: policyDecision.decision as "APPROVED" | "BLOCKED" | "PENDING",
+        duration_ms: policyMs,
       });
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: policyMs,
-        guard_check_ms: guardCheckElapsed,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
+      logGovernanceEvent("governance.policy", {
+        taskId,
+        decision:
+          policyDecision.decision === "REQUIRES_HUMAN" ? "PENDING" : policyDecision.decision,
+        policy: policyDecision.policy?.name ?? null,
       });
+
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "policy");
+
+      if (policyDecision.decision === "BLOCKED") {
+        const totalMs = Date.now() - startTotal;
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: policyMs,
+          guard_check_ms: 0,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision,
+          guardDecision: "ALLOWED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
+      }
+
+      const startGuard = Date.now();
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "guard");
+
+      if (!task || typeof task.description !== "string" || !task.description.trim()) {
+        guardMs = Date.now() - startGuard;
+        budget.spend(guardMs);
+        const totalMs = Date.now() - startTotal;
+        this.merkleAudit.record({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "guard",
+          decision: "BLOCKED",
+          detail: { reason: "blank description" },
+        });
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: policyMs,
+          guard_check_ms: guardMs,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision: policyDecision!,
+          guardDecision: "ALLOWED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
+      }
+      // Guard evaluation with hard timeout (anti Guardrail-DoS)
+      const guardCheckStart = Date.now();
+      const guardResult = this.guardOverrides.checkWithBudget(
+        taskWithRisk,
+        budget,
+        GovernanceOrchestrator.GUARD_TIMEOUT_MS
+      );
+      const guardCheckElapsed = Date.now() - guardCheckStart;
+      if (guardCheckElapsed > GovernanceOrchestrator.GUARD_TIMEOUT_MS) {
+        console.warn(
+          `[GovernanceOrchestrator] guard timeout after ${guardCheckElapsed}ms (limit ${GovernanceOrchestrator.GUARD_TIMEOUT_MS}ms)`
+        );
+        guardMs = Date.now() - startGuard;
+        budget.spend(guardMs);
+        const totalMs = Date.now() - startTotal;
+        this.merkleAudit.record({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "guard",
+          decision: "BLOCKED",
+          detail: { reason: "guard timeout", elapsed: guardCheckElapsed },
+        });
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: policyMs,
+          guard_check_ms: guardCheckElapsed,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        this.logAuditEntry({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "guard",
+          input: task.description,
+          output: "BLOCKED",
+          decision: "BLOCKED",
+          duration_ms: guardCheckElapsed,
+          reason: "guard timeout",
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision: policyDecision!,
+          guardDecision: "BLOCKED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
+      }
+      if (guardResult.decision === "BLOCKED" && guardResult.reason.includes("budget")) {
+        return budgetBlocked(guardResult.reason, "guard");
+      }
+      if (guardResult.decision === "BLOCKED" && guardResult.reason === "guard timeout") {
+        guardMs = Date.now() - startGuard;
+        budget.spend(guardMs);
+        const totalMs = Date.now() - startTotal;
+        this.merkleAudit.record({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "guard",
+          decision: "BLOCKED",
+          detail: { reason: "guard timeout", elapsed: guardCheckElapsed },
+        });
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: policyMs,
+          guard_check_ms: guardMs,
+          proof_verification_ms: 0,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision: policyDecision!,
+          guardDecision: "BLOCKED",
+          proofStatus: "FAIL",
+          verdict: "BLOCKED",
+        };
+      }
+
+      guardMs = Date.now() - startGuard;
+      budget.spend(guardMs);
       this.logAuditEntry({
         timestamp: new Date().toISOString(),
         taskId,
         taskDescription: task.description,
         stage: "guard",
         input: task.description,
-        output: "BLOCKED",
-        decision: "BLOCKED",
-        duration_ms: guardCheckElapsed,
-        reason: "guard timeout",
+        output: guardResult.decision,
+        decision: guardResult.decision === "ALLOWED" ? "APPROVED" : guardResult.decision,
+        duration_ms: guardMs,
+        reason: guardResult.reason,
       });
-      return {
+      logGovernanceEvent("governance.guard", {
         taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: policyDecision!,
-        guardDecision: "BLOCKED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-    if (
-      guardResult.decision === "BLOCKED" &&
-      guardResult.reason.includes("budget")
-    ) {
-      return budgetBlocked(guardResult.reason, "guard");
-    }
-    if (
-      guardResult.decision === "BLOCKED" &&
-      guardResult.reason === "guard timeout"
-    ) {
-      guardMs = Date.now() - startGuard;
-      budget.spend(guardMs);
-      const totalMs = Date.now() - startTotal;
-      this.merkleAudit.record({
+        decision: guardResult.decision === "ALLOWED" ? "APPROVED" : "BLOCKED",
+        guardDecision: guardResult.decision,
+        reason: guardResult.reason,
+      });
+
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "guard");
+
+      // --- Static rules (Semgrep-spirit code scan) ---
+      const startStatic = Date.now();
+      const staticReport = scanStatic([task.description, task.operation || ""].join("\n"));
+      budget.spend(Date.now() - startStatic);
+      this.logAuditEntry({
         timestamp: new Date().toISOString(),
         taskId,
         taskDescription: task.description,
         stage: "guard",
-        decision: "BLOCKED",
-        detail: { reason: "guard timeout", elapsed: guardCheckElapsed },
+        input: { staticRules: staticReport.rulesEvaluated },
+        output: { blocked: staticReport.blocked, findings: staticReport.findings.length },
+        decision: staticReport.blocked ? "BLOCKED" : "APPROVED",
+        duration_ms: Date.now() - startStatic,
       });
-      this.metrics.push({
-        classification_ms: classifyMs,
-        risk_assessment_ms: riskMs,
-        policy_evaluation_ms: policyMs,
-        guard_check_ms: guardMs,
-        proof_verification_ms: 0,
-        pipeline_total_ms: totalMs,
-      });
-      return {
+
+      ex = budget.exhausted();
+      if (ex.exhausted) return budgetBlocked(ex.reason!, "static");
+
+      const startProof = Date.now();
+      const proofChain = this.proofVerifier.generateProofChain(
+        { ...taskWithRisk, id: taskId },
+        policyDecision.policy!,
+        evidence
+      );
+
+      const proofStatus = this.proofVerifier.verifyProofChain(
+        proofChain,
+        { ...taskWithRisk, id: taskId },
+        evidence
+      );
+      const requiredProofs = policyDecision.proofsRequired || [];
+      const hasAllRequiredProofs = this.proofVerifier.checkMinimumProofs(
+        proofChain,
+        requiredProofs
+      );
+      proofMs = Date.now() - startProof;
+      budget.spend(proofMs);
+      this.logAuditEntry({
+        timestamp: new Date().toISOString(),
         taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: policyDecision!,
-        guardDecision: "BLOCKED",
-        proofStatus: "FAIL",
-        verdict: "BLOCKED",
-      };
-    }
-
-    guardMs = Date.now() - startGuard;
-    budget.spend(guardMs);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "guard",
-      input: task.description,
-      output: guardResult.decision,
-      decision: guardResult.decision === "ALLOWED" ? "APPROVED" : guardResult.decision,
-      duration_ms: guardMs,
-      reason: guardResult.reason,
-    });
-    logGovernanceEvent("governance.guard", {
-      taskId,
-      decision: guardResult.decision === "ALLOWED" ? "APPROVED" : "BLOCKED",
-      guardDecision: guardResult.decision,
-      reason: guardResult.reason,
-    });
-
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "guard");
-
-    // --- Static rules (Semgrep-spirit code scan) ---
-    const startStatic = Date.now();
-    const staticReport = scanStatic([task.description, task.operation || ""].join("\n"));
-    budget.spend(Date.now() - startStatic);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "guard",
-      input: { staticRules: staticReport.rulesEvaluated },
-      output: { blocked: staticReport.blocked, findings: staticReport.findings.length },
-      decision: staticReport.blocked ? "BLOCKED" : "APPROVED",
-      duration_ms: Date.now() - startStatic,
-    });
-
-    ex = budget.exhausted();
-    if (ex.exhausted) return budgetBlocked(ex.reason!, "static");
-
-    const startProof = Date.now();
-    const proofChain = this.proofVerifier.generateProofChain(
-      { ...taskWithRisk, id: taskId },
-      policyDecision.policy!,
-      evidence
-    );
-
-    const proofStatus = this.proofVerifier.verifyProofChain(
-      proofChain,
-      { ...taskWithRisk, id: taskId },
-      evidence
-    );
-    const requiredProofs = policyDecision.proofsRequired || [];
-    const hasAllRequiredProofs = this.proofVerifier.checkMinimumProofs(proofChain, requiredProofs);
-    proofMs = Date.now() - startProof;
-    budget.spend(proofMs);
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "proof",
-      input: { requiredProofs, proofCount: proofChain.proofs.length },
-      output: { proofStatus, hasAllRequiredProofs },
-      decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
-      duration_ms: proofMs,
-    });
-    logGovernanceEvent("governance.proof", {
-      taskId,
-      decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
-      proofStatus,
-      hasAllRequiredProofs,
-    });
-
-    // D3: Record to merkle audit trail for tamper-evident logging
-    this.merkleAudit.record({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "proof",
-      decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
-      detail: {
-        requiredProofs: policyDecision.proofsRequired || [],
-        proofCount: proofChain.proofs.length,
+        taskDescription: task.description,
+        stage: "proof",
+        input: { requiredProofs, proofCount: proofChain.proofs.length },
+        output: { proofStatus, hasAllRequiredProofs },
+        decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
+        duration_ms: proofMs,
+      });
+      logGovernanceEvent("governance.proof", {
+        taskId,
+        decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
         proofStatus,
         hasAllRequiredProofs,
-      },
-    });
-    ex = budget.exhausted();
-    if (ex.exhausted) {
+      });
+
+      // D3: Record to merkle audit trail for tamper-evident logging
+      this.merkleAudit.record({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "proof",
+        decision: proofStatus === "PASS" && hasAllRequiredProofs ? "APPROVED" : "BLOCKED",
+        detail: {
+          requiredProofs: policyDecision.proofsRequired || [],
+          proofCount: proofChain.proofs.length,
+          proofStatus,
+          hasAllRequiredProofs,
+        },
+      });
+      ex = budget.exhausted();
+      if (ex.exhausted) {
+        const totalMs = Date.now() - startTotal;
+        this.merkleAudit.record({
+          timestamp: new Date().toISOString(),
+          taskId,
+          taskDescription: task.description,
+          stage: "final",
+          decision: "BLOCKED",
+          detail: {
+            taskType,
+            riskLevel,
+            policyDecision: policyDecision.decision,
+            guardDecision: guardResult.decision,
+            proofStatus,
+            anomalyScore: anomalyResult!.score,
+            injectionDetected: injectionReport.action !== "ALLOW",
+            semanticScore: semanticResult.score,
+            staticBlocked: staticReport.blocked,
+            evidenceProvided: Object.keys(evidence),
+            reason: ex.reason,
+            budgetExceeded: true,
+          },
+        });
+        this.metrics.push({
+          classification_ms: classifyMs,
+          risk_assessment_ms: riskMs,
+          policy_evaluation_ms: policyMs,
+          guard_check_ms: guardMs,
+          proof_verification_ms: proofMs,
+          pipeline_total_ms: totalMs,
+        });
+        return {
+          taskId,
+          taskType: taskType!,
+          riskLevel: riskLevel!,
+          policyDecision: { ...policyDecision!, decision: "BLOCKED", reason: ex.reason! },
+          guardDecision: guardResult.decision === "WARN" ? "BLOCKED" : guardResult.decision,
+          proofStatus,
+          verdict: "BLOCKED",
+        };
+      }
+
+      let verdict: "APPROVED" | "BLOCKED" | "REJECTED" = "APPROVED";
+
+      if (guardResult.decision === "BLOCKED") {
+        verdict = "BLOCKED";
+      } else if (guardResult.decision === "WARN") {
+        verdict = "BLOCKED";
+      } else if (semanticResult.action === "WARN") {
+        verdict = "BLOCKED";
+      } else if (staticReport.blocked) {
+        verdict = "BLOCKED";
+      } else if (anomalyResult!.isAnomalous && anomalyResult!.category === "anomalous") {
+        verdict = "BLOCKED";
+      } else if (proofStatus === "FAIL") {
+        verdict = "BLOCKED";
+      } else if (proofStatus === "PENDING") {
+        verdict = "BLOCKED";
+      } else if (!hasAllRequiredProofs) {
+        verdict = "BLOCKED";
+      } else if (policyDecision.humanApproval && !this.hasHumanApproval(proofChain)) {
+        verdict = "BLOCKED";
+      }
+
+      // D2 : persiste la chaîne de preuves (best-effort — n'altère jamais le verdict ;
+      // un échec disque est journalisé, pas transformé en BLOCKED : la décision est déjà prise).
+      try {
+        await saveProofChain(proofChain);
+      } catch (err) {
+        console.warn(
+          `[GovernanceOrchestrator] proof persistence failed for ${taskId}: ${(err as Error).message}`
+        );
+      }
+
+      // D1 : exécution réelle après APPROVED. L'échec d'exécution ne change
+      // jamais le verdict (la décision porte sur la permission, pas l'issue).
+      // Sans exécuteur injecté : pas d'exécution, output reste undefined.
+      let output: string | undefined;
+      let provider: string | undefined;
+      if (verdict === "APPROVED" && this.workerExecutor) {
+        try {
+          const exec = await this.workerExecutor(task.description);
+          if (exec.success) {
+            output = exec.output;
+            provider = exec.provider;
+          } else {
+            console.warn(
+              `[GovernanceOrchestrator] worker execution failed for ${taskId}: ${exec.error}`
+            );
+          }
+        } catch (err) {
+          console.warn(
+            `[GovernanceOrchestrator] worker executor threw for ${taskId}: ${(err as Error).message}`
+          );
+        }
+      }
+
       const totalMs = Date.now() - startTotal;
+
+      this.logAuditEntry({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "final",
+        input: { taskType, riskLevel, guardResult: guardResult.decision },
+        output: verdict,
+        decision: verdict as "APPROVED" | "BLOCKED",
+        duration_ms: totalMs,
+      });
+
+      // --- Merkle Audit Trail ---
       this.merkleAudit.record({
         timestamp: new Date().toISOString(),
         taskId,
         taskDescription: task.description,
         stage: "final",
-        decision: "BLOCKED",
+        decision: verdict,
         detail: {
           taskType,
           riskLevel,
@@ -747,12 +861,46 @@ export class GovernanceOrchestrator {
           proofStatus,
           anomalyScore: anomalyResult!.score,
           injectionDetected: injectionReport.action !== "ALLOW",
+          engineMode,
           semanticScore: semanticResult.score,
+          semanticReasons: semanticResult.reasons,
           staticBlocked: staticReport.blocked,
+          staticFindings: staticReport.findings.map((f) => `${f.ruleId}:${f.severity}`),
           evidenceProvided: Object.keys(evidence),
-          reason: ex.reason,
-          budgetExceeded: true,
         },
+      });
+
+      this.metrics.push({
+        classification_ms: classifyMs,
+        risk_assessment_ms: riskMs,
+        policy_evaluation_ms: policyMs,
+        guard_check_ms: guardMs,
+        proof_verification_ms: proofMs,
+        pipeline_total_ms: totalMs,
+      });
+
+      return {
+        taskId,
+        taskType: taskType!,
+        riskLevel: riskLevel!,
+        policyDecision: policyDecision!,
+        guardDecision: guardResult.decision === "WARN" ? "BLOCKED" : guardResult.decision,
+        proofStatus,
+        verdict,
+        ...(output !== undefined ? { output } : {}),
+        ...(provider !== undefined ? { provider } : {}),
+      };
+    } catch (error) {
+      // Fail-closed: any unexpected error = BLOCKED
+      const totalMs = Date.now() - startTotal;
+      const errMsg = error instanceof Error ? error.message : "Unknown governance error";
+      this.merkleAudit.record({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "final",
+        decision: "BLOCKED",
+        detail: { reason: errMsg, error: true },
       });
       this.metrics.push({
         classification_ms: classifyMs,
@@ -762,170 +910,33 @@ export class GovernanceOrchestrator {
         proof_verification_ms: proofMs,
         pipeline_total_ms: totalMs,
       });
+      this.logAuditEntry({
+        timestamp: new Date().toISOString(),
+        taskId,
+        taskDescription: task.description,
+        stage: "final",
+        input: { error: errMsg },
+        output: "BLOCKED",
+        decision: "BLOCKED",
+        duration_ms: totalMs,
+        reason: `Governance error: ${errMsg}`,
+      });
       return {
         taskId,
-        taskType: taskType!,
-        riskLevel: riskLevel!,
-        policyDecision: { ...policyDecision!, decision: "BLOCKED", reason: ex.reason! },
-        guardDecision: guardResult.decision === "WARN" ? "BLOCKED" : guardResult.decision,
-        proofStatus,
+        taskType: taskType ?? TaskType.FEATURE_LIMITED,
+        riskLevel: riskLevel ?? RiskLevel.HIGH,
+        policyDecision: {
+          decision: "BLOCKED",
+          policy: null,
+          proofsRequired: [],
+          humanApproval: false,
+          reason: `Governance error: ${errMsg}`,
+        },
+        guardDecision: "BLOCKED",
+        proofStatus: "FAIL",
         verdict: "BLOCKED",
       };
     }
-
-    let verdict: "APPROVED" | "BLOCKED" | "REJECTED" = "APPROVED";
-
-    if (guardResult.decision === "BLOCKED") {
-      verdict = "BLOCKED";
-    } else if (guardResult.decision === "WARN") {
-      verdict = "BLOCKED";
-    } else if (semanticResult.action === "WARN") {
-      verdict = "BLOCKED";
-    } else if (staticReport.blocked) {
-      verdict = "BLOCKED";
-    } else if (anomalyResult!.isAnomalous && anomalyResult!.category === "anomalous") {
-      verdict = "BLOCKED";
-    } else if (proofStatus === "FAIL") {
-      verdict = "BLOCKED";
-    } else if (proofStatus === "PENDING") {
-      verdict = "BLOCKED";
-    } else if (!hasAllRequiredProofs) {
-      verdict = "BLOCKED";
-    } else if (policyDecision.humanApproval && !this.hasHumanApproval(proofChain)) {
-      verdict = "BLOCKED";
-    }
-
-    // D2 : persiste la chaîne de preuves (best-effort — n'altère jamais le verdict ;
-    // un échec disque est journalisé, pas transformé en BLOCKED : la décision est déjà prise).
-    try {
-      await saveProofChain(proofChain);
-    } catch (err) {
-      console.warn(`[GovernanceOrchestrator] proof persistence failed for ${taskId}: ${(err as Error).message}`);
-    }
-
-    // D1 : exécution réelle après APPROVED. L'échec d'exécution ne change
-    // jamais le verdict (la décision porte sur la permission, pas l'issue).
-    // Sans exécuteur injecté : pas d'exécution, output reste undefined.
-    let output: string | undefined;
-    let provider: string | undefined;
-    if (verdict === "APPROVED" && this.workerExecutor) {
-      try {
-        const exec = await this.workerExecutor(task.description);
-        if (exec.success) {
-          output = exec.output;
-          provider = exec.provider;
-        } else {
-          console.warn(`[GovernanceOrchestrator] worker execution failed for ${taskId}: ${exec.error}`);
-        }
-      } catch (err) {
-        console.warn(`[GovernanceOrchestrator] worker executor threw for ${taskId}: ${(err as Error).message}`);
-      }
-    }
-
-    const totalMs = Date.now() - startTotal;
-
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "final",
-      input: { taskType, riskLevel, guardResult: guardResult.decision },
-      output: verdict,
-      decision: verdict as "APPROVED" | "BLOCKED",
-      duration_ms: totalMs,
-    });
-
-    // --- Merkle Audit Trail ---
-    this.merkleAudit.record({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "final",
-      decision: verdict,
-      detail: {
-        taskType,
-        riskLevel,
-        policyDecision: policyDecision.decision,
-        guardDecision: guardResult.decision,
-        proofStatus,
-        anomalyScore: anomalyResult!.score,
-        injectionDetected: injectionReport.action !== "ALLOW",
-        engineMode,
-        semanticScore: semanticResult.score,
-        semanticReasons: semanticResult.reasons,
-        staticBlocked: staticReport.blocked,
-        staticFindings: staticReport.findings.map((f) => `${f.ruleId}:${f.severity}`),
-        evidenceProvided: Object.keys(evidence),
-      },
-    });
-
-    this.metrics.push({
-      classification_ms: classifyMs,
-      risk_assessment_ms: riskMs,
-      policy_evaluation_ms: policyMs,
-      guard_check_ms: guardMs,
-      proof_verification_ms: proofMs,
-      pipeline_total_ms: totalMs,
-    });
-
-    return {
-      taskId,
-      taskType: taskType!,
-      riskLevel: riskLevel!,
-      policyDecision: policyDecision!,
-      guardDecision: guardResult.decision === "WARN" ? "BLOCKED" : guardResult.decision,
-      proofStatus,
-      verdict,
-      ...(output !== undefined ? { output } : {}),
-      ...(provider !== undefined ? { provider } : {}),
-    };
-  } catch (error) {
-    // Fail-closed: any unexpected error = BLOCKED
-    const totalMs = Date.now() - startTotal;
-    const errMsg = error instanceof Error ? error.message : "Unknown governance error";
-    this.merkleAudit.record({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "final",
-      decision: "BLOCKED",
-      detail: { reason: errMsg, error: true },
-    });
-    this.metrics.push({
-      classification_ms: classifyMs,
-      risk_assessment_ms: riskMs,
-      policy_evaluation_ms: policyMs,
-      guard_check_ms: guardMs,
-      proof_verification_ms: proofMs,
-      pipeline_total_ms: totalMs,
-    });
-    this.logAuditEntry({
-      timestamp: new Date().toISOString(),
-      taskId,
-      taskDescription: task.description,
-      stage: "final",
-      input: { error: errMsg },
-      output: "BLOCKED",
-      decision: "BLOCKED",
-      duration_ms: totalMs,
-      reason: `Governance error: ${errMsg}`,
-    });
-    return {
-      taskId,
-      taskType: taskType ?? TaskType.FEATURE_LIMITED,
-      riskLevel: riskLevel ?? RiskLevel.HIGH,
-      policyDecision: {
-        decision: "BLOCKED",
-        policy: null,
-        proofsRequired: [],
-        humanApproval: false,
-        reason: `Governance error: ${errMsg}`,
-      },
-      guardDecision: "BLOCKED",
-      proofStatus: "FAIL",
-      verdict: "BLOCKED",
-    };
-  }
   }
 
   private checkMinimumProofs(chain: ProofChain, required: ProofType[]): boolean {

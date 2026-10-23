@@ -1,4 +1,4 @@
-# Plugins Documentation — opencode-config EURINHASH
+# Plugins Documentation — opencode-config TOLLFREE
 
 ## Table of Contents
 1. [audit-logger.ts](#audit-loggerts)
@@ -32,7 +32,7 @@ Complete logging plugin that traces all tool calls and agent interactions in a r
 ```json
 {
   "timestamp": "2026-09-06T12:00:00Z",
-  "agent": "eurinhash",
+  "agent": "tollfree",
   "tool": "bash",
   "command": "rm -rf /tmp/test",
   "status": "blocked",
@@ -85,7 +85,7 @@ cat logs/audit-2026-09-06.jsonl
 grep "blocked" logs/audit-2026-09-06.jsonl
 
 # Statistics
-python scripts/view-audit-log.py
+tollfree audit-log
 ```
 
 ### Log Structure
@@ -122,38 +122,25 @@ Security plugin that blocks destructive commands before execution. Protection ag
 
 ### Blocked Commands
 
-| Command | Pattern | Action |
-|---------|---------|--------|
-| `rm -rf` | `/rm\s+-rf/` | Block |
-| `dd` | `/dd\s+if=/` | Block |
-| `mkfs` | `/mkfs/` | Block |
-| `> /etc/` | `/>\s*\/etc/` | Block |
-| `chmod 777` | `/chmod\s+777/` | Block |
-| `sudo rm` | `/sudo\s+rm/` | Block |
-| `shutdown` | `/shutdown/i` | Block |
-| `reboot` | `/reboot/i` | Block |
+Detection lives in `src/core/destructive-command.ts` (tested in `destructive-command.test.ts`).
+The command is canonicalized first (`$IFS`, quotes, escapes, `$HOME` → `~`), then split on `;`, `&&`, `||`, `|`.
+Only commands that are catastrophic in any context are blocked; `rm -rf node_modules` still runs.
+
+| Blocked | Examples |
+|---------|----------|
+| Recursive delete of `/` or the home directory | `rm -rf /`, `rm -fr /*`, `sudo rm -r -f ~`, `rm -rf $HOME`, `rm --no-preserve-root` |
+| Disk format | `mkfs`, `mkfs.ext4 /dev/sda1` |
+| Raw disk write | `dd ... of=/dev/sda` |
+| Remote history rewrite | `git push --force`, `git push -f`, `git push --force-with-lease`, `git push origin +main` |
 
 ### Configuration
-```typescript
-// Customize in guard.ts
-const BLOCKED_COMMANDS = [
-  ...SENSITIVE_PATTERNS,
-  "my_custom_command",
-];
-```
+To add a case: edit `checkSegment()` in `src/core/destructive-command.ts` and add the matching test.
 
 ### Usage
-The plugin works automatically. When a blocked command is detected:
-1. Execution is cancelled
-2. A warning message is displayed
-3. The audit logger records the event
+The plugin runs automatically. When a blocked command is detected, the tool call fails with:
 
-### Example Output
 ```
-⚠️ Command blocked: rm -rf /tmp/test
-Reason: Destructive operation detected
-User: user@machine
-Time: 2026-09-06T12:00:00Z
+Bloqué par guard.ts : commande destructive interdite (suppression récursive de / ou du dossier personnel).
 ```
 
 ---

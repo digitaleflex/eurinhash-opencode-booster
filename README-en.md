@@ -1,8 +1,8 @@
-# EURINHASH — AI Coding Agent Governance
+# Tollfree
 
 **Don't just build. Prove it.**
 
-EURINHASH is a governance layer for AI coding agents. It automatically selects the right orchestration level, agents, models, and controls based on task complexity and risk — then requires verifiable proof before considering work done.
+TOLLFREE is a governance layer for AI coding agents. It automatically selects the right orchestration level, agents, models, and controls based on task complexity and risk — then requires verifiable proof before considering work done.
 
 ---
 
@@ -25,13 +25,13 @@ EURINHASH is a governance layer for AI coding agents. It automatically selects t
 ## ✨ Features
 
 - **Models (free tiers, strict quotas)**: Groq, Google, Zhipu, Novita AI (**FREE**, 256K ctx), SambaNova, Pollinations (keyless), Cerebras (trial), Ollama (local), Cohere (trial) — see `docs/02-configuration-en.md` §3
-- **EURINHASH Supervisor**: Automatic provider rotation on quota/error
-- **25 agents**: 15 role agents (planner, architect, design-lead, builder, quality-engineer, tester, security, reviewer, git-engineer, docwriter, auditor, integrator, verifier, quota-guard, eurinhash) + 10 free/trial workers
+- **TOLLFREE Supervisor**: Automatic provider rotation on quota/error
+- **25 agents**: 15 role agents (planner, architect, design-lead, builder, quality-engineer, tester, security, reviewer, git-engineer, docwriter, auditor, integrator, verifier, quota-guard, tollfree) + 10 free/trial workers
 - **Circuit breaker**: Protection against failing providers (CLOSED/OPEN/HALF_OPEN)
 - **Local quota tracking**: Daily count per provider/model to prevent overuse
-- **hash-direct wrapper**: Bypass of the `opencode run` bug (Windows SDK workaround, optional on macOS/Linux)
+- **direct wrapper**: Bypass of the `opencode run` bug (Windows SDK workaround, optional on macOS/Linux)
 - **Audit logger**: JSONL logging of tool calls with sensitive ops detection and redaction
-- **Custom commands**: `/run`, `/hash-direct`, `/audit-log`, `/commit`, `/review`, `/quota`, `/mode`, `/myfree-eurinhash`
+- **Custom commands**: `/run`, `/direct`, `/audit-log`, `/commit`, `/review`, `/quota`, `/mode`, `/free-test`
 - **Plugins**: `better-compact`, `opencode-mem`, `envsitter-guard`, `oh-my-opencode-slim`, `opencode-plugin-preload-skills`, guard.ts, audit-logger.ts, auto-compact.ts
 - **Skill matrix**: Intelligent routing of tasks by complexity (L1-L4)
 
@@ -49,7 +49,7 @@ EURINHASH is a governance layer for AI coding agents. It automatically selects t
 ├── 📄 CONFIG-GUIDE.md            # Quick configuration guide
 ├── 📄 .gitignore                 # Sensitive file exclusions
 ├── 📁 agent/                     # 25 specialized agents
-│   ├── eurinhash.md              # Main supervisor
+│   ├── tollfree.md              # Main supervisor
 │   ├── planner.md                # Task planning
 │   ├── architect.md              # Technical architecture
 │   ├── design-lead.md            # Design direction
@@ -68,8 +68,8 @@ EURINHASH is a governance layer for AI coding agents. It automatically selects t
 ├── 📁 command/                   # 8 slash commands
 │   ├── audit-log.md              # Audit log
 │   ├── commit.md                 # Git commit
-│   ├── hash-direct.md            # Direct provider access
-│   ├── myfree-eurinhash.md       # Free model testing
+│   ├── direct.md            # Direct provider access
+│   ├── free-test.md       # Free model testing
 │   ├── quota.md                  # Quota management
 │   ├── review.md                 # Code review
 │   └── run.md                    # opencode run wrapper
@@ -78,27 +78,14 @@ EURINHASH is a governance layer for AI coding agents. It automatically selects t
 │   ├── guard.ts                  # Destructive protection + secret redaction
 │   └── auto-compact.ts           # Intelligent compaction
 ├── 📁 scripts/                   # 12 scripts (Python, Node, TypeScript)
-│   ├── hash-direct.py            # Main wrapper (circuit breaker + quota)
-│   ├── hash-direct-wrapper.py    # opencode run alias
-│   ├── free-probe.py             # Model availability testing
-│   ├── quota.py                  # Quota management
-│   ├── myfree-eurinhash.py       # Full model testing
-│   ├── view-audit-log.py         # Audit log display
-│   ├── route.py                  # EV routing + Bayesian feedback
-│   ├── models-free.py            # Free model inventory
-│   ├── patch-better-compact.py   # Windows fsync patch
 │   ├── session-review.mjs        # Session review
-│   ├── cleanup-opencode-db.mjs   # Database cleanup
 │   └── verify-golden.ts          # Golden test verification
-│   └── windows/                  # PowerShell scripts (Windows-only)
-│       ├── compact-docker-vhdx.ps1
-│       └── finish-cleanup.ps1
 ├── 📁 skills/                    # 30+ skills
-│   ├── hash-agent-matrix/        # L1-L4 routing
-│   ├── hash-code-navigation/     # Efficient codebase search
-│   ├── hash-token-efficiency/    # Token optimization
-│   ├── hash-verification/        # Proportional verification
-│   └── hash-enterprise-development/ # Enterprise development
+│   ├── tollfree-agent-matrix/        # L1-L4 routing
+│   ├── tollfree-code-navigation/     # Efficient codebase search
+│   ├── tollfree-token-efficiency/    # Token optimization
+│   ├── tollfree-verification/        # Proportional verification
+│   └── tollfree-enterprise-development/ # Enterprise development
 ├── 📁 docs/                      # Technical documentation (FR/EN)
 ├── 📁 logs/                      # Audit logs (JSONL)
 └── 📁 node_modules/              # Installed dependencies
@@ -109,15 +96,15 @@ EURINHASH is a governance layer for AI coding agents. It automatically selects t
 ```
 User
     │
-    ├─ opencode run "prompt" ──► hash-direct-wrapper.py ──► hash-direct.py
+    ├─ opencode run "prompt" ──► tollfree direct ──► tollfree direct
     │                                                                    │
     │                                                                    ├─► Circuit breaker (provider_circuit.json)
     │                                                                    ├─► Quota tracking (provider_usage.json)
     │                                                                    └─► API calls (Groq, Google, Zhipu, etc.)
     │
-    └─ opencode agent "task" ──► Agent (eurinhash/planner/etc.)
+    └─ opencode agent "task" ──► Agent (tollfree/planner/etc.)
                                     │
-                                    ├─► opencode run (if bug) ──► hash-direct.py
+                                    ├─► opencode run (if bug) ──► tollfree direct
                                     └─► opencode native (if working)
 ```
 
@@ -125,7 +112,7 @@ User
 
 | Agent | Role | Model | Provider |
 |-------|------|--------|----------|
-| **eurinhash** | Supervisor | `google/gemini-2.5-flash` | Google (FREE) |
+| **tollfree** | Supervisor | `google/gemini-2.5-flash` | Google (FREE) |
 | **planner** | Planning | `google/gemini-2.5-flash` | Google (FREE) |
 | **architect** | Architecture | `google/gemini-2.5-flash` | Google (FREE) |
 | **design-lead** | Design | `google/gemini-2.5-flash` | Google (FREE) |
@@ -155,57 +142,57 @@ User
 
 ## 🛠️ Installation
 
-### Prerequisites
+### Requirements
 
-- [OpenCode installed](https://opencode.ai/) (v0.10.0+)
-- Python 3.8+ (for scripts)
-- Node.js 18+ or [Bun](https://bun.sh) (for plugins)
-- API keys for free providers (see below)
-- `bash` (available natively on macOS/Linux, via WSL/Git Bash on Windows)
+- [OpenCode](https://opencode.ai/) installed
+- Node.js 18+ (Linux, macOS or Windows). Python is no longer needed.
+- Optional: free API keys (Groq, Google, Zhipu, OpenRouter, Novita…); with no key, OpenCode's built-in free models already work.
 
-### Steps
+### In 3 commands
 
-1. **Clone the repository** to `~/.config/opencode`:
-   ```bash
-   git clone https://github.com/digitaleflex/opencode-config.git ~/.config/opencode
-   ```
+```bash
+npm install -g tollfree     # or: pnpm add -g tollfree
+tollfree init               # installs agents, commands, skills and guardrails
+tollfree doctor             # checks that everything is in place
+```
 
-2. **Install dependencies**:
-   ```bash
-   cd ~/.config/opencode
-   npm install  # or bun install
-   ```
+> **Status:** the package is not published on npm yet. Meanwhile, from a clone:
+> `git clone <this repo> && cd <folder> && npm install && npm run build && npm link`, then `tollfree init`.
 
-3. **Create API key files** in `~/.config/opencode/`:
-   ```bash
-   # Required providers (for orchestration)
-   echo "YOUR_GROQ_KEY" > ~/.config/opencode/.groq-key
-   echo "YOUR_GEMINI_KEY" > ~/.config/opencode/.gemini-key
-   echo "YOUR_OPENROUTER_KEY" > ~/.config/opencode/.openrouter-key
-   echo "YOUR_NOVITA_KEY" > ~/.config/opencode/.novita-key
-   echo "YOUR_ZHIPU_KEY" > ~/.config/opencode/.zhipu-key
-   echo "YOUR_HF_KEY" > ~/.config/opencode/.hf-key
+`tollfree init` **adapts to the machine**:
 
-   # Optional providers
-   echo "YOUR_MISTRAL_KEY" > ~/.config/opencode/.mistral-key
-   echo "YOUR_TOGETHER_KEY" > ~/.config/opencode/.together-key
-   echo "YOUR_DEEPSEEK_KEY" > ~/.config/opencode/.deepseek-key
-   echo "YOUR_ZENMUX_KEY" > ~/.config/opencode/.zenmux-key
-   echo "YOUR_MAMMOUTH_KEY" > ~/.config/opencode/.mammouth-key
-   ```
+- detects your keys (env vars `GROQ_API_KEY`, `GEMINI_API_KEY`, `ZHIPU_API_KEY`, `OPENROUTER_API_KEY`, `NOVITA_API_KEY`… or `.groq-key`… files) and installs only the workers you can use;
+- notices a local Ollama;
+- swaps the model of an agent whose key is missing for a free built-in model (`--fallback-model` to pick another);
+- never overwrites an existing file you edited (`--force` backs it up, then replaces it);
+- leaves an existing `opencode.jsonc` alone (`--set-default` only adds `"default_agent": "tollfree"`).
 
-4. **Verify the configuration**:
-   ```bash
-   opencode /run "test"
-   ```
+| Command | What it does |
+|---|---|
+| `tollfree init [--global \| --project \| --dir <path>] [--dry-run]` | Install (global by default, or into `./.opencode` for one project) |
+| `tollfree update` | Update without touching your edits; follows keys you add or remove |
+| `tollfree uninstall [--purge]` | Remove only what was installed and restore your original files |
+| `tollfree doctor [--json]` | Diagnose Node, OpenCode, keys, Ollama and file integrity |
 
-### Installation on Different OS
+The target is OpenCode's config dir (`~/.config/opencode`, or `$XDG_CONFIG_HOME/opencode`); set `TOLLFREE_DIR` to use another.
+Each install writes `.tollfree/manifest.json` (files and hashes), which is what makes `update` and `uninstall` safe.
 
-| OS | Shell | Notes |
-|----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | `hash-direct.py` wrapper bypasses SDK bug. PowerShell scripts in `scripts/windows/`. |
-| **macOS** | bash / zsh | Everything works natively. `opencode run` works without wrapper. |
-| **Linux** | bash | Everything works natively. No workaround needed. |
+> Agents run the `tollfree` command in a terminal, so it must be on your `PATH` (`npm install -g`), not only run through `npx`.
+
+### API keys (optional)
+
+Easiest: export the provider's environment variable, then `tollfree update`. Otherwise a one-line file in the config dir:
+
+```bash
+echo "YOUR_KEY" > ~/.config/opencode/.groq-key     # same for .gemini-key, .zhipu-key, .openrouter-key, .novita-key
+```
+
+### Platforms
+
+| OS | Notes |
+|----|-------|
+| **Windows** | Node 18+ is enough. Agent commands use `bash` (Git Bash or WSL), like OpenCode. |
+| **macOS / Linux** | Works natively. |
 
 ---
 
@@ -213,16 +200,16 @@ User
 
 ### Custom Commands
 
-- `/run "your prompt"` → Uses hash-direct wrapper with automatic fallback
-- `/hash-direct [options] "prompt"` → Direct provider access with fine-grained control
+- `/run "your prompt"` → Uses direct wrapper with automatic fallback
+- `/direct [options] "prompt"` → Direct provider access with fine-grained control
 - `/audit-log` → Displays the audit log (JSONL)
 - `/commit` → Intelligent Git commit
 - `/review` → Code review
 - `/quota` → Quota management
 - `/mode` → Switch mode (FREE/PRO)
-- `/myfree-eurinhash` → Full free model testing
+- `/free-test` → Full free model testing
 
-### hash-direct Options
+### direct Options
 
 ```bash
 --model SPECIFIC    Use a specific model
@@ -238,20 +225,20 @@ User
 --list-providers    List configured providers
 ```
 
-### EURINHASH Routing
+### TOLLFREE Routing
 
 ```bash
 # Find the best worker for a task type
-python ~/.config/opencode/scripts/route.py code
+tollfree route code
 
 # Find the fallback worker
-python ~/.config/opencode/scripts/route.py code --next
+tollfree route code --next
 
 # List all workers with status
-python ~/.config/opencode/scripts/route.py list
+tollfree route list
 
 # Record a result (Bayesian feedback)
-python ~/.config/opencode/scripts/route.py record worker-groq success
+tollfree route record worker-groq success
 ```
 
 ---
@@ -283,19 +270,19 @@ python ~/.config/opencode/scripts/route.py record worker-groq success
 opencode /run --status
 
 # Test a specific provider
-opencode /hash-direct --provider groq "explain recursion"
+opencode /direct --provider groq "explain recursion"
 
 # List available models
-opencode /hash-direct --list
+opencode /direct --list
 
 # Reset quotas (for testing)
-opencode /hash-direct --reset-quota
+opencode /direct --reset-quota
 
 # View audit log
 opencode /audit-log
 
 # Test all free models
-opencode /myfree-eurinhash
+opencode /free-test
 ```
 
 ---
@@ -305,7 +292,7 @@ opencode /myfree-eurinhash
 ### opencode.jsonc
 
 The main configuration defines:
-- `default_agent`: "eurinhash"
+- `default_agent`: "tollfree"
 - `small_model`: "google/gemini-2.5-flash"
 - Bash and skills permissions
 - Free/trial providers by default, paid entries clearly marked (Mammouth as optional fallback)
@@ -313,12 +300,12 @@ The main configuration defines:
 
 ### Custom Skills
 
-- `hash-agent-matrix`: L1-L4 routing by complexity
-- `hash-token-efficiency`: Token optimization
-- `hash-code-navigation`: Efficient codebase search
-- `hash-verification`: Proportional verification
-- `hash-enterprise-development`: Enterprise development
-- `hash-verification`: Verification before completion
+- `tollfree-agent-matrix`: L1-L4 routing by complexity
+- `tollfree-token-efficiency`: Token optimization
+- `tollfree-code-navigation`: Efficient codebase search
+- `tollfree-verification`: Proportional verification
+- `tollfree-enterprise-development`: Enterprise development
+- `tollfree-verification`: Verification before completion
 
 ---
 
@@ -327,7 +314,7 @@ The main configuration defines:
 ### Common Issues
 
 1. **"Creating a session failed"** → Check that `opencode.json` (legacy) does not have `permission.task: "deny"` (rename to `.bak`)
-2. **Opencode run hangs** → Use `/run` or `/hash-direct` instead (Windows SDK bug workaround — macOS/Linux: `opencode run` works natively)
+2. **Opencode run hangs** → Use `/run` or `/direct` instead (Windows SDK bug workaround — macOS/Linux: `opencode run` works natively)
 3. **Quota exhausted** → Circuit breaker automatically switches to the next provider
 4. **Provider error 429** → Check `provider_circuit.json` and wait for timeout to end
 5. **Missing API key** → Create the corresponding `.xxx-key` file
@@ -346,7 +333,7 @@ Complete documentation is available in `docs/` (in English and French):
 
 | Document | Description |
 |----------|-------------|
-| [Architecture](docs/01-architecture-en.md) | Technical architecture, providers, EURINHASH protocol |
+| [Architecture](docs/01-architecture-en.md) | Technical architecture, providers, TOLLFREE protocol |
 | [Configuration](docs/02-configuration-en.md) | Full configuration guide |
 | [Agents](docs/03-agents-en.md) | All 25 agents documented |
 | [Scripts](docs/04-scripts-en.md) | Python scripts reference |
@@ -385,7 +372,7 @@ MIT — Adapt to your needs.
 
 ---
 
-*Configuration maintained with love by EurinHash*
+*Configuration maintained with love by Tollfree*
 *Last update: 2026-09-19*
 
 ---

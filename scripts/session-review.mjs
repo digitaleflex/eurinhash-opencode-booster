@@ -25,7 +25,11 @@ const di = argv.indexOf("--days");
 const DAYS = di !== -1 ? Number(argv[di + 1]) : 7;
 const AS_JSON = argv.includes("--json");
 
-const DB = join(homedir(), ".local", "share", "opencode", "opencode.db");
+const DB = join(
+  process.env.XDG_DATA_HOME?.trim() || join(homedir(), ".local", "share"),
+  "opencode",
+  "opencode.db"
+);
 if (!existsSync(DB)) {
   console.error(`❌ Base introuvable : ${DB}`);
   process.exit(1);

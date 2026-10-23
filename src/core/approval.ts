@@ -1,6 +1,6 @@
-// src/core/approval.ts — Human Approval Token (EURINHASH #6 / EU AI Act Art.14)
+// src/core/approval.ts — Human Approval Token (TOLLFREE #6 / EU AI Act Art.14)
 // Signed ApprovalToken with HMAC-SHA256, TTL, clock-skew, nonce replay protection.
-// Secret resolution mirrors merkle-audit.ts: explicit key > EURINHASH_APPROVAL_KEY > .approval-key > deterministic test key.
+// Secret resolution mirrors merkle-audit.ts: explicit key > TOLLFREE_APPROVAL_KEY > .approval-key > deterministic test key.
 
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -21,13 +21,13 @@ const CLOCK_SKEW_MS = 30_000; // 30s
 const NONCE_MIN_LEN = 8;
 const NONCE_BYTES = 16;
 
-const DETERMINISTIC_TEST_KEY = Buffer.from("eurinhash-test-approval-key-v1", "utf8");
+const DETERMINISTIC_TEST_KEY = Buffer.from("tollfree-test-approval-key-v1", "utf8");
 
 // In-memory replay protection: nonce -> expiresAt
 const seenNonces = new Map<string, number>();
 
 export function resolveApprovalKey(): Buffer {
-  const envKey = process.env.EURINHASH_APPROVAL_KEY;
+  const envKey = process.env.TOLLFREE_APPROVAL_KEY ?? process.env.EURINHASH_APPROVAL_KEY; // legacy name kept as fallback
   if (envKey && envKey.trim().length > 0) {
     return Buffer.from(envKey, "utf8");
   }
@@ -42,7 +42,7 @@ export function resolveApprovalKey(): Buffer {
   }
   // Fallback deterministic test key when NODE_ENV=test or when no key configured.
   // Keeping fallback deterministic ensures `bun test` works without env/file.
-  // In production callers should configure EURINHASH_APPROVAL_KEY or .approval-key.
+  // In production callers should configure TOLLFREE_APPROVAL_KEY or .approval-key.
   if (process.env.NODE_ENV === "test") {
     return DETERMINISTIC_TEST_KEY;
   }

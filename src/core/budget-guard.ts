@@ -1,9 +1,9 @@
 /**
  * src/core/budget-guard.ts
  *
- * Budget guard + quota tracking for EURINHASH workers, adapted from
+ * Budget guard + quota tracking for TOLLFREE workers, adapted from
  * ingridtoulotte/llm-fallback-router budget.ts (MIT) and
- * research/patterns/budget-guard-pattern.ts.
+ * historical research/patterns/budget-guard-pattern.ts (see git history).
  *
  * Keyed by WORKER ID (worker-novita, worker-groq, ...) rather than model ID,
  * matching GovernanceOrchestrator's unit of routing.
@@ -105,7 +105,8 @@ export class BudgetGuard {
       workerRequests,
       warnings: {
         daily: this.limits.daily !== undefined && this.dailySpent / this.limits.daily >= 0.75,
-        monthly: this.limits.monthly !== undefined && this.monthlySpent / this.limits.monthly >= 0.75,
+        monthly:
+          this.limits.monthly !== undefined && this.monthlySpent / this.limits.monthly >= 0.75,
       },
     };
   }
@@ -114,7 +115,8 @@ export class BudgetGuard {
   isCritical(): boolean {
     this.checkReset();
     if (this.limits.daily !== undefined && this.dailySpent / this.limits.daily >= 0.9) return true;
-    if (this.limits.monthly !== undefined && this.monthlySpent / this.limits.monthly >= 0.9) return true;
+    if (this.limits.monthly !== undefined && this.monthlySpent / this.limits.monthly >= 0.9)
+      return true;
     return false;
   }
 

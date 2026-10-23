@@ -938,14 +938,14 @@ describe("GuardOverrides confinement integration (#3)", () => {
 
 describe("StateStore + detector persistence (#5)", () => {
   test("save/load round-trip", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-state-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-state-"));
     const store = new StateStore(dir);
     store.save("x", { a: 1, b: [2, 3] });
     expect(store.load<{ a: number }>("x")!.a).toBe(1);
   });
 
   test("load returns null for missing/corrupt", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-state-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-state-"));
     const store = new StateStore(dir);
     expect(store.load("nope")).toBeNull();
   });
@@ -963,7 +963,7 @@ describe("StateStore + detector persistence (#5)", () => {
   });
 
   test("orchestrator persistence is opt-in", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-state-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-state-"));
     const store = new StateStore(dir);
     const o = new GovernanceOrchestrator(undefined, store);
     await o.execute({ description: "fix typo in readme" });
@@ -1039,7 +1039,7 @@ describe("ApprovalToken (#6 / Art.14)", () => {
 
 describe("McpGovernance (#7)", () => {
   test("first-seen manifest is valid", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-mcp-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-mcp-"));
     const g = new McpGovernance(join(dir, "trust.yaml"));
     const r = g.verifyManifest({
       server: "srv-a",
@@ -1049,7 +1049,7 @@ describe("McpGovernance (#7)", () => {
   });
 
   test("description change is rejected (rug-pull)", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-mcp-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-mcp-"));
     const g = new McpGovernance(join(dir, "trust.yaml"));
     g.registerManifest({ server: "srv-b", tools: [{ name: "read", description: "Read a file" }] });
     const r = g.verifyManifest({
@@ -1060,7 +1060,7 @@ describe("McpGovernance (#7)", () => {
   });
 
   test("added tool is flagged", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-mcp-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-mcp-"));
     const g = new McpGovernance(join(dir, "trust.yaml"));
     g.registerManifest({ server: "srv-c", tools: [{ name: "read", description: "Read a file" }] });
     const r = g.verifyManifest({
@@ -1075,7 +1075,7 @@ describe("McpGovernance (#7)", () => {
   });
 
   test("suspicious tool description is rejected", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-mcp-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-mcp-"));
     const g = new McpGovernance(join(dir, "trust.yaml"));
     const r = g.verifyManifest({
       server: "srv-d",
@@ -1261,28 +1261,28 @@ describe("SemanticJudge", () => {
 
 describe("EngineMode free/pro", () => {
   test("loadMode defaults to free (fail-closed)", () => {
-    const prev = process.env.EURINHASH_MODE;
-    delete process.env.EURINHASH_MODE;
+    const prev = process.env.TOLLFREE_MODE;
+    delete process.env.TOLLFREE_MODE;
     try {
-      expect(loadMode(mkdtempSync(join(tmpdir(), "eurinhash-mode-"))).mode).toBe("free");
+      expect(loadMode(mkdtempSync(join(tmpdir(), "tollfree-mode-"))).mode).toBe("free");
     } finally {
-      if (prev !== undefined) process.env.EURINHASH_MODE = prev;
+      if (prev !== undefined) process.env.TOLLFREE_MODE = prev;
     }
   });
 
   test("env overrides file", () => {
-    const prev = process.env.EURINHASH_MODE;
-    process.env.EURINHASH_MODE = "pro";
+    const prev = process.env.TOLLFREE_MODE;
+    process.env.TOLLFREE_MODE = "pro";
     try {
       expect(loadMode().mode).toBe("pro");
     } finally {
-      if (prev !== undefined) process.env.EURINHASH_MODE = prev;
-      else delete process.env.EURINHASH_MODE;
+      if (prev !== undefined) process.env.TOLLFREE_MODE = prev;
+      else delete process.env.TOLLFREE_MODE;
     }
   });
 
   test("save/load round-trip with cap", () => {
-    const dir = mkdtempSync(join(tmpdir(), "eurinhash-mode-"));
+    const dir = mkdtempSync(join(tmpdir(), "tollfree-mode-"));
     saveMode({ mode: "pro", proMonthlyCapUsd: 10 }, dir);
     const loaded = loadMode(dir);
     expect(loaded.mode).toBe("pro");

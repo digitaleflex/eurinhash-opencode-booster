@@ -6,7 +6,6 @@ logs/
 bun.lockb
 
 # Vendored / archived content (not ours to reformat)
-skills-archive/
 .oh-my-opencode-slim/
 
 # Formats prettier cannot / should not touch here

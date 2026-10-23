@@ -1,7 +1,7 @@
-# Documentation des Agents — opencode-config EURINHASH
+# Documentation des Agents — opencode-config TOLLFREE
 
 ## Table des matières
-1. [eurinhash.md](#eurinhashmd)
+1. [tollfree.md](#tollfreemd)
 2. [planner.md](#plannermd)
 3. [architect.md](#architectmd)
 4. [design-lead.md](#design-leadmd)
@@ -13,21 +13,21 @@
 10. [git-engineer.md](#git-engineermd)
 11. [docwriter.md](#docwritermd)
 12. [Workers (fallback)](#workers-fallback)
-13. [Routing matrix (hash-agent-matrix)](#routing-matrix)
+13. [Routing matrix (tollfree-agent-matrix)](#routing-matrix)
 
 ---
 
-## 1. eurinhash.md — Superviseur
+## 1. tollfree.md — Superviseur
 
 ### Rôle
-Superviseur EURINHASH principal. Gère la rotation des providers, le quota tracking, le circuit breaker, et décide quel agent/provider utiliser selon le type de tâche.
+Superviseur TOLLFREE principal. Gère la rotation des providers, le quota tracking, le circuit breaker, et décide quel agent/provider utiliser selon le type de tâche.
 
 ### Modèle
 - `google/gemini-2.5-flash` (via Groq API)
 
-### Protocol EURINHASH (6 étapes)
+### Protocol TOLLFREE (6 étapes)
 
-**Étape 1 — Probe** : Lire `free-models.json`. Si >30min ou fichier absent → lancer `python scripts/free-probe.py`.
+**Étape 1 — Probe** : Lire `free-models.json`. Si >30min ou fichier absent → lancer `tollfree probe`.
 
 **Étape 2 — Pick** : Définir l'ordre de fallback :
 - Tâche **code** : `groq → mistral → zhipu → openrouter → novita → together`
@@ -56,10 +56,10 @@ Superviseur EURINHASH principal. Gère la rotation des providers, le quota track
 
 ```bash
 # Via le TUI OpenCode
-/agent eurinhash "Gère ma session"
+/agent tollfree "Gère ma session"
 
 # Via le prompt
-@eurinhash Gère ma session : ...
+@tollfree Gère ma session : ...
 ```
 
 ### Logique de décision
@@ -462,13 +462,13 @@ Documentation technique. README, API docs, guides.
 - `cohere/command-a-03-2025`
 - Trial (1000 appels/mois, sans carte, non-commercial)
 
-> Cloudflare Workers AI n'a pas de worker : sondé via `free-probe.py`
+> Cloudflare Workers AI n'a pas de worker : sondé via `tollfree probe`
 > (`worker-cloudflare` dans `free-models.json`) mais le mapping provider
 > OpenCode reste à valider live — ne pas router vers lui.
 
 ---
 
-## 13. Routing matrix (hash-agent-matrix)
+## 13. Routing matrix (tollfree-agent-matrix)
 
 ### Niveaux
 | Niveau | Description | Exemple |

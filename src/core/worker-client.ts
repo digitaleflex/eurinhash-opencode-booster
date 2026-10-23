@@ -1,7 +1,7 @@
 // src/core/worker-client.ts — Free Worker HTTP Client (D1-core)
 //
 // Exécution réelle des tâches APPROVED via les providers gratuits
-// (même endpoints/clés que scripts/free-probe.py : groq, zhipu,
+// (même endpoints/clés que tollfree probe : groq, zhipu,
 // openrouter, novita). Seuls les endpoints OpenAI-compatibles sont
 // couverts (google/gemini et les workers intégrés ont une autre forme
 // d'API — voir dashboard/server.ts pour le routage EV complet).
@@ -12,7 +12,7 @@
 // ne doivent jamais être un effet de bord implicite d'une librairie.
 
 import { join } from "node:path";
-import { homedir } from "node:os";
+import { configDir } from "./paths";
 import { readFileSync } from "node:fs";
 
 export interface WorkerCall {
@@ -61,7 +61,7 @@ export const WORKER_CALLS: WorkerCall[] = [
 ];
 
 export function workerKeysDir(): string {
-  return join(homedir(), ".config", "opencode");
+  return configDir();
 }
 
 export function readWorkerKey(keyFile: string): string {
@@ -73,7 +73,7 @@ export function readWorkerKey(keyFile: string): string {
 }
 
 const SYSTEM_PROMPT =
-  "Tu es EURINHASH, un agent d'ingénierie. Réponds de façon concise et technique.";
+  "Tu es TOLLFREE, un agent d'ingénierie. Réponds de façon concise et technique.";
 
 type FetchImpl = typeof fetch;
 
@@ -115,7 +115,10 @@ export async function callWorker(
     return { ok: true, output };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "erreur";
-    return { ok: false, error: err instanceof Error && err.name === "AbortError" ? "timeout" : msg };
+    return {
+      ok: false,
+      error: err instanceof Error && err.name === "AbortError" ? "timeout" : msg,
+    };
   } finally {
     clearTimeout(timer);
   }
@@ -131,7 +134,8 @@ export async function executeWithWorkers(
   opts?: { workers?: WorkerCall[]; call?: typeof callWorker; timeoutMs?: number }
 ): Promise<WorkerExecution> {
   const workers = opts?.workers ?? WORKER_CALLS;
-  const call = opts?.call ?? ((w: WorkerCall, p: string) => callWorker(w, p, opts?.timeoutMs ?? 30000));
+  const call =
+    opts?.call ?? ((w: WorkerCall, p: string) => callWorker(w, p, opts?.timeoutMs ?? 30000));
   let lastError = "aucun worker configuré";
   let lastProvider: string | undefined;
   for (const worker of workers) {

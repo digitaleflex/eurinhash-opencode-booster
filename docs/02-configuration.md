@@ -1,4 +1,4 @@
-# Guide de Configuration — opencode-config EURINHASH
+# Guide de Configuration — opencode-config TOLLFREE
 
 ## Table des matières
 1. [Installation rapide](#1-installation-rapide)
@@ -43,7 +43,7 @@ echo "votre-cle-mistral" > .mistral-key
 # ... autres clés
 
 # 2. Vérifier l'installation
-python scripts/hash-direct.py --list-providers
+tollfree direct --list-providers
 
 # 3. Tester
 opencode /run "test"
@@ -57,7 +57,7 @@ opencode /run "test"
 ```jsonc
 {
   // Agent par défaut
-  "default_agent": "eurinhash",
+  "default_agent": "tollfree",
 
   // Modèle pour les tâches simples
   "small_model": "google/gemini-2.5-flash",
@@ -248,7 +248,7 @@ cat .groq-key
 # 3. La stocker :
 echo "votre-cle-sambanova" > ~/.config/opencode/.sambanova-key
 chmod 600 ~/.config/opencode/.sambanova-key
-# 4. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 4. Vérifier : tollfree probe
 ```
 Modèles configurés : `DeepSeek-V3.1`, `Meta-Llama-3.3-70B-Instruct`,
 `gpt-oss-120b`. Quotas gratuits : 20 req/min, 20 req/jour, 200K tokens/jour
@@ -263,7 +263,7 @@ echo "votre-cle-pollinations" > ~/.config/opencode/.pollinations-key
 # puis dans opencode.jsonc, provider pollinations :
 # "apiKey": "{file:~/.config/opencode/.pollinations-key}"
 ```
-Vérifier : `python ~/.config/opencode/scripts/free-probe.py` (aucune clé
+Vérifier : `tollfree probe` (aucune clé
 requise pour le probe anonyme).
 
 #### Cerebras (trial $5, ultra-rapide)
@@ -296,7 +296,7 @@ comme futur rôle juge local. Limité par ta RAM/VRAM.
 # 2. Créer une TRIAL key sur https://dashboard.cohere.com/api-keys
 echo "votre-cle-cohere" > ~/.config/opencode/.cohere-key
 chmod 600 ~/.config/opencode/.cohere-key
-# 3. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 3. Vérifier : tollfree probe
 ```
 Modèles configurés : `command-a-03-2025` (généraliste), `command-r-plus-08-2024`,
 `north-mini-code-1-0` (code). **Contraintes** : 1000 appels/mois TOUS
@@ -311,7 +311,7 @@ AI SDK — à valider live au premier appel réel.
 echo "votre-token-cloudflare" > ~/.config/opencode/.cloudflare-key
 echo "votre-account-id" > ~/.config/opencode/.cloudflare-account
 chmod 600 ~/.config/opencode/.cloudflare-*
-# 3. Vérifier : python ~/.config/opencode/scripts/free-probe.py
+# 3. Vérifier : tollfree probe
 ```
 Modèles gratuits constatés : `@cf/zai-org/glm-4.7-flash`, `@cf/google/gemma-4-*`,
 `@cf/nvidia/nemotron-3-*` (les gros Kimi/GLM-5.2 sont passés au plan payant).
@@ -322,7 +322,7 @@ reste **à valider live** avant d'y router des workers.
 
 #### Après ajout d'un provider
 1. Quitter + relancer OpenCode (rechargement config).
-2. `python ~/.config/opencode/scripts/free-probe.py` → `free-models.json`
+2. `tollfree probe` → `free-models.json`
    passe le worker à `ok` (ou `rate_limited`/`error` avec la raison).
 3. `/models` dans OpenCode pour choisir le modèle à la main.
 
@@ -339,7 +339,7 @@ Pour autoriser le payant un jour (choix explicite uniquement) :
 /mode free          # retour gratuit
 # Manuel : ~/.config/opencode/mode.json
 {"mode": "pro", "proMonthlyCapUsd": 10}
-# Temporaire : EURINHASH_MODE=pro opencode
+# Temporaire : TOLLFREE_MODE=pro opencode
 ```
 - Fichier absent/illisible = FREE. En PRO, `/quota` suit la dépense vs
   plafond (alerte 70/90%) et le bandeau affiche PRO en orange.
@@ -354,7 +354,7 @@ Pour autoriser le payant un jour (choix explicite uniquement) :
 ### 4.1 Liste des agents
 | Agent | Modèle | Rôle |
 |-------|--------|------|
-| eurinhash | google/gemini-2.5-flash | Superviseur, rotation providers |
+| tollfree | google/gemini-2.5-flash | Superviseur, rotation providers |
 | planner | google/gemini-2.5-flash | Plans avant action |
 | architect | google/gemini-2.5-flash | Décisions architecturales |
 | design-lead | google/gemini-2.5-flash | Direction UI/UX |
@@ -407,8 +407,8 @@ tools: read_files, write_files, bash
 Instructions détaillées...
 EOF
 
-# 2. Optionnel : Ajouter au routing dans hash-agent-matrix
-# Éditer skills/hash-agent-matrix/SKILL.md
+# 2. Optionnel : Ajouter au routing dans tollfree-agent-matrix
+# Éditer skills/tollfree-agent-matrix/SKILL.md
 ```
 
 ### 4.4 Invoquer un agent spécifique
@@ -466,19 +466,19 @@ cp mon-plugin.ts plugin/
 ### 6.1 Liste des commands
 | Command | Description |
 |---------|-------------|
-| `/run` | Wrapper hash-direct avec fallback automatique |
-| `/hash-direct` | Appel direct aux providers |
+| `/run` | Wrapper direct avec fallback automatique |
+| `/direct` | Appel direct aux providers |
 | `/audit-log` | Affichage du journal d'audit |
 | `/commit` | Commit Git avec Conventional Commits |
 | `/review` | Revue de code |
 | `/quota` | Gestion des quotas |
-| `/myfree-eurinhash` | Test de tous les modèles gratuits |
+| `/free-test` | Test de tous les modèles gratuits |
 
 ### 6.2 Structure d'une command
 ```markdown
 ---
 description: Description courte de la command
-agent: eurinhash
+agent: tollfree
 ---
 
 Commande à exécuter
@@ -515,11 +515,11 @@ EOF
 ### 7.1 Skills personnalisées
 | Skill | Description |
 |-------|-------------|
-| `hash-agent-matrix` | Routage des tâches L1-L4 |
-| `hash-token-efficiency` | Optimisation des tokens |
-| `hash-code-navigation` | Recherche efficace dans le code |
-| `hash-verification` | Vérification proportionnée |
-| `hash-enterprise-development` | Développement enterprise |
+| `tollfree-agent-matrix` | Routage des tâches L1-L4 |
+| `tollfree-token-efficiency` | Optimisation des tokens |
+| `tollfree-code-navigation` | Recherche efficace dans le code |
+| `tollfree-verification` | Vérification proportionnée |
+| `tollfree-enterprise-development` | Développement enterprise |
 
 ### 7.2 Structure d'une skill
 ```markdown
@@ -612,7 +612,7 @@ mv opencode.json.bak opencode.jsonc
 ## 10. Checklist post-installation
 
 - [ ] Clés API créées (`.groq-key`, `.mistral-key`, etc.)
-- [ ] `python scripts/hash-direct.py --list-providers` → OK
+- [ ] `tollfree direct --list-providers` → OK
 - [ ] `opencode /run "test"` → OK
 - [ ] `opencode /audit-log` → fonctionne
 - [ ] Git initialisé (si souhaité)

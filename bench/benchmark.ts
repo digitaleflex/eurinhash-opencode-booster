@@ -1,4 +1,4 @@
-// bench/benchmark.ts — EURINHASH Governance Engine Performance Benchmark
+// bench/benchmark.ts — TOLLFREE Governance Engine Performance Benchmark
 // Measures: classification, risk assessment, policy evaluation, guard evaluation,
 // proof verification, and full orchestration latency.
 // Load levels: 1 / 10 / 100 / 1000 tasks. Concurrency: 10 / 50 / 100.
@@ -376,7 +376,7 @@ async function main(): Promise<void> {
   writeFileSync(join("docs", "testing", "benchmark-baseline.json"), JSON.stringify(output, null, 2));
 
   // Console summary
-  console.log("EURINHASH Governance Engine — Performance Baseline");
+  console.log("TOLLFREE Governance Engine — Performance Baseline");
   console.log(JSON.stringify(meta, null, 2));
   for (const [component, levels] of Object.entries(results)) {
     console.log(`\n=== ${component} ===`);

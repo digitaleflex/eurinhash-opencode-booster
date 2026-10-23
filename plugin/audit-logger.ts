@@ -1,7 +1,7 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { mkdir, appendFile, readdir, stat, unlink } from "node:fs/promises";
 import { join } from "node:path";
-import { homedir } from "node:os";
+import { logsDir } from "../src/core/paths";
 
 // ---------------------------------------------------------------------------
 // Audit logger plugin
@@ -14,7 +14,7 @@ import { homedir } from "node:os";
 //                            sessionId, parentAgentId  [not in current SDK version]
 //
 // Logs are appended as JSON Lines (one entry per line) to:
-//   ~/.config/opencode/logs/audit-YYYY-MM-DD.jsonl
+//   <config dir>/logs/audit-YYYY-MM-DD.jsonl
 //
 // Requirements:
 //   - Async, fire-and-forget (never block tool execution)
@@ -26,7 +26,7 @@ import { homedir } from "node:os";
 //   - Log rotation: delete files older than 30 days
 // ---------------------------------------------------------------------------
 
-const LOG_DIR = join(homedir(), ".config", "opencode", "logs");
+const LOG_DIR = logsDir();
 const RETENTION_DAYS = 30;
 const TASK_TRUNCATE = 200;
 const ROTATION_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24h

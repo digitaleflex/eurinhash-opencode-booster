@@ -1,19 +1,19 @@
-# EurinHash Cross-Repository Orchestration Architecture
+# Tollfree Cross-Repository Orchestration Architecture
 
 ## Overview
 
-This document defines the canonical architecture for cross-repository orchestration across the EurinHash system. Three repositories participate in one system with explicit authority boundaries.
+This document defines the canonical architecture for cross-repository orchestration across the Tollfree system. Three repositories participate in one system with explicit authority boundaries.
 
 ## Canonical Three-Repository Model
 
 ```
-EURINHASH-ENGINEERING
+TOLLFREE-ENGINEERING
   specification / UX / architecture / acceptance
               ↓
 OPENCODE-CONFIG
   orchestration / agents / commands / rules / routing
               ↓
-EURINHASH-OPENCODE
+TOLLFREE-OPENCODE
   product / TUI / runtime integration / presentation
               ↓
 VALIDATION
@@ -39,8 +39,8 @@ ISSUE REPORT / CLOSURE
 | Acceptance criteria | engineering/issue | all | issue/engineering |
 | Orchestration | opencode-config | product + agents | opencode-config |
 | Agent/rule/command config | opencode-config | runtime/config agents | opencode-config |
-| Runtime/product behavior | eurinhash-opencode | orchestration + UI | eurinhash-opencode |
-| UI presentation | eurinhash-opencode | orchestration | eurinhash-opencode |
+| Runtime/product behavior | tollfree-opencode | orchestration + UI | tollfree-opencode |
+| UI presentation | tollfree-opencode | orchestration | tollfree-opencode |
 | Validation evidence | orchestration/reporting | all | orchestration/issue |
 
 ## Mandatory Decision Rules
@@ -87,11 +87,11 @@ Every write to a repository other than the originating one MUST include:
 ```yaml
 cross_repo_write:
   source_repo: "opencode-config"      # Where the write originates
-  target_repo: "eurinhash-opencode"   # Where the write goes
+  target_repo: "tollfree-opencode"   # Where the write goes
   target_branch: "main"               # Explicit branch
   target_path: "src/components/X.tsx" # Explicit path
   operation: "CREATE|UPDATE|DELETE"   # Operation type
-  issue_ref: "eurinhash-engineering#123"  # Originating issue
+  issue_ref: "tollfree-engineering#123"  # Originating issue
   authorization: "ALLOWED"            # Gate decision
   attestation: "att-..."              # Tool attestation token
 ```
@@ -149,10 +149,10 @@ Before becoming routable, new entries must pass registry validation. Existing wo
 |-------------|---------------|---------------------|-----------|
 | New UX spec | engineering | engineering owns UX | engineering (write), config+product (read) |
 | New agent config | opencode-config | config owns orchestration | opencode-config (write) |
-| UI bug fix | eurinhash-opencode | product owns UI | eurinhash-opencode (write) |
+| UI bug fix | tollfree-opencode | product owns UI | tollfree-opencode (write) |
 | Architecture change | engineering | engineering owns arch | engineering (write), all (read) |
 | Security policy | opencode-config | config owns security rules | opencode-config (write), all (read) |
-| Runtime capability gap | eurinhash-opencode | product identifies gap | engineering (issue), config (routing) |
+| Runtime capability gap | tollfree-opencode | product identifies gap | engineering (issue), config (routing) |
 
 ---
 

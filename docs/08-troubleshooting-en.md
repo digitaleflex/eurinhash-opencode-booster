@@ -1,4 +1,4 @@
-# Troubleshooting Guide — opencode-config EURINHASH
+# Troubleshooting Guide — opencode-config TOLLFREE
 
 ## Table of Contents
 1. [Common Issues](#common-issues)
@@ -38,12 +38,12 @@ opencode /run "test"
 /run "my prompt"
 
 # Or directly
-/hash-direct "my prompt"
+/direct "my prompt"
 
 # Or via the command
 /opencode /run "my prompt"
 
-# Permanent measure: The `hash-direct-wrapper.py` wrapper is now the recommended method under Windows.
+# Permanent measure: The `tollfree direct` wrapper is now the recommended method under Windows.
 ```
 
 ### 1.3 Quota Exhausted
@@ -103,7 +103,7 @@ opencode /run "test"
 /host-direct "test"  # Uses automatic fallback
 
 # To test Zhipu specifically
-python scripts/myfree-eurinhash.py
+tollfree free-test
 ```
 
 ### 2.2 Google rate_limited
@@ -163,9 +163,9 @@ Emojis are replaced with markers:
 - 🔄 → `[R]`
 
 This is already applied in:
-- `scripts/hash-direct.py`
-- `scripts/view-audit-log.py`
-- `scripts/myfree-eurinhash.py`
+- `tollfree direct`
+- `tollfree audit-log`
+- `tollfree free-test`
 
 ### 3.2 `opencode run` Hang
 
@@ -193,7 +193,7 @@ opencode run "my command"
 ls -la scripts/
 
 # Use python to run
-python scripts/hash-direct.py "test"
+tollfree direct "test"
 ```
 
 ---
@@ -236,7 +236,7 @@ ls ~/.config/opencode/node_modules/
 
 ### 4.3 API Keys Not Recognized
 
-**Symptoms**: `/hash-direct --list-providers` shows `[NO]`.
+**Symptoms**: `/direct --list-providers` shows `[NO]`.
 
 **Solution**:
 ```bash
@@ -259,7 +259,7 @@ cat ~/.config/opencode/.groq-key
 
 # Delete cache files
 rm ~/.config/opencode/free-models.json
-rm ~/.config/opencode/myfree-eurinhash-report.json
+rm ~/.config/opencode/free-test-report.json
 
 # Restart OpenCode
 opencode /run "test"
@@ -313,7 +313,7 @@ cat ~/.config/opencode/provider_usage.json
 ### 5.4 Customize Thresholds
 
 ```bash
-# Modify thresholds in hash-direct.py
+# Modify thresholds in tollfree direct
 FAILURE_THRESHOLD = 3    # Default: 3 failures to OPEN the circuit
 CIRCUIT_TIMEOUT = 60     # Default: 60 seconds in OPEN
 

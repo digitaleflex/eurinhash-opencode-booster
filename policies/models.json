@@ -1,5 +1,5 @@
 {
-  "_comment": "Worker cost registry for mode enforcement (EURINHASH free/pro modes). tier: free ($0 within quotas) | trial ($0 exhaustible: credits, call caps) | paid (billed). costs are USD per 1M tokens list rates, informational only.",
+  "_comment": "Worker cost registry for mode enforcement (TOLLFREE free/pro modes). tier: free ($0 within quotas) | trial ($0 exhaustible: credits, call caps) | paid (billed). costs are USD per 1M tokens list rates, informational only.",
   "workers": {
     "worker-codestral": { "tier": "free", "notes": "Mistral Experiment tier, ~1 req/s" },
     "worker-groq": { "tier": "free", "notes": "Groq free tier, 1K req/day on chat models" },

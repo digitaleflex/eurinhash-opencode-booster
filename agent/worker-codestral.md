@@ -1,5 +1,5 @@
 ---
-description: Worker code du mode free-router (Mistral Codestral gratuit). Appelé par @eurinhash, pas directement.
+description: Worker code du mode free-router (Mistral Codestral gratuit). Appelé par @tollfree, pas directement.
 mode: subagent
 model: openrouter/poolside/laguna-s-2.1:free
 ---

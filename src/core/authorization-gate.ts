@@ -2,30 +2,41 @@
 // Canonical gate that must approve every protected repository, filesystem, command
 // and cross-repository operation before execution.
 
-import { RepositoryRegistry, CrossRepoWriteRequest, AuthorityResolution, getRegistry } from "./registry";
+import {
+  RepositoryRegistry,
+  CrossRepoWriteRequest,
+  AuthorityResolution,
+  getRegistry,
+} from "./registry";
 import { GuardOverrides } from "./guard-overrides";
 import { TaskSpec, PolicyDecision, ProofChain, TaskType, RiskLevel, OperationType } from "./types";
 import { createHash, randomUUID } from "node:crypto";
 
 export type AuthorizationDecision = "ALLOW" | "DENY" | "REQUIRES_APPROVAL" | "UNKNOWN";
 
+// Defensive check kept even where control flow already excludes these values,
+// so a future refactor can never escalate a DENY/UNKNOWN into REQUIRES_APPROVAL.
+function isTerminalDecision(decision: AuthorizationDecision): boolean {
+  return decision === "DENY" || decision === "UNKNOWN";
+}
+
 export interface AuthorizationInput {
   issue_id: string;
   plan_id?: string;
   plan_version?: string;
   task_id?: string;
-  repository: string;           // target repository identity
-  branch: string;               // target branch
-  target_paths: string[];       // target path(s)
-  operation: OperationType;     // must match registry OperationType
-  tool_command: string;         // tool/command being executed
+  repository: string; // target repository identity
+  branch: string; // target branch
+  target_paths: string[]; // target path(s)
+  operation: OperationType; // must match registry OperationType
+  tool_command: string; // tool/command being executed
   risk: RiskLevel;
-  actor_agent: string;          // agent/actor identity
+  actor_agent: string; // agent/actor identity
   requested_capability: string; // capability being requested
   working_tree_state: WorkingTreeState;
-  policy_decision?: PolicyDecision;  // from policy engine
-  proof_chain?: ProofChain;          // from proof verifier
-  guard_decision?: "BLOCKED" | "ALLOWED" | "WARN";  // from guard overrides
+  policy_decision?: PolicyDecision; // from policy engine
+  proof_chain?: ProofChain; // from proof verifier
+  guard_decision?: "BLOCKED" | "ALLOWED" | "WARN"; // from guard overrides
 }
 
 export interface WorkingTreeState {
@@ -40,9 +51,9 @@ export interface AuthorizationResult {
   reason: string;
   policy_rule_ref?: string;
   scope: AuthorizationScope;
-  expiry?: number;           // context expiry (ms since epoch)
-  conditions?: string[];     // conditions for REQUIRE_APPROVAL
-  audit_id: string;          // correlation ID for audit trail
+  expiry?: number; // context expiry (ms since epoch)
+  conditions?: string[]; // conditions for REQUIRE_APPROVAL
+  audit_id: string; // correlation ID for audit trail
 }
 
 export interface AuthorizationScope {
@@ -95,7 +106,7 @@ export class AuthorizationGate {
         reason: authority.reason,
         policy_rule_ref: "registry.authority",
         scope: this.buildScope(input),
-        conditions: authority.approval_conditions.map(c => c.description),
+        conditions: authority.approval_conditions.map((c) => c.description),
         audit_id: auditId,
       };
       this.recordAudit(auditId, input, result);
@@ -153,11 +164,11 @@ export class AuthorizationGate {
     if (authority.decision === "REQUIRES_APPROVAL") {
       finalDecision = "REQUIRES_APPROVAL";
       finalReason = "Cross-repository write requires human approval";
-      conditions.push(...authority.approval_conditions.map(c => c.description));
+      conditions.push(...authority.approval_conditions.map((c) => c.description));
     }
 
     // If policy requires human approval, escalate
-    if (input.policy_decision?.humanApproval && finalDecision !== "DENY" && finalDecision !== "UNKNOWN") {
+    if (input.policy_decision?.humanApproval && !isTerminalDecision(finalDecision)) {
       finalDecision = "REQUIRES_APPROVAL";
       finalReason = "Policy requires human approval";
       conditions.push("Policy human_approval=true");
@@ -241,7 +252,8 @@ export class AuthorizationGate {
 
     // 4. Unexpected dirty/conflicted state for protected execution
     if (!input.working_tree_state.clean) {
-      if (input.operation !== "READ") {
+      // OperationType has no READ today; the string comparison keeps the exemption ready if one is added.
+      if ((input.operation as string) !== "READ") {
         return {
           decision: "DENY",
           reason: `Dirty working tree: ${input.working_tree_state.dirty_files.length} modified, ${input.working_tree_state.untracked_files.length} untracked, ${input.working_tree_state.conflicted_files.length} conflicted`,
@@ -312,7 +324,10 @@ export class AuthorizationGate {
   /**
    * Check guard overrides
    */
-  private checkGuards(input: AuthorizationInput): { decision: "BLOCKED" | "ALLOWED" | "WARN"; reason: string } {
+  private checkGuards(input: AuthorizationInput): {
+    decision: "BLOCKED" | "ALLOWED" | "WARN";
+    reason: string;
+  } {
     const task: TaskSpec = {
       description: input.tool_command,
       operation: input.tool_command,
@@ -327,7 +342,10 @@ export class AuthorizationGate {
   /**
    * Check policy engine decision
    */
-  private checkPolicy(input: AuthorizationInput): { decision: "BLOCKED" | "ALLOWED"; reason: string } {
+  private checkPolicy(input: AuthorizationInput): {
+    decision: "BLOCKED" | "ALLOWED";
+    reason: string;
+  } {
     if (!input.policy_decision) {
       return { decision: "ALLOWED", reason: "No policy decision (not a governed task)" };
     }
@@ -340,7 +358,10 @@ export class AuthorizationGate {
   /**
    * Check proof chain verification
    */
-  private checkProofChain(input: AuthorizationInput): { decision: "BLOCKED" | "ALLOWED"; reason: string } {
+  private checkProofChain(input: AuthorizationInput): {
+    decision: "BLOCKED" | "ALLOWED";
+    reason: string;
+  } {
     if (!input.proof_chain) {
       // No proof chain required for this task
       return { decision: "ALLOWED", reason: "No proof chain required" };
@@ -351,13 +372,16 @@ export class AuthorizationGate {
     if (input.policy_decision?.proofsRequired) {
       // This would call ProofVerifier.checkMinimumProofs in real implementation
       // Simplified check:
-      const hasFailures = input.proof_chain.proofs.some(p => p.status === "FAIL");
+      const hasFailures = input.proof_chain.proofs.some((p) => p.status === "FAIL");
       if (hasFailures) {
         return { decision: "BLOCKED", reason: "Proof chain contains FAIL status" };
       }
-      const hasPending = input.proof_chain.proofs.some(p => p.status === "PENDING");
+      const hasPending = input.proof_chain.proofs.some((p) => p.status === "PENDING");
       if (hasPending) {
-        return { decision: "BLOCKED", reason: "Proof chain contains PENDING status - evidence not yet provided" };
+        return {
+          decision: "BLOCKED",
+          reason: "Proof chain contains PENDING status - evidence not yet provided",
+        };
       }
     }
     return { decision: "ALLOWED", reason: "Proof chain verified" };
@@ -370,32 +394,15 @@ export class AuthorizationGate {
     // Allowlist of authorized tool/command patterns per capability
     // This is a simplified version - real implementation would be more granular
     const authorizedPatterns: Record<string, RegExp[]> = {
-      "filesystem.write": [
-        /^edit:/,
-        /^write:/,
-        /^apply_patch:/,
-      ],
-      "filesystem.read": [
-        /^read:/,
-        /^glob:/,
-        /^grep:/,
-        /^ast_grep_search:/,
-      ],
-      "git": [
-        /^git\s+/,
-      ],
-      "shell": [
-        /^shell:/,
-      ],
-      "cross_repo_write": [
-        /^write:/,
-        /^edit:/,
-        /^apply_patch:/,
-      ],
+      "filesystem.write": [/^edit:/, /^write:/, /^apply_patch:/],
+      "filesystem.read": [/^read:/, /^glob:/, /^grep:/, /^ast_grep_search:/],
+      git: [/^git\s+/],
+      shell: [/^shell:/],
+      cross_repo_write: [/^write:/, /^edit:/, /^apply_patch:/],
     };
 
     const patterns = authorizedPatterns[capability] || [];
-    return patterns.some(p => p.test(toolCommand));
+    return patterns.some((p) => p.test(toolCommand));
   }
 
   /**
@@ -429,10 +436,14 @@ export class AuthorizationGate {
   /**
    * Record audit entry (secret material redacted)
    */
-  private recordAudit(auditId: string, input: AuthorizationInput, result: AuthorizationResult): void {
+  private recordAudit(
+    auditId: string,
+    input: AuthorizationInput,
+    result: AuthorizationResult
+  ): void {
     // Redact sensitive fields
     const redactedInput = this.redactSecrets(input);
-    
+
     const record: AuditRecord = {
       audit_id: auditId,
       timestamp: Date.now(),
@@ -441,7 +452,7 @@ export class AuthorizationGate {
     };
 
     this.auditLog.push(record);
-    
+
     // Trim audit log if too large
     if (this.auditLog.length > this.maxAuditSize) {
       this.auditLog = this.auditLog.slice(-this.maxAuditSize);
@@ -453,19 +464,21 @@ export class AuthorizationGate {
    */
   private redactSecrets(input: AuthorizationInput): AuthorizationInput {
     const redacted = { ...input };
-    
+
     // Redact potential secrets in tool command
     redacted.tool_command = this.redactString(redacted.tool_command);
-    
+
     // Redact paths that might contain secrets
-    redacted.target_paths = redacted.target_paths.map(p => this.redactString(p));
-    
+    redacted.target_paths = redacted.target_paths.map((p) => this.redactString(p));
+
     // Working tree state paths might contain secrets
     redacted.working_tree_state = {
       ...redacted.working_tree_state,
-      dirty_files: redacted.working_tree_state.dirty_files.map(f => this.redactString(f)),
-      untracked_files: redacted.working_tree_state.untracked_files.map(f => this.redactString(f)),
-      conflicted_files: redacted.working_tree_state.conflicted_files.map(f => this.redactString(f)),
+      dirty_files: redacted.working_tree_state.dirty_files.map((f) => this.redactString(f)),
+      untracked_files: redacted.working_tree_state.untracked_files.map((f) => this.redactString(f)),
+      conflicted_files: redacted.working_tree_state.conflicted_files.map((f) =>
+        this.redactString(f)
+      ),
     };
 
     return redacted;

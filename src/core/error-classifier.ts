@@ -4,7 +4,7 @@
  * Classifies errors into retryable vs non-retryable, adapted from
  * ingridtoulotte/llm-fallback-router and reaatech/llm-router.
  *
- * Adapted for opencode/EURINHASH: distinguishes transient API failures
+ * Adapted for opencode/TOLLFREE: distinguishes transient API failures
  * (retryable → fallback worker) from client-side errors (non-retryable →
  * stop immediately, don't burn other workers).
  */

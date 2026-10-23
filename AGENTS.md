@@ -1,11 +1,11 @@
-# Global instructions — Cloudflare Workers + Python/Data + EURINHASH (FREE)
+# Global instructions — Cloudflare Workers + Python/Data + TOLLFREE (FREE)
 
 ## Provider
 
-- **Default agent**: `eurinhash` (superviseur FREE, route vers workers gratuits)
+- **Default agent**: `tollfree` (superviseur FREE, route vers workers gratuits)
 - **Small model**: `google/gemini-2.5-flash` (FREE) — ex-`mistral/mistral-code-latest`, retiré le **2026-09-12** (Mistral renvoyait « Payment Required »)
 - **Modèle par défaut des agents** : `google/gemini-2.5-flash` (FREE, 1M ctx). Tous les rôles ont été basculés le **2026-09-12** : `mistral/*` = paiement requis, `groq/qwen/qwen3.8-27b` = free tier mais **ITPM 7000** (inutilisable dès que le contexte dépasse ~26k tokens).
-- **EURINHASH Pro** : superviseur prioritaire pour les crédits $1+$100 sandbox Novita. Orchestre `worker-novita` → `worker-codestral` → `worker-groq` → `worker-zhipu` → `worker-google`. Bascule automatique si un worker échoue.
+- **TOLLFREE Pro** : superviseur prioritaire pour les crédits $1+$100 sandbox Novita. Orchestre `worker-novita` → `worker-codestral` → `worker-groq` → `worker-zhipu` → `worker-google`. Bascule automatique si un worker échoue.
 - Escalate to Mammouth models ONLY when: all FREE workers exhausted (429/quota/auth), task is critical, explicit user approval.
 
 ## Git workflow (2026-09-12 — leçon de la session EPIC #112)
@@ -68,7 +68,7 @@ Niveau 5  ▸ opencode-go/glm-5.3      ABONNEMENT, lourd     → pointe rare
 | Agents | Modèle |
 |---|---|
 | `architect`, `security` | `opencode-go/glm-5.3` (niveau 5 — **rares** : L3+ et zones sensibles) |
-| `builder`, `integrator`, `verifier`, `tester`, `auditor`, `quality-engineer`, `eurinhash` | `opencode-go/deepseek-v4.1-flash` (niveau 4) |
+| `builder`, `integrator`, `verifier`, `tester`, `auditor`, `quality-engineer`, `tollfree` | `opencode-go/deepseek-v4.1-flash` (niveau 4) |
 | `planner`, `reviewer` | `opencode-go/glm-5.3-flash` (niveau 4 — **fréquents**, donc flash) |
 | `docwriter`, `git-engineer` | `opencode-go/qwen3.8-flash` (niveau 4) |
 | `design-lead` | `opencode-go/glm-5.3-flash` (niveau 4) |
@@ -153,7 +153,7 @@ Règles non négociables :
 3. **Ne pas transmettre tout le contexte** aux sous-agents : donner le besoin, pas l'historique.
 4. **Un seul écrivain à la fois** sur des fichiers qui se chevauchent.
 
-Backup des agents : `~/.config/opencode/agent-backup-*`.
+Backup des agents : historique git (`git log -- agent/`).
 
 ## Cloudflare Workers
 
@@ -167,13 +167,13 @@ Backup des agents : `~/.config/opencode/agent-backup-*`.
 - Virtualenv per project, never install packages globally.
 - SQL via parameterized queries only; migrations must be reversible.
 
-## EURINHASH — Mode FREE par défaut
+## TOLLFREE — Mode FREE par défaut
 
-**L'agent par défaut est `eurinhash`** : un superviseur qui NE s'arrête jamais, teste la disponibilité en temps réel, et rebascule automatiquement sur les workers gratuits en cas de quota/erreur.
+**L'agent par défaut est `tollfree`** : un superviseur qui NE s'arrête jamais, teste la disponibilité en temps réel, et rebascule automatiquement sur les workers gratuits en cas de quota/erreur.
 
-### Protocole EURINHASH (obligatoire)
+### Protocole TOLLFREE (obligatoire)
 
-1. **Vérification temps réel** : lire `~/.config/opencode/free-models.json` ; s'il manque ou date de +30 min → lancer `python ~/.config/opencode/scripts/free-probe.py` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
+1. **Vérification temps réel** : lire `free-models.json` (dossier de config) ; s'il manque ou date de +30 min → lancer `tollfree probe` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
 2. **Ordre selon la tâche** (statuts live dans `free-models.json`, sauter tout worker ≠ `ok`) :
    - Code → `worker-codestral` → `worker-groq` → `worker-novita` → `worker-zhipu` → `worker-google` → `worker-ollama` → `worker-pollinations`
    - Discussion/Résumé/Rédaction → `worker-groq` → `worker-zhipu` → `worker-novita` → `worker-codestral` → `worker-google` → `worker-ollama` → `worker-pollinations`
@@ -182,7 +182,7 @@ Backup des agents : `~/.config/opencode/agent-backup-*`.
 5. **Arrêt conditionnel** : ne s'arrête que si TOUS les workers gratuits sont KO → résumer ce qui est fait / ce qui bloque, proposer le fallback payant (`mammouth/...`) et demander validation explicite.
 6. **INTERDIT** : utiliser un modèle payant sans accord explicite.
 
-### Workers disponibles (statuts live : `free-models.json`, `python scripts/free-probe.py`)
+### Workers disponibles (statuts live : `free-models.json`, `tollfree probe`)
 
 | Worker                | Modèle                                    | Spécialité             | Coût réel                                                            |
 | --------------------- | ----------------------------------------- | ---------------------- | -------------------------------------------------------------------- |
@@ -216,8 +216,8 @@ avec free tier, trial ou crédits. Détail par provider : `docs/02-configuration
 
 | Level       | Type                                                     | Pipeline                                                                                            | Skills                                         | Validation                   |
 | ----------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------- |
-| L1 simple   | typo, color, config, localized bug                       | `@builder`                                                                                          | hash-verification                              | targeted                     |
-| L2 medium   | limited feature, module, endpoint, business logic        | `@planner` → `@builder` → `@reviewer`                                                               | hash-enterprise-development, hash-verification | reviewer                     |
+| L1 simple   | typo, color, config, localized bug                       | `@builder`                                                                                          | tollfree-verification                              | targeted                     |
+| L2 medium   | limited feature, module, endpoint, business logic        | `@planner` → `@builder` → `@reviewer`                                                               | tollfree-enterprise-development, tollfree-verification | reviewer                     |
 | L3 complex  | new module, architecture, API change, auth, payment      | `@planner` → `@architect` → user approval → `@builder` → `@reviewer`                                | enterprise + verification                      | reviewer                     |
 | L4 critical | production, sensitive data, destructive migration, infra | `@planner` → `@architect` → risk assessment → **user approval required** → `@builder` → `@reviewer` | enterprise + verification                      | independent review, SHIP/FIX |
 
@@ -227,14 +227,6 @@ avec free tier, trial ou crédits. Détail par provider : `docs/02-configuration
 
 **Model escalation:** free/flash models for exploration, navigation, docs, simple tasks, standard planning. Strong models for architecture, complex bugs, deep analysis. Premium only when the task is critical, error cost is high, or free/strong models failed. Never premium by default.
 
-**Token efficiency:** search before broad reading (`hash-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`hash-verification`); stop when complete. Optimize tokens per completed task, not per response.
+**Token efficiency:** search before broad reading (`tollfree-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`tollfree-verification`); stop when complete. Optimize tokens per completed task, not per response.
 
 **Never:** call all agents, load all skills, add plugins/MCP without real need, use premium models by default, bypass safety protections, modify `plugin/guard.ts` without explicit user authorization, or turn a small task into a complex pipeline.
-
-## Cloned Dependency Source
-
-Read-only dependency source repositories are available under
-`.slim/clonedeps/repos/` for inspection. Do not edit these clones.
-
-- `.slim/clonedeps/repos/anomalyco__models-dev/` - `anomalyco/models.dev` at `cff85c0` (2026-09-24, shallow, sparse: amazon-bedrock exclu — nom de fichier invalide sur Windows); schéma TOML cost/limit/modalities + usage SDK `@opencode-ai/models` pour brancher les données modèles live dans `route.py`.
-- `.slim/clonedeps/repos/anomalyco__effect-http-recorder/` - `anomalyco/effect-http-recorder` at `89e1b85` (2026-07-06, shallow); patterns cassettes record/replay + redaction pour des tests HTTP workers déterministes (Effect 4 beta only — patterns, pas une dépendance).

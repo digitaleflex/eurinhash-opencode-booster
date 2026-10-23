@@ -1,5 +1,5 @@
 ---
-description: Garde-fou de quotas du mode free-router. Vérifie l'état des workers (free-models.json), la conso OpenRouter et le budget avant toute délégation externe. Recommande le worker le plus économe. Lecture seule, ne modifie jamais rien. Appelé par @eurinhash avant délégation.
+description: Garde-fou de quotas du mode free-router. Vérifie l'état des workers (free-models.json), la conso OpenRouter et le budget avant toute délégation externe. Recommande le worker le plus économe. Lecture seule, ne modifie jamais rien. Appelé par @tollfree avant délégation.
 mode: subagent
 model: opencode/mimo-v2.5-free
 permission:
@@ -13,15 +13,15 @@ and advise.
 
 ## Protocol (run before any external delegation)
 
-1. Run `python ~/.config/opencode/scripts/quota.py` and read the output:
+1. Run `tollfree quota` and read the output:
    - Mode (FREE/PRO), dépense du jour, état des workers, conseil du moment.
-2. Read `~/.config/opencode/free-models.json` for live status + latencies.
+2. Read `free-models.json` (dossier de config) for live status + latencies.
 3. Decide, in this order of preference:
    - **Integrated opencode/*-free models** (0 quota, no external rate limit)
      → `opencode/deepseek-v4-flash` (workhorse), `opencode/glm-5` (heavy)
    - **External workers with status "ok"** → pick the LOWEST latency for the task type
    - **NEVER** route to a worker whose status is "rate_limited", "error" or "skipped"
-4. If the OpenRouter counter (in quota.py output) is near its limit, do NOT
+4. If the OpenRouter counter (in tollfree quota output) is near its limit, do NOT
    recommend worker-codestral (it will 429).
 
 ## Output format (concise)
@@ -37,5 +37,5 @@ QUOTA_GUARD: worker-opencode|opencode/deepseek-v4-flash|intégré 0 quota, fiabl
 ALERTE: OpenRouter à 2.7/3 req — éviter worker-codestral
 ```
 
-Never stop silently. If quota.py fails, say so and recommend the integrated
+Never stop silently. If tollfree quota fails, say so and recommend the integrated
 models (they never fail on quota).

@@ -1,4 +1,4 @@
-# UX Design: Friendly CLI Progress for `hash-direct.py`
+# UX Design: Friendly CLI Progress for `tollfree direct`
 
 **Date:** 2026-09-06
 **Author:** @designer
@@ -9,7 +9,7 @@
 
 ## 1. Problem Statement
 
-The current CLI output of `hash-direct.py` exposes raw technical errors to the user:
+The current CLI output of `tollfree direct` exposes raw technical errors to the user:
 
 ```
 [fallback] groq failed: 429
@@ -85,7 +85,7 @@ ASCII fallback: `| / - \`.
 
 ## 4. UX Flow (the five phases)
 
-Every run of `hash-direct.py --progress` follows this 5-phase narrative.
+Every run of `tollfree direct --progress` follows this 5-phase narrative.
 
 ### Phase 1 — Boot (`🚀 Initialisation...`)
 
@@ -206,7 +206,7 @@ The raw exception is still logged to `stderr` for `--verbose` mode (see §7), ke
    Impossible de générer une réponse.
 
    💡 Astuce : réessayez dans 1 minute, ou lancez
-      `python ~/.config/opencode/scripts/hash-direct.py --status`
+      `tollfree direct --status`
       pour voir l'état des providers.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ↳ Dernière erreur technique (stderr) :
@@ -326,7 +326,7 @@ Each phase emits a "delta" line, never reprints. The final `└─` is the winni
 
 ---
 
-## 10. Code insertion points in `hash-direct.py`
+## 10. Code insertion points in `tollfree direct`
 
 The implementation should add a new module section, then thread it through. **No existing call signature changes.**
 
@@ -377,7 +377,7 @@ Pure function: `def _humanize_error(exc: Exception) -> str` returning the friend
 ### 11.1 Happy path (1st provider works)
 
 ```
-$ python hash-direct.py -P "Écris un haïku sur Python"
+$ tollfree direct -P "Écris un haïku sur Python"
 
 🔍 Recherche d'un provider disponible...
    └─ groq      ✅ Prêt ! (qwen/qwen3.8-27b)
@@ -397,7 +397,7 @@ Voici un haïku sur Python :
 ### 11.2 Fallback path (1st fails, 2nd works)
 
 ```
-$ python hash-direct.py -P "Refactor this Python function"
+$ tollfree direct -P "Refactor this Python function"
 
 🔍 Recherche d'un provider disponible...
    ├─ groq      ❌ Rate limited (429) → Je bascule...
@@ -417,7 +417,7 @@ def greet(name: str) -> str:
 ### 11.3 All providers fail
 
 ```
-$ python hash-direct.py -P "Anything"
+$ tollfree direct -P "Anything"
 
 🔍 Recherche d'un provider disponible...
    ├─ groq      ❌ Rate limited (429) → Je bascule...
@@ -432,7 +432,7 @@ $ python hash-direct.py -P "Anything"
    Impossible de générer une réponse.
 
    💡 Astuce : réessayez dans 1 minute, ou lancez
-      `python ~/.config/opencode/scripts/hash-direct.py --status`
+      `tollfree direct --status`
       pour voir l'état des providers.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ↳ Dernière erreur technique : openrouter: 429 Too Many Requests
@@ -444,7 +444,7 @@ $ echo $?
 ### 11.4 Batch with progress bar
 
 ```
-$ python hash-direct.py -P --batch prompts.txt
+$ tollfree direct -P --batch prompts.txt
 
 🚀 Initialisation du système...
    ✓ Clés chargées (6 providers)
@@ -464,7 +464,7 @@ $ python hash-direct.py -P --batch prompts.txt
 ### 11.5 Non-TTY (piped to file)
 
 ```
-$ python hash-direct.py -P "Hello" > out.txt 2> err.txt
+$ tollfree direct -P "Hello" > out.txt 2> err.txt
 $ cat out.txt
 [groq/qwen/qwen3.8-27b] Hello! How can I help today?
 $ cat err.txt
@@ -507,7 +507,7 @@ This keeps the wrapper **scriptable** even with `-P`.
 [ ] Replace batch loop's "Traitement prompt N/M" with progress bar
 [ ] Detect TTY + Unicode support + Windows ANSI enable
 [ ] Add a tiny self-test at bottom (if __name__ == "__main__" and "--demo" arg)
-[ ] Update hash-direct-wrapper.py to forward -P / --progress to hash-direct.py
+[ ] Update tollfree direct to forward -P / --progress to tollfree direct
 [ ] Run --progress on three scenarios: success, fallback, all-fail — verify visually
 [ ] Confirm default (no flag) output is byte-identical to current
 [ ] Update ~/.config/opencode/AGENTS.md usage example to show -P
@@ -533,7 +533,7 @@ This keeps the wrapper **scriptable** even with `-P`.
 
 ## 14. Out of scope (deliberately)
 
-- TUI / interactive picker for the model (would be a separate `hash-direct-tui.py`).
+- TUI / interactive picker for the model (would be a separate `direct-tui.py`).
 - Persistent progress across calls (no log file by default).
 - Web UI / dashboard (separate concern).
 - Localizing messages to other languages — French only for now, matching the rest of the toolchain.
@@ -544,8 +544,8 @@ This keeps the wrapper **scriptable** even with `-P`.
 
 The change is **done** when:
 
-1. `python hash-direct.py "Hello"` produces output **byte-identical** to today.
-2. `python hash-direct.py -P "Hello"` produces a flow matching §11.1, §11.2, or §11.3 depending on outcome.
+1. `tollfree direct "Hello"` produces output **byte-identical** to today.
+2. `tollfree direct -P "Hello"` produces a flow matching §11.1, §11.2, or §11.3 depending on outcome.
 3. No raw exception class names, tracebacks, or `requests.exceptions.*` strings appear in stdout when `-P` is on.
 4. Exit codes unchanged.
 5. All three scenarios (success / fallback / all-fail) verified manually.

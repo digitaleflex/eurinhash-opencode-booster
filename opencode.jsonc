@@ -3,24 +3,24 @@
   "shell": "bash",
 
   // ═══════════════════════════════════════════════════════════════════
-  //  EURINHASH GOVERNANCE ENGINE v2 — CONFIGURATION CANONIQUE
+  //  TOLLFREE GOVERNANCE ENGINE v2 — CONFIGURATION CANONIQUE
   // ═══════════════════════════════════════════════════════════════════
   //
   // Philosophie : 100% FREE, zéro dépense, privacy respectée.
   //   - Modèles : uniquement FREE tier / intégrés 0 quota
   //   - Privacy : interdit muse-spark-*-contributor-free, nemotron-*-free
   //     (prompts/complétions utilisés pour entraîner des modèles)
-  //   - Architecture : superviseur EURINHASH → route.py (EV scoring)
+  //   - Architecture : superviseur TOLLFREE → tollfree route (EV scoring)
   //     → workers gratuits → feedback loop bayésien
   //
   // Fichiers clés :
-  //   - ~/.config/opencode/scripts/route.py     → routage EV + feedback
-  //   - ~/.config/opencode/scripts/quota.py      → dashboard quotas
-  //   - ~/.config/opencode/scripts/free-probe.py → probe workers
-  //   - ~/.config/opencode/free-models.json      → statut live workers
-  //   - ~/.config/opencode/route-usage.json      → historique succès/échec
-  //   - ~/.config/opencode/plugin/auto-compact.ts → compaction intelligente
-  //   - ~/.config/opencode/agent/eurinhash.md    → superviseur pipeline
+  //   - tollfree route     → routage EV + feedback
+  //   - tollfree quota      → dashboard quotas
+  //   - tollfree probe → probe workers
+  //   - free-models.json      → statut live workers
+  //   - route-usage.json      → historique succès/échec
+  //   - plugin/auto-compact.ts → compaction intelligente
+  //   - agent/tollfree.md    → superviseur pipeline
   //
   // ═══════════════════════════════════════════════════════════════════
 
@@ -36,10 +36,8 @@
   // ├─────────────────────────────────────────────────────────────┤
   // │ better-compact          │ Pruning par étapes, préservation   │
   // │                         │ de l'intention utilisateur, TUI.     │
-  // │                         │ ⚠️ Bug Windows fsync (EPERM) →     │
-  // │                         │ patché dans le cache npm (voir     │
-  // │                         │ ~/.config/opencode/scripts/        │
-  // │                         │ patch-better-compact.py).          │
+  // │                         │ ⚠️ Bug Windows fsync (EPERM) connu │
+  // │                         │ côté plugin (voir son dépôt).      │
   // ├─────────────────────────────────────────────────────────────┤
   // │ auto-compact.ts (local) │ Directive de préservation context. │
   // │                         │ + reprise AUTOMATIQUE après        │
@@ -161,13 +159,13 @@
     },
   },
 
-  // ── Modèle par défaut : EURINHASH (superviseur FREE) ────────────
+  // ── Modèle par défaut : TOLLFREE (superviseur FREE) ────────────
   // 2026-09-12 : tous les rôles basculés sur des modèles FREE.
   //   - mistral/* → "Payment Required" (abonnement Mistral inactif)  ⇒ retiré
   //   - groq/qwen3.8-27b → free tier mais ITPM 7000 ⇒ inutilisable sur gros contexte
   //   - défaut = opencode/deepseek-v4-flash (intégré, $0, 200K ctx)
   //   - worker-zenmux (anthropic/*) reste PAYG et n'est jamais routé auto.
-  "default_agent": "eurinhash",
+  "default_agent": "tollfree",
   // 2026-09-14 : gemini-2.5-flash rate_limited (20 req/jour) → tout
   // tombait en panne. Basculé sur l'abonnement, variantes flash.
   // 2026-09-19 : opencode-go indisponible → bascule 100% FREE.
@@ -248,7 +246,7 @@
   // │ Outils : search_deals, plan_stack, compare_vendors,          │
   // │          track_changes                                       │
   // │ Utilité : trouve les meilleurs free tiers pour alimenter     │
-  // │           le système FREE-only d'EURINHASH.                  │
+  // │           le système FREE-only d'TOLLFREE.                  │
   // └─────────────────────────────────────────────────────────────┘
   "mcp": {
     "cloudflare": {
@@ -287,14 +285,14 @@
   // « FREE » = tier gratuit du provider, jamais illimité.
   // Voir docs/02-configuration.md §3 pour le détail de chaque provider.
   //
-  // Stratégie de routage (route.py v2) :
+  // Stratégie de routage (tollfree route v2) :
   //   EV(worker) = qualité × disponibilité / coût(latence)
   //   - qualité : baseline par famille de modèle, ajustée par Bayes
   //   - disponibilité : 1.0 si ok, 0.2 si rate_limited, 0 si error
   //   - coût : latence mesurée (ms/1000 + 1)
-  //   - Feedback : route.py record <worker> success|fail → ajuste les poids
+  //   - Feedback : tollfree route record <worker> success|fail → ajuste les poids
   //
-  // Workers actifs (statut live : ~/.config/opencode/free-models.json) :
+  // Workers actifs (statut live : free-models.json) :
   //   worker-opencode      → deepseek-v4-flash (intégré, 0 quota)
   //   worker-opencode-heavy → glm-5 (intégré, 0 quota, raisonnement)
   //   worker-groq          → qwen3.8-27b (245ms, FREE tier)
@@ -311,7 +309,7 @@
       "name": "Z.AI GLM (FREE)",
       "options": {
         "baseURL": "https://api.z.ai/api/paas/v4",
-        "apiKey": "{file:~/.config/opencode/.zhipu-key}",
+        "apiKey": "{file:./.zhipu-key}",
       },
       "models": {
         "glm-4.7-flash": { "name": "GLM 4.7 Flash (FREE)" },
@@ -323,7 +321,7 @@
       "npm": "@ai-sdk/google",
       "name": "Google Gemini (FREE)",
       "options": {
-        "apiKey": "{file:~/.config/opencode/.gemini-key}",
+        "apiKey": "{file:./.gemini-key}",
         "timeout": 300000,
         "headerTimeout": 90000,
         "chunkTimeout": 60000,
@@ -360,7 +358,7 @@
       "name": "Groq (FREE)",
       "options": {
         "baseURL": "https://api.groq.com/openai/v1",
-        "apiKey": "{file:~/.config/opencode/.groq-key}",
+        "apiKey": "{file:./.groq-key}",
       },
       "models": {
         "qwen/qwen3.8-27b": { "name": "Qwen 3.8 27B (FREE tier, 1K req/jour chat-models)" },
@@ -379,7 +377,7 @@
       "name": "OpenRouter (FREE)",
       "options": {
         "baseURL": "https://openrouter.ai/api/v1",
-        "apiKey": "{file:~/.config/opencode/.openrouter-key}",
+        "apiKey": "{file:./.openrouter-key}",
       },
       "models": {
         "openrouter/free": {
@@ -388,7 +386,7 @@
         },
         "inclusionai/ling-3.0-flash-sante:free": { "name": "Ling 3.0 Flash Santé (100% GRATUIT, 256K ctx)" },
         "poolside/laguna-s-2.1:free": { "name": "Poolside Laguna S 2.1 (FREE, code, 1M ctx)" },
-        // 2026-09-13 : découverts via models-free.py (models.dev)
+        // 2026-09-13 : découverts via tollfree models-free (models.dev)
         "poolside/laguna-xs-2.1:free": { "name": "Poolside Laguna XS 2.1 (FREE, code, 262K ctx)" },
         "minimax/MiniMax-M2.7:free": { "name": "MiniMax M2.7 (FREE, 512K ctx)" },
         // 2026-09-19 : enrichissement models.dev — nouveaux gratuits openrouter
@@ -407,7 +405,7 @@
       "name": "Hugging Face (FREE)",
       "options": {
         "baseURL": "https://router.huggingface.co/v1",
-        "apiKey": "{file:~/.config/opencode/.hf-key}",
+        "apiKey": "{file:./.hf-key}",
       },
       "models": {
         "Qwen/Qwen3-Coder-480B-A35B-Instruct:cheapest": { "name": "Qwen3 Coder 480B (FREE)" },
@@ -420,7 +418,7 @@
       "name": "Novita AI (bon marché + gratuit)",
       "options": {
         "baseURL": "https://api.novita.ai/openai/v1",
-        "apiKey": "{file:~/.config/opencode/.novita-key}",
+        "apiKey": "{file:./.novita-key}",
       },
       "models": {
         "deepseek-ai/DeepSeek-V4-Flash": { "name": "DeepSeek V4 Flash ($0.14/M input, $0.03/M cached, 1M ctx)" },
@@ -465,7 +463,7 @@
       "options": {
         "baseURL": "https://integrate.api.nvidia.com/v1",
         // Clé API NVIDIA (gratuit, 1000 req/jour).
-        // "apiKey": "{file:~/.config/opencode/.nvidia-key}",
+        // "apiKey": "{file:./.nvidia-key}",
       },
       "models": {
         "nvidia/nemotron-3-ultra-550b-a55b:free": {
@@ -503,7 +501,7 @@
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  //  EURINHASH PRO MODE — modèles payants économiques (OpenRouter + opencode-go)
+  //  TOLLFREE PRO MODE — modèles payants économiques (OpenRouter + opencode-go)
   // ═══════════════════════════════════════════════════════════════════
   //
   // Philosophie : 100% FREE par défaut, mode PRO optionnel.
@@ -525,10 +523,10 @@
   //   - mistral/mistral-large     → $4/M in, $12/M out
   //
   // Fichiers clés :
-  //   - ~/.config/opencode/agent/worker-pro-openrouter.md
-  //   - ~/.config/opencode/agent/worker-pro-opencode-go.md
-  //   - ~/.config/opencode/command/mode.md
-  //   - ~/.config/opencode/scripts/quota.py
+  //   - agent/worker-pro-openrouter.md
+  //   - agent/worker-pro-opencode-go.md
+  //   - command/mode.md
+  //   - tollfree quota
   //
   "pro": {
     "enabled": false,
@@ -544,7 +542,7 @@
 
     // ── OpenRouter (PAYG) ──────────────────────────────────────────
     "openrouter": {
-      "api_key": "{file:~/.config/opencode/.openrouter-key}",
+      "api_key": "{file:./.openrouter-key}",
       "base_url": "https://openrouter.ai/api/v1/chat/completions",
       "models": {
         "openai/gpt-4o-mini": {

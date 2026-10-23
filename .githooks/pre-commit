@@ -1,5 +1,5 @@
 #!/bin/sh
-# EURINHASH pre-commit gate (fast, local).
+# TOLLFREE pre-commit gate (fast, local).
 # Install once per clone:  git config core.hooksPath .githooks
 set -e
 echo "[pre-commit] format:check"

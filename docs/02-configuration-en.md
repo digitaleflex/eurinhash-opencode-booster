@@ -1,4 +1,4 @@
-# Configuration Guide — EURINHASH
+# Configuration Guide — TOLLFREE
 
 ## Table of Contents
 1. [Quick Installation](#1-quick-installation)
@@ -33,7 +33,7 @@ echo "your-mistral-key" > .mistral-key
 # ... other keys
 
 # Verify installation
-python scripts/hash-direct.py --list-providers
+tollfree direct --list-providers
 
 # Test
 opencode /run "test"
@@ -46,7 +46,7 @@ opencode /run "test"
 ### opencode.jsonc (main config)
 ```jsonc
 {
-  "default_agent": "eurinhash",
+  "default_agent": "tollfree",
   "small_model": "google/gemini-2.5-flash",
   "plugins": [
     "@felipegenef/opencode-lazy-skills",
@@ -199,7 +199,7 @@ cat .groq-key
 # 2. Create an API key in the dashboard, then:
 echo "your-sambanova-key" > ~/.config/opencode/.sambanova-key
 chmod 600 ~/.config/opencode/.sambanova-key
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Configured models: `DeepSeek-V3.1`, `Meta-Llama-3.3-70B-Instruct`,
 `gpt-oss-120b`. Free quotas: 20 req/min, 20 req/day, 200K tokens/day
@@ -243,7 +243,7 @@ ollama pull llama3.1        # general
 # 2. Create a TRIAL key at https://dashboard.cohere.com/api-keys
 echo "your-cohere-key" > ~/.config/opencode/.cohere-key
 chmod 600 ~/.config/opencode/.cohere-key
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Configured models: `command-a-03-2025`, `command-r-plus-08-2024`,
 `north-mini-code-1-0` (code). **Constraints**: 1000 calls/month across ALL
@@ -257,7 +257,7 @@ API exposed via the AI SDK adapter — validate live on first real call.
 echo "your-cloudflare-token" > ~/.config/opencode/.cloudflare-key
 echo "your-account-id" > ~/.config/opencode/.cloudflare-account
 chmod 600 ~/.config/opencode/.cloudflare-*
-# 3. Verify: python ~/.config/opencode/scripts/free-probe.py
+# 3. Verify: tollfree probe
 ```
 Free models observed: `@cf/zai-org/glm-4.7-flash`, `@cf/google/gemma-4-*`,
 `@cf/nvidia/nemotron-3-*` (heavy Kimi/GLM-5.2 moved to paid).
@@ -268,7 +268,7 @@ live validation** before routing workers to it.
 
 #### After adding a provider
 1. Quit + restart OpenCode (config reload).
-2. `python ~/.config/opencode/scripts/free-probe.py` → `free-models.json`
+2. `tollfree probe` → `free-models.json`
    flips the worker to `ok` (or `rate_limited`/`error` with the reason).
 3. `/models` inside OpenCode to pick the model manually.
 
@@ -279,7 +279,7 @@ live validation** before routing workers to it.
 ### Agent List
 | Agent | Model | Role |
 |-------|-------|------|
-| eurinhash | google/gemini-2.5-flash | Supervisor, provider rotation |
+| tollfree | google/gemini-2.5-flash | Supervisor, provider rotation |
 | planner | google/gemini-2.5-flash | Planning before action |
 | architect | google/gemini-2.5-flash | Architecture decisions |
 | design-lead | google/gemini-2.5-flash | UI/UX direction |
@@ -387,19 +387,19 @@ cp my-plugin.ts plugin/
 ### Command List
 | Command | Description |
 |---------|-------------|
-| `/run` | hash-direct wrapper with auto fallback |
-| `/hash-direct` | Direct provider access |
+| `/run` | direct wrapper with auto fallback |
+| `/direct` | Direct provider access |
 | `/audit-log` | Audit log display |
 | `/commit` | Git commit with Conventional Commits |
 | `/review` | Code review |
 | `/quota` | Quota management |
-| `/myfree-eurinhash` | Test all free models |
+| `/free-test` | Test all free models |
 
 ### Command Structure
 ```markdown
 ---
 description: Short command description
-agent: eurinhash
+agent: tollfree
 ---
 
 Command to execute
@@ -434,11 +434,11 @@ EOF
 ### Custom Skills
 | Skill | Description |
 |-------|-------------|
-| `hash-agent-matrix` | L1-L4 task routing |
-| `hash-token-efficiency` | Token optimization |
-| `hash-code-navigation` | Efficient code navigation |
-| `hash-verification` | Risk-proportionate verification |
-| `hash-enterprise-development` | Enterprise development |
+| `tollfree-agent-matrix` | L1-L4 task routing |
+| `tollfree-token-efficiency` | Token optimization |
+| `tollfree-code-navigation` | Efficient code navigation |
+| `tollfree-verification` | Risk-proportionate verification |
+| `tollfree-enterprise-development` | Enterprise development |
 
 ### Skill Structure
 ```markdown
@@ -529,7 +529,7 @@ mv opencode.json.bak opencode.jsonc
 ## Post-Installation Checklist
 
 - [ ] API keys created (`.groq-key`, `.mistral-key`, etc.)
-- [ ] `python scripts/hash-direct.py --list-providers` → OK
+- [ ] `tollfree direct --list-providers` → OK
 - [ ] `opencode /run "test"` → OK
 - [ ] `opencode /audit-log` → works
 - [ ] Git initialized (if desired)
