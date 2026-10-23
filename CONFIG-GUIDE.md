@@ -33,7 +33,7 @@
 - `./plugin/guard.ts` + `./plugin/audit-logger.ts` : garde-fou destructeur in-process et audit runtime avec rotation (gardés).
 - `@f97/opencode-morph-fast-apply` : **désactivé** (commenté dans la config) — exige `MORPH_API_KEY`, réactiver après avoir posé la clé.
 - Retirés (inutilisés) : `opencode-router` (bridges Slack/Telegram), `opencode.nvim` (pas d'usage Neovim).
-- Skills `arkcli-*` (BytePlus) : archivés dans `skills-archive/` (hors scan, réversibles en un `mv`).
+- Skills `arkcli-*` (BytePlus) : retirés du dépôt (récupérables via l'historique git).
 
 ## Providers & modèles (`/models` pour choisir)
 
