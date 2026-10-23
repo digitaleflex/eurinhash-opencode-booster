@@ -149,7 +149,7 @@ Le plugin `audit-logger.ts` enregistre tous les événements dans `logs/audit-YY
 /audit-log --filter blocked
 
 # Statistiques
-python scripts/view-audit-log.py --statistics
+tollfree audit-log --statistics
 ```
 
 ### 3.5 Rotation

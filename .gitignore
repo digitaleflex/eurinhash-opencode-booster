@@ -49,3 +49,6 @@ route-usage.json
 results-governance.json
 batch-report.json
 .slim/deepwork/
+
+# Build output
+dist/

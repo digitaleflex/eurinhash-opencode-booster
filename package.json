@@ -1,7 +1,7 @@
 {
   "name": "tollfree",
   "version": "0.10.0",
-  "description": "TOLLFREE governance engine and OpenCode configuration (free-tier models only)",
+  "description": "Tollfree: free-tier model routing, failover and guardrails for OpenCode",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,9 @@
     "test:golden": "bun run scripts/verify-golden.ts",
     "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\" \"plugin/*.ts\" \"tests/**/*.ts\" \"*.json\" \".opencode/*.json\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"scripts/**/*.ts\" \"plugin/*.ts\" \"tests/**/*.ts\" \"*.json\" \".opencode/*.json\"",
-    "verify": "bun run format:check && bun run typecheck && bun run test && bun run test:fuzz && bun run test:golden"
+    "verify": "bun run format:check && bun run typecheck && bun run build && bun run test && bun run test:fuzz && bun run test:golden",
+    "build": "tsc -p tsconfig.build.json",
+    "tollfree": "bun src/cli/index.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",
@@ -30,5 +32,11 @@
     "jsonschema": "^1.4.1",
     "openai": "^7.21.0",
     "yaml": "^2.9.1"
+  },
+  "bin": {
+    "tollfree": "dist/cli/index.js"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

@@ -17,7 +17,7 @@
 | `agent/` | `tollfree` (superviseur FREE) + 10 agents rôle + 11 workers (builder, planner, architect, design-lead, docwriter, reviewer…) |
 | `command/` | `/review`, `/commit`, `/quota`, `/free-test` |
 | `skills/` (23 : 5 maison `tollfree-*` + tierces scannées, voir `skills/INSTALLED.md`) | Méthodo tollfree-*, superpowers, mattpocock... |
-| `scripts/` | `free-probe.py` (teste les FREE), `quota.py` (monitoring), `free-test.py` (routeur) |
+| `scripts/` | `tollfree probe` (teste les FREE), `tollfree quota` (monitoring), `tollfree free-test` (routeur) |
 | `plugin/guard.ts` | Bloque `rm -rf /`, `mkfs`, `dd`, `push --force` |
 | `free-models.json` | Cache d'état des FREE (régénéré si >30 min) |
 
@@ -232,7 +232,7 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 **Notre valeur ajoutée réelle :**
 
 1. **Assemblage cohérent** : au lieu de configurer 5 plugins séparés, une config unifiée `~/.config/opencode/` qui fonctionne immédiatement
-2. **100% gratuit prêt à l'emploi** : workers gratuits/trial/locaux sondés via `free-probe.py` (statuts dans `free-models.json`), pas de configuration nécessaire au-delà des clés
+2. **100% gratuit prêt à l'emploi** : workers gratuits/trial/locaux sondés via `tollfree probe` (statuts dans `free-models.json`), pas de configuration nécessaire au-delà des clés
 3. **Optimisé Windows** : wrapper direct pour contourner les bugs Windows, chemin `%USERPROFILE%`
 4. **Sécurité intégrée** : envsitter-guard + audit-logger + safety guard en une config
 5. **Curated runtime** : sélection des meilleurs composants (better-compact, opencode-mem, preload-skills, oh-my-opencode-slim) intégrés intelligemment — un seul système par rôle
@@ -268,7 +268,7 @@ TOLLFREE évolue selon une stratégie **composition over competition** : utilise
 | **Superviseur TOLLFREE** | Identité unique, orchestration simple mais efficace |
 | **Matrice L1→L4** | Gouvernance claire des tâches, signature du projet |
 | **Sécurité** (`envsitter-guard` + `guard.ts` + audit) | Protection essentielle, pas de doublon open source |
-| **Workers gratuits validés** | Valeur immédiate, free tiers à quotas stricts (sondés via `free-probe.py`, statuts dans `free-models.json`) |
+| **Workers gratuits validés** | Valeur immédiate, free tiers à quotas stricts (sondés via `tollfree probe`, statuts dans `free-models.json`) |
 
 ### INTEGRATE — Ce que nous intégrons
 

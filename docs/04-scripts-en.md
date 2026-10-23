@@ -1,18 +1,18 @@
 # Scripts Documentation — TOLLFREE
 
 ## Table of Contents
-1. [direct.py](#directpy)
-2. [direct-wrapper.py](#direct-wrapperpy)
-3. [free-probe.py](#free-probepy)
-4. [quota.py](#quotapy)
-5. [free-test.py](#free-testpy)
-6. [view-audit-log.py](#view-audit-logpy)
+1. [tollfree direct](#directpy)
+2. [tollfree direct](#direct-wrapperpy)
+3. [tollfree probe](#free-probepy)
+4. [tollfree quota](#quotapy)
+5. [tollfree free-test](#free-testpy)
+6. [tollfree audit-log](#view-audit-logpy)
 7. [State Files](#state-files)
 8. [Windows Fixes](#windows-fixes)
 
 ---
 
-## 1. direct.py — Main Wrapper
+## 1. tollfree direct — Main Wrapper
 
 ### Description
 Central script that bypasses the `opencode run` bug on Windows. Calls providers directly via their APIs with automatic fallback, circuit breaker, and quota tracking.
@@ -20,13 +20,13 @@ Central script that bypasses the `opencode run` bug on Windows. Calls providers 
 ### Installation
 ```bash
 # The script is already in the repo
-ls scripts/direct.py
+ls tollfree direct
 ```
 
 ### CLI Reference
 
 ```
-Usage: python direct.py [prompt] [options]
+Usage: tollfree direct [prompt] [options]
 
 Options:
   --model, -m MODEL       Specific model
@@ -46,31 +46,31 @@ Options:
 
 ```bash
 # Automatic fallback
-python scripts/direct.py "Explain Ohm's law"
+tollfree direct "Explain Ohm's law"
 
 # Force specific provider
-python scripts/direct.py --provider groq "Analyze this code"
+tollfree direct --provider groq "Analyze this code"
 
 # Force specific model
-python scripts/direct.py --model "codestral-latest" "What does this function do?"
+tollfree direct --model "codestral-latest" "What does this function do?"
 
 # JSON output for automation
-python scripts/direct.py --json "test"
+tollfree direct --json "test"
 
 # List available models
-python scripts/direct.py --list
+tollfree direct --list
 
 # List configured providers
-python scripts/direct.py --list-providers
+tollfree direct --list-providers
 
 # Show system status
-python scripts/direct.py --status
+tollfree direct --status
 
 # Reset quotas
-python scripts/direct.py --reset-quota
+tollfree direct --reset-quota
 
 # Reset circuit breakers
-python scripts/direct.py --reset-circuit
+tollfree direct --reset-circuit
 ```
 
 ### Code Structure
@@ -175,7 +175,7 @@ CODE_ORDER.append("newprovider")
 
 ---
 
-## 2. direct-wrapper.py — opencode run Alias
+## 2. tollfree direct — opencode run Alias
 
 ### Description
 Transforms `opencode run "prompt"` into a direct direct call. Bypasses the Windows SDK bug.
@@ -186,7 +186,7 @@ Transforms `opencode run "prompt"` into a direct direct call. Bypasses the Windo
 opencode run "Explain recursion"
 
 # Use:
-python scripts/direct-wrapper.py run "Explain recursion"
+tollfree run "Explain recursion"
 
 # Or via /run command:
 opencode /run "Explain recursion"
@@ -212,14 +212,14 @@ The `opencode run` bug on Windows (SDK) fails silently. This wrapper provides an
 
 ---
 
-## 3. free-probe.py — Availability Test
+## 3. tollfree probe — Availability Test
 
 ### Description
 Tests all free models and creates the `free-models.json` cache.
 
 ### Usage
 ```bash
-python scripts/free-probe.py
+tollfree probe
 ```
 
 ### Output
@@ -252,7 +252,7 @@ Creates `~/.config/opencode/free-models.json` with model status:
 
 ---
 
-## 4. quota.py — Manual Quota Management
+## 4. tollfree quota — Manual Quota Management
 
 ### Description
 Manual quota management script. View, reset, and force quotas.
@@ -260,25 +260,25 @@ Manual quota management script. View, reset, and force quotas.
 ### Usage
 ```bash
 # View current quotas
-python scripts/quota.py status
+tollfree quota status
 
 # Reset quotas
-python scripts/quota.py reset
+tollfree quota reset
 
 # Force specific usage
-python scripts/quota.py add groq 5
+tollfree quota add groq 5
 ```
 
 ---
 
-## 5. free-test.py — Complete Model Test
+## 5. tollfree free-test — Complete Model Test
 
 ### Description
 Complete test of all free models. Generates `free-test-report.json`.
 
 ### Usage
 ```bash
-python scripts/free-test.py
+tollfree free-test
 ```
 
 ### Output
@@ -298,16 +298,16 @@ Creates `~/.config/opencode/free-test-report.json` with detailed results:
 
 ---
 
-## 6. view-audit-log.py — Audit Log Display
+## 6. tollfree audit-log — Audit Log Display
 
 ### Description
 Displays the audit log in a readable format. Fixes Windows cp1252 issue.
 
 ### Usage
 ```bash
-python scripts/view-audit-log.py
-python scripts/view-audit-log.py --date 2026-09-06
-python scripts/view-audit-log.py --filter tool.execute
+tollfree audit-log
+tollfree audit-log --date 2026-09-06
+tollfree audit-log --filter tool.execute
 ```
 
 ### Options
@@ -335,7 +335,7 @@ Emojis are replaced with ASCII markers:
 ## 7. State Files
 
 ### free-models.json
-Model availability cache. Updated by `free-probe.py`.
+Model availability cache. Updated by `tollfree probe`.
 ```json
 {
   "google/gemini-2.5-flash": "ok",
@@ -346,7 +346,7 @@ Model availability cache. Updated by `free-probe.py`.
 ```
 
 ### provider_usage.json
-Daily quota counters. Updated automatically by `direct.py`.
+Daily quota counters. Updated automatically by `tollfree direct`.
 ```json
 {
   "groq:qwen/qwen3.8-27b:2026-09-06": 12,
@@ -356,7 +356,7 @@ Daily quota counters. Updated automatically by `direct.py`.
 ```
 
 ### provider_circuit.json
-Circuit breaker states. Updated automatically by `direct.py`.
+Circuit breaker states. Updated automatically by `tollfree direct`.
 ```json
 {
   "groq": {"state": "CLOSED", "failures": 0, "last_failure": 0},
@@ -366,7 +366,7 @@ Circuit breaker states. Updated automatically by `direct.py`.
 ```
 
 ### free-test-report.json
-Complete model test report. Generated by `free-test.py`.
+Complete model test report. Generated by `tollfree free-test`.
 
 ### logs/audit-YYYY-MM-DD.jsonl
 Detailed audit log. Generated by the audit-logger.ts plugin.
@@ -391,7 +391,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 ### opencode run Hang
 Windows SDK bug causes `opencode run` to fail silently despite valid keys.
 
-**Solution**: Use `direct-wrapper.py` or `/run` or `/direct` instead.
+**Solution**: Use `tollfree direct` or `/run` or `/direct` instead.
 
 ### permission task denied
 Legacy `opencode.json` had `"permission": {"task": "deny"}` blocking session creation.

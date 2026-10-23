@@ -40,10 +40,10 @@ Retirés : `worker-sambanova`, `worker-cerebras`, `worker-cohere` (clés 401),
 2. **Tâche simple (L1)** : fais-la TOI-MÊME (tu tournes sur `opencode/deepseek-v4-flash`, 0 quota). Ne délègue pas — chaque délégation coûte du contexte.
 3. **Tâche complexe (L2+)** : route dynamiquement :
    ```bash
-   python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" <type>        # meilleur worker
-   python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" <type> --next # fallback après échec
+   tollfree route <type>        # meilleur worker
+   tollfree route <type> --next # fallback après échec
    ```
-   `route.py` lit `free-models.json` (statut live + latence) et priorise les
+   `tollfree route` lit `free-models.json` (statut live + latence) et priorise les
    modèles intégrés (0 quota) puis les externes `ok` par latence croissante.
    Ne probe JAMAIS huggingface (crédit payant).
 4. **Avant délégation externe** : consulte `quota-guard` (subagent) si le worker
@@ -51,7 +51,7 @@ Retirés : `worker-sambanova`, `worker-cerebras`, `worker-cohere` (clés 401),
    il vérifie les quotas et peut déconseiller un worker proche de l'épuisement.
 5. **Délègue** la tâche complète + contexte nécessaire (les workers n'ont pas ta
    mémoire) au worker choisi via subagent. Récupère son résultat.
-6. **Échec (429, quota, auth, timeout)** : `route.py <type> --next` → worker
+6. **Échec (429, quota, auth, timeout)** : `tollfree route <type> --next` → worker
    suivant EN LUI TRANSMETTANT LE PROGRÈS ACCUMULÉ. Ne redemande JAMAIS à
    l'utilisateur en cours de chaîne.
 7. **Tous KO** : résume ce qui est fait / ce qui bloque, propose le fallback
@@ -78,20 +78,20 @@ suivie vs plafond dans `/quota`. Ne propose JAMAIS le passage en PRO de toi-mêm
    - Si la tâche dépasse le budget : découpe-la, ne gonfle pas le contexte.
 7. **Rétroaction (Bayes)** : après chaque délégation, enregistre le résultat :
    ```bash
-   python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" record <worker> success|fail
+   tollfree route record <worker> success|fail
    ```
    Les poids de routage s'ajustent automatiquement (EV = qualité × dispo / coût).
 
 ## Quick Commands
 
 ```bash
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" list        # état + latence + EV de tous les workers
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" code        # meilleur worker (EV max) pour du code
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" report      # EV par type de tâche
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" record worker-groq success   # feedback loop
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/route.py" heavy --next # fallback
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/free-probe.py"        # rafraîchir le probe
-python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/quota.py"             # tableau de bord quotas
+tollfree route list        # état + latence + EV de tous les workers
+tollfree route code        # meilleur worker (EV max) pour du code
+tollfree route report      # EV par type de tâche
+tollfree route record worker-groq success   # feedback loop
+tollfree route heavy --next # fallback
+tollfree probe        # rafraîchir le probe
+tollfree quota             # tableau de bord quotas
 ```
 
 ## Rules
@@ -101,5 +101,5 @@ python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/quota.py"             # 
 - L3/L4 tasks require human approval
 - L1 tasks can execute immediately (no approval needed)
 - NEVER use paid models without explicit user consent
-- ALWAYS route via `route.py`, fallback automatically on 429
+- ALWAYS route via `tollfree route`, fallback automatically on 429
 - Log all governance decisions via audit-logger.ts

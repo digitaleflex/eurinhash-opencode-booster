@@ -33,12 +33,12 @@ TOLLFREE est un superviseur intelligent pour OpenCode qui garantit :
 - **Workers** : `worker-groq`, `worker-codestral`, `worker-google`, `worker-zhipu` (fallback ciblé)
 
 ### 2.3 Scripts Python (7)
-- **`direct.py`** : Wrapper principal avec circuit breaker + quota
-- **`direct-wrapper.py`** : Alias pour `opencode run`
-- **`free-probe.py`** : Test de disponibilité des modèles gratuits
-- **`quota.py`** : Gestion manuelle des quotas
-- **`free-test.py`** : Test complet de tous les modèles
-- **`view-audit-log.py`** : Affichage du journal d'audit
+- **`tollfree direct`** : Wrapper principal avec circuit breaker + quota
+- **`tollfree direct`** : Alias pour `opencode run`
+- **`tollfree probe`** : Test de disponibilité des modèles gratuits
+- **`tollfree quota`** : Gestion manuelle des quotas
+- **`tollfree free-test`** : Test complet de tous les modèles
+- **`tollfree audit-log`** : Affichage du journal d'audit
 
 ### 2.4 Plugins TypeScript (2)
 - **`audit-logger.ts`** : Journalisation JSONL avec redaction
@@ -87,7 +87,7 @@ TOLLFREE est un superviseur intelligent pour OpenCode qui garantit :
                                   │
                                   ▼
                     ┌─────────────────────────┐
-                    │   direct.py       │
+                    │   tollfree direct       │
                     │  ┌─────────────────┐  │
                     │  │ Circuit Breaker │  │
                     │  │ provider_circuit│  │
@@ -194,7 +194,7 @@ TOLLFREE est un superviseur intelligent pour OpenCode qui garantit :
 
 ### Étape 1 : Probe (Vérification)
 ```
-Lire free-models.json (>30min = re-probe via free-probe.py)
+Lire free-models.json (>30min = re-probe via tollfree probe)
 Marquer les providers OK/KO
 ```
 
@@ -365,13 +365,13 @@ const SENSITIVE_PATTERNS = [
 
 ### 10.1 Ajouter un nouveau provider
 1. Ajouter la clé API : `echo "KEY" > .newprovider-key`
-2. Ajouter dans `direct.py` :
+2. Ajouter dans `tollfree direct` :
    - Endpoint dans `ENDPOINTS`
    - Modèles dans `MODELS`
    - Fonction d'appel
    - Limite dans `QUOTA_LIMITS`
 3. Ajouter dans `MODELS` (keys.py)
-4. Tester avec `python scripts/direct.py --provider newprovider "test"`
+4. Tester avec `tollfree direct --provider newprovider "test"`
 
 ### 10.2 Ajouter un nouvel agent
 1. Créer `agent/nouveau-agent.md`

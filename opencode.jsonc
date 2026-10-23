@@ -10,13 +10,13 @@
   //   - Modèles : uniquement FREE tier / intégrés 0 quota
   //   - Privacy : interdit muse-spark-*-contributor-free, nemotron-*-free
   //     (prompts/complétions utilisés pour entraîner des modèles)
-  //   - Architecture : superviseur TOLLFREE → route.py (EV scoring)
+  //   - Architecture : superviseur TOLLFREE → tollfree route (EV scoring)
   //     → workers gratuits → feedback loop bayésien
   //
   // Fichiers clés :
-  //   - scripts/route.py     → routage EV + feedback
-  //   - scripts/quota.py      → dashboard quotas
-  //   - scripts/free-probe.py → probe workers
+  //   - tollfree route     → routage EV + feedback
+  //   - tollfree quota      → dashboard quotas
+  //   - tollfree probe → probe workers
   //   - free-models.json      → statut live workers
   //   - route-usage.json      → historique succès/échec
   //   - plugin/auto-compact.ts → compaction intelligente
@@ -285,12 +285,12 @@
   // « FREE » = tier gratuit du provider, jamais illimité.
   // Voir docs/02-configuration.md §3 pour le détail de chaque provider.
   //
-  // Stratégie de routage (route.py v2) :
+  // Stratégie de routage (tollfree route v2) :
   //   EV(worker) = qualité × disponibilité / coût(latence)
   //   - qualité : baseline par famille de modèle, ajustée par Bayes
   //   - disponibilité : 1.0 si ok, 0.2 si rate_limited, 0 si error
   //   - coût : latence mesurée (ms/1000 + 1)
-  //   - Feedback : route.py record <worker> success|fail → ajuste les poids
+  //   - Feedback : tollfree route record <worker> success|fail → ajuste les poids
   //
   // Workers actifs (statut live : free-models.json) :
   //   worker-opencode      → deepseek-v4-flash (intégré, 0 quota)
@@ -386,7 +386,7 @@
         },
         "inclusionai/ling-3.0-flash-sante:free": { "name": "Ling 3.0 Flash Santé (100% GRATUIT, 256K ctx)" },
         "poolside/laguna-s-2.1:free": { "name": "Poolside Laguna S 2.1 (FREE, code, 1M ctx)" },
-        // 2026-09-13 : découverts via models-free.py (models.dev)
+        // 2026-09-13 : découverts via tollfree models-free (models.dev)
         "poolside/laguna-xs-2.1:free": { "name": "Poolside Laguna XS 2.1 (FREE, code, 262K ctx)" },
         "minimax/MiniMax-M2.7:free": { "name": "MiniMax M2.7 (FREE, 512K ctx)" },
         // 2026-09-19 : enrichissement models.dev — nouveaux gratuits openrouter
@@ -526,7 +526,7 @@
   //   - agent/worker-pro-openrouter.md
   //   - agent/worker-pro-opencode-go.md
   //   - command/mode.md
-  //   - scripts/quota.py
+  //   - tollfree quota
   //
   "pro": {
     "enabled": false,

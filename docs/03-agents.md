@@ -27,7 +27,7 @@ Superviseur TOLLFREE principal. Gère la rotation des providers, le quota tracki
 
 ### Protocol TOLLFREE (6 étapes)
 
-**Étape 1 — Probe** : Lire `free-models.json`. Si >30min ou fichier absent → lancer `python scripts/free-probe.py`.
+**Étape 1 — Probe** : Lire `free-models.json`. Si >30min ou fichier absent → lancer `tollfree probe`.
 
 **Étape 2 — Pick** : Définir l'ordre de fallback :
 - Tâche **code** : `groq → mistral → zhipu → openrouter → novita → together`
@@ -462,7 +462,7 @@ Documentation technique. README, API docs, guides.
 - `cohere/command-a-03-2025`
 - Trial (1000 appels/mois, sans carte, non-commercial)
 
-> Cloudflare Workers AI n'a pas de worker : sondé via `free-probe.py`
+> Cloudflare Workers AI n'a pas de worker : sondé via `tollfree probe`
 > (`worker-cloudflare` dans `free-models.json`) mais le mapping provider
 > OpenCode reste à valider live — ne pas router vers lui.
 

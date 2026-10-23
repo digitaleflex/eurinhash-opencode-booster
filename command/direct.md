@@ -3,7 +3,7 @@ description: Contournement direct pour appeler les providers AI (Groq, Mistral, 
 agent: tollfree
 ---
 
-`python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/direct.py" $ARG`
+`tollfree direct $ARG`
 
 **Exemples :**
 - `/direct "explique la loi d'Ohm"` → utilise le fallback automatique (Groq → Mistral → ...)

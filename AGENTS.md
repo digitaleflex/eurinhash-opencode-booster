@@ -173,7 +173,7 @@ Backup des agents : historique git (`git log -- agent/`).
 
 ### Protocole TOLLFREE (obligatoire)
 
-1. **Vérification temps réel** : lire `free-models.json` (dossier de config) ; s'il manque ou date de +30 min → lancer `python "${TOLLFREE_DIR:-$HOME/.config/opencode}/scripts/free-probe.py"` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
+1. **Vérification temps réel** : lire `free-models.json` (dossier de config) ; s'il manque ou date de +30 min → lancer `tollfree probe` (bash) pour rafraîchir. Ne JAMAIS tester HuggingFace (crédit payant).
 2. **Ordre selon la tâche** (statuts live dans `free-models.json`, sauter tout worker ≠ `ok`) :
    - Code → `worker-codestral` → `worker-groq` → `worker-novita` → `worker-zhipu` → `worker-google` → `worker-ollama` → `worker-pollinations`
    - Discussion/Résumé/Rédaction → `worker-groq` → `worker-zhipu` → `worker-novita` → `worker-codestral` → `worker-google` → `worker-ollama` → `worker-pollinations`
@@ -182,7 +182,7 @@ Backup des agents : historique git (`git log -- agent/`).
 5. **Arrêt conditionnel** : ne s'arrête que si TOUS les workers gratuits sont KO → résumer ce qui est fait / ce qui bloque, proposer le fallback payant (`mammouth/...`) et demander validation explicite.
 6. **INTERDIT** : utiliser un modèle payant sans accord explicite.
 
-### Workers disponibles (statuts live : `free-models.json`, `python scripts/free-probe.py`)
+### Workers disponibles (statuts live : `free-models.json`, `tollfree probe`)
 
 | Worker                | Modèle                                    | Spécialité             | Coût réel                                                            |
 | --------------------- | ----------------------------------------- | ---------------------- | -------------------------------------------------------------------- |

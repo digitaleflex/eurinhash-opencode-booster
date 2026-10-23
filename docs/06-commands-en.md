@@ -152,7 +152,7 @@ Displays recent JSONL audit log. Detects sensitive ops, shows model calls, succe
 /audit-log --json
 
 # Quick stats
-/audit-log | python scripts/view-audit-log.py --statistics
+/audit-log | tollfree audit-log --statistics
 ```
 
 ### Log Structure

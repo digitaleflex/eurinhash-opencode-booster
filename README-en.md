@@ -78,14 +78,6 @@ TOLLFREE is a governance layer for AI coding agents. It automatically selects th
 │   ├── guard.ts                  # Destructive protection + secret redaction
 │   └── auto-compact.ts           # Intelligent compaction
 ├── 📁 scripts/                   # 12 scripts (Python, Node, TypeScript)
-│   ├── direct.py            # Main wrapper (circuit breaker + quota)
-│   ├── direct-wrapper.py    # opencode run alias
-│   ├── free-probe.py             # Model availability testing
-│   ├── quota.py                  # Quota management
-│   ├── free-test.py       # Full model testing
-│   ├── view-audit-log.py         # Audit log display
-│   ├── route.py                  # EV routing + Bayesian feedback
-│   ├── models-free.py            # Free model inventory
 │   ├── session-review.mjs        # Session review
 │   └── verify-golden.ts          # Golden test verification
 ├── 📁 skills/                    # 30+ skills
@@ -104,7 +96,7 @@ TOLLFREE is a governance layer for AI coding agents. It automatically selects th
 ```
 User
     │
-    ├─ opencode run "prompt" ──► direct-wrapper.py ──► direct.py
+    ├─ opencode run "prompt" ──► tollfree direct ──► tollfree direct
     │                                                                    │
     │                                                                    ├─► Circuit breaker (provider_circuit.json)
     │                                                                    ├─► Quota tracking (provider_usage.json)
@@ -112,7 +104,7 @@ User
     │
     └─ opencode agent "task" ──► Agent (tollfree/planner/etc.)
                                     │
-                                    ├─► opencode run (if bug) ──► direct.py
+                                    ├─► opencode run (if bug) ──► tollfree direct
                                     └─► opencode native (if working)
 ```
 
@@ -198,7 +190,7 @@ User
 
 | OS | Shell | Notes |
 |----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | `direct.py` wrapper bypasses SDK bug. |
+| **Windows** | WSL2 / Git Bash / PowerShell | `tollfree direct` wrapper bypasses SDK bug. |
 | **macOS** | bash / zsh | Everything works natively. `opencode run` works without wrapper. |
 | **Linux** | bash | Everything works natively. No workaround needed. |
 
@@ -237,16 +229,16 @@ User
 
 ```bash
 # Find the best worker for a task type
-python ~/.config/opencode/scripts/route.py code
+tollfree route code
 
 # Find the fallback worker
-python ~/.config/opencode/scripts/route.py code --next
+tollfree route code --next
 
 # List all workers with status
-python ~/.config/opencode/scripts/route.py list
+tollfree route list
 
 # Record a result (Bayesian feedback)
-python ~/.config/opencode/scripts/route.py record worker-groq success
+tollfree route record worker-groq success
 ```
 
 ---

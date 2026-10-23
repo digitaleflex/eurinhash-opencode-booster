@@ -14,7 +14,7 @@ TOLLFREE is an intelligent supervisor for OpenCode that guarantees:
 
 ### Step 1 — Probe
 ```
-Read free-models.json (>30min = re-probe via free-probe.py)
+Read free-models.json (>30min = re-probe via tollfree probe)
 Mark providers OK/KO
 ```
 
@@ -115,7 +115,7 @@ User
         └───────┬───────┘
                 ▼
       ┌─────────────────┐
-      │ direct.py  │
+      │ tollfree direct  │
       │ ┌─────────────┐ │
       │ │Circuit Breaker│ │
       │ │  (file)     │ │
@@ -168,12 +168,12 @@ User
 ### Scripts (7)
 | Script | Purpose |
 |--------|---------|
-| `direct.py` | Main wrapper with circuit breaker + quota |
-| `direct-wrapper.py` | Alias for `opencode run` |
-| `free-probe.py` | Test free model availability |
-| `quota.py` | Manual quota management |
-| `free-test.py` | Complete free model test |
-| `view-audit-log.py` | Audit log display |
+| `tollfree direct` | Main wrapper with circuit breaker + quota |
+| `tollfree direct` | Alias for `opencode run` |
+| `tollfree probe` | Test free model availability |
+| `tollfree quota` | Manual quota management |
+| `tollfree free-test` | Complete free model test |
+| `tollfree audit-log` | Audit log display |
 
 ### Plugins (3)
 | Plugin | Purpose |
@@ -268,12 +268,12 @@ User
 
 ### Add a new provider
 1. Create API key file: `echo "KEY" > .newprovider-key`
-2. Add in `direct.py`:
+2. Add in `tollfree direct`:
    - Endpoint in `ENDPOINTS`
    - Models in `MODELS`
    - Call function
    - Limit in `QUOTA_LIMITS`
-3. Test: `python scripts/direct.py --provider newprovider "test"`
+3. Test: `tollfree direct --provider newprovider "test"`
 
 ### Add a new agent
 1. Create `agent/my-agent.md`

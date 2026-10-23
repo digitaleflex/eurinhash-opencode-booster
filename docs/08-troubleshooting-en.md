@@ -43,7 +43,7 @@ opencode /run "test"
 # Or via the command
 /opencode /run "my prompt"
 
-# Permanent measure: The `direct-wrapper.py` wrapper is now the recommended method under Windows.
+# Permanent measure: The `tollfree direct` wrapper is now the recommended method under Windows.
 ```
 
 ### 1.3 Quota Exhausted
@@ -103,7 +103,7 @@ opencode /run "test"
 /host-direct "test"  # Uses automatic fallback
 
 # To test Zhipu specifically
-python scripts/free-test.py
+tollfree free-test
 ```
 
 ### 2.2 Google rate_limited
@@ -163,9 +163,9 @@ Emojis are replaced with markers:
 - 🔄 → `[R]`
 
 This is already applied in:
-- `scripts/direct.py`
-- `scripts/view-audit-log.py`
-- `scripts/free-test.py`
+- `tollfree direct`
+- `tollfree audit-log`
+- `tollfree free-test`
 
 ### 3.2 `opencode run` Hang
 
@@ -193,7 +193,7 @@ opencode run "my command"
 ls -la scripts/
 
 # Use python to run
-python scripts/direct.py "test"
+tollfree direct "test"
 ```
 
 ---
@@ -313,7 +313,7 @@ cat ~/.config/opencode/provider_usage.json
 ### 5.4 Customize Thresholds
 
 ```bash
-# Modify thresholds in direct.py
+# Modify thresholds in tollfree direct
 FAILURE_THRESHOLD = 3    # Default: 3 failures to OPEN the circuit
 CIRCUIT_TIMEOUT = 60     # Default: 60 seconds in OPEN
 
