@@ -16,7 +16,7 @@
 | `.env` + `.-key` (15 fichiers) | Clés API hors config — **jamais à committer** (`.gitignore` OK) |
 | `agent/` | `tollfree` (superviseur FREE) + 10 agents rôle + 11 workers (builder, planner, architect, design-lead, docwriter, reviewer…) |
 | `command/` | `/review`, `/commit`, `/quota`, `/free-test` |
-| `skills/` (30 : 14 maison + 16 tierces scannées, `arkcli-*` archivés) | Méthodo hash-*, superpowers, mattpocock, caveman, skill-creator... |
+| `skills/` (23 : 5 maison `tollfree-*` + tierces scannées, voir `skills/INSTALLED.md`) | Méthodo tollfree-*, superpowers, mattpocock... |
 | `scripts/` | `free-probe.py` (teste les FREE), `quota.py` (monitoring), `free-test.py` (routeur) |
 | `plugin/guard.ts` | Bloque `rm -rf /`, `mkfs`, `dd`, `push --force` |
 | `free-models.json` | Cache d'état des FREE (régénéré si >30 min) |

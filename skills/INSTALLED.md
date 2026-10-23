@@ -19,11 +19,6 @@
 | resolving-merge-conflicts | mattpocock/skills | 3cca18b (2026-09-04) | 2026-09-10 | clean |
 | git-guardrails-claude-code | mattpocock/skills | 3cca18b (2026-09-04) | 2026-09-10 | clean |
 | setup-pre-commit | mattpocock/skills | 3cca18b (2026-09-04) | 2026-09-10 | clean |
-| caveman-commit | juliusbrussee/caveman | 15581d1 (2026-09-07) | 2026-09-10 | clean |
-| caveman-review | juliusbrussee/caveman | 15581d1 (2026-09-07) | 2026-09-10 | clean |
-| caveman-compress | juliusbrussee/caveman | 15581d1 (2026-09-07) | 2026-09-10 | clean |
-| skill-creator | anthropics/skills | 41bbe19 (2026-09-03) | 2026-09-10 | clean |
-| supabase-postgres-best-practices | supabase/agent-skills | 8331f91 (2026-08-12) | 2026-09-10 | clean |
 
 Update procedure: re-clone the source, copy only the listed directory,
 re-scan, bump the commit SHA + date above.

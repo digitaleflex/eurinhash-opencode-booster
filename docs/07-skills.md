@@ -381,11 +381,6 @@ bénins revus et acceptés). Chargées via `opencode-plugin-preload-skills`
 | resolving-merge-conflicts | mattpocock/skills | git-engineer |
 | git-guardrails-claude-code | mattpocock/skills | security, git-engineer |
 | setup-pre-commit | mattpocock/skills | git-engineer |
-| caveman-commit | juliusbrussee/caveman | git-engineer |
-| caveman-review | juliusbrussee/caveman | reviewer |
-| caveman-compress | juliusbrussee/caveman | trigger "compress context" |
-| skill-creator | anthropics/skills | trigger "create a skill" |
-| supabase-postgres-best-practices | supabase/agent-skills | trigger "supabase/postgres" |
 
 Mise à jour : re-cloner la source, copier le dossier, re-scanner, bumper
 `skills/INSTALLED.md`.
