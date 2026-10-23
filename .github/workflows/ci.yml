@@ -64,7 +64,10 @@ jobs:
       - name: Build CLI and plugin bundles
         run: npm run build
 
+      # vitest 5 needs Node >= 22.12; Node 18 still builds and runs the end-to-end test below,
+      # which is what users on Node 18 actually execute.
       - name: Unit tests (vitest)
+        if: matrix.node == 22
         run: npx vitest run
 
       - name: End-to-end smoke test on plain Node

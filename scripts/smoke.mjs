@@ -4,9 +4,10 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const cli = resolve(import.meta.dirname, "..", "dist", "cli", "index.js");
+const cli = resolve(dirname(fileURLToPath(import.meta.url)), "..", "dist", "cli", "index.js");
 const dir = mkdtempSync(join(tmpdir(), "tollfree-smoke-"));
 const env = { ...process.env, NO_COLOR: "1", TOLLFREE_DIR: dir };
 for (const k of [
