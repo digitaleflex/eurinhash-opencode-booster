@@ -142,57 +142,57 @@ User
 
 ## 🛠️ Installation
 
-### Prerequisites
+### Requirements
 
-- [OpenCode installed](https://opencode.ai/) (v0.10.0+)
-- Python 3.8+ (for scripts)
-- Node.js 18+ or [Bun](https://bun.sh) (for plugins)
-- API keys for free providers (see below)
-- `bash` (available natively on macOS/Linux, via WSL/Git Bash on Windows)
+- [OpenCode](https://opencode.ai/) installed
+- Node.js 18+ (Linux, macOS or Windows). Python is no longer needed.
+- Optional: free API keys (Groq, Google, Zhipu, OpenRouter, Novita…); with no key, OpenCode's built-in free models already work.
 
-### Steps
+### In 3 commands
 
-1. **Clone the repository** to `~/.config/opencode`:
-   ```bash
-   git clone https://github.com/digitaleflex/opencode-config.git ~/.config/opencode
-   ```
+```bash
+npm install -g tollfree     # or: pnpm add -g tollfree
+tollfree init               # installs agents, commands, skills and guardrails
+tollfree doctor             # checks that everything is in place
+```
 
-2. **Install dependencies**:
-   ```bash
-   cd ~/.config/opencode
-   npm install  # or bun install
-   ```
+> **Status:** the package is not published on npm yet. Meanwhile, from a clone:
+> `git clone <this repo> && cd <folder> && npm install && npm run build && npm link`, then `tollfree init`.
 
-3. **Create API key files** in `~/.config/opencode/`:
-   ```bash
-   # Required providers (for orchestration)
-   echo "YOUR_GROQ_KEY" > ~/.config/opencode/.groq-key
-   echo "YOUR_GEMINI_KEY" > ~/.config/opencode/.gemini-key
-   echo "YOUR_OPENROUTER_KEY" > ~/.config/opencode/.openrouter-key
-   echo "YOUR_NOVITA_KEY" > ~/.config/opencode/.novita-key
-   echo "YOUR_ZHIPU_KEY" > ~/.config/opencode/.zhipu-key
-   echo "YOUR_HF_KEY" > ~/.config/opencode/.hf-key
+`tollfree init` **adapts to the machine**:
 
-   # Optional providers
-   echo "YOUR_MISTRAL_KEY" > ~/.config/opencode/.mistral-key
-   echo "YOUR_TOGETHER_KEY" > ~/.config/opencode/.together-key
-   echo "YOUR_DEEPSEEK_KEY" > ~/.config/opencode/.deepseek-key
-   echo "YOUR_ZENMUX_KEY" > ~/.config/opencode/.zenmux-key
-   echo "YOUR_MAMMOUTH_KEY" > ~/.config/opencode/.mammouth-key
-   ```
+- detects your keys (env vars `GROQ_API_KEY`, `GEMINI_API_KEY`, `ZHIPU_API_KEY`, `OPENROUTER_API_KEY`, `NOVITA_API_KEY`… or `.groq-key`… files) and installs only the workers you can use;
+- notices a local Ollama;
+- swaps the model of an agent whose key is missing for a free built-in model (`--fallback-model` to pick another);
+- never overwrites an existing file you edited (`--force` backs it up, then replaces it);
+- leaves an existing `opencode.jsonc` alone (`--set-default` only adds `"default_agent": "tollfree"`).
 
-4. **Verify the configuration**:
-   ```bash
-   opencode /run "test"
-   ```
+| Command | What it does |
+|---|---|
+| `tollfree init [--global \| --project \| --dir <path>] [--dry-run]` | Install (global by default, or into `./.opencode` for one project) |
+| `tollfree update` | Update without touching your edits; follows keys you add or remove |
+| `tollfree uninstall [--purge]` | Remove only what was installed and restore your original files |
+| `tollfree doctor [--json]` | Diagnose Node, OpenCode, keys, Ollama and file integrity |
 
-### Installation on Different OS
+The target is OpenCode's config dir (`~/.config/opencode`, or `$XDG_CONFIG_HOME/opencode`); set `TOLLFREE_DIR` to use another.
+Each install writes `.tollfree/manifest.json` (files and hashes), which is what makes `update` and `uninstall` safe.
 
-| OS | Shell | Notes |
-|----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | `tollfree direct` wrapper bypasses SDK bug. |
-| **macOS** | bash / zsh | Everything works natively. `opencode run` works without wrapper. |
-| **Linux** | bash | Everything works natively. No workaround needed. |
+> Agents run the `tollfree` command in a terminal, so it must be on your `PATH` (`npm install -g`), not only run through `npx`.
+
+### API keys (optional)
+
+Easiest: export the provider's environment variable, then `tollfree update`. Otherwise a one-line file in the config dir:
+
+```bash
+echo "YOUR_KEY" > ~/.config/opencode/.groq-key     # same for .gemini-key, .zhipu-key, .openrouter-key, .novita-key
+```
+
+### Platforms
+
+| OS | Notes |
+|----|-------|
+| **Windows** | Node 18+ is enough. Agent commands use `bash` (Git Bash or WSL), like OpenCode. |
+| **macOS / Linux** | Works natively. |
 
 ---
 

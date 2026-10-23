@@ -11,5 +11,6 @@ export default defineConfig({
       exclude: ["node_modules/", "dist/", "**/*.test.ts", "**/*.config.ts"],
     },
     globals: true,
+    setupFiles: ["tests/setup-env.ts"],
   },
 });

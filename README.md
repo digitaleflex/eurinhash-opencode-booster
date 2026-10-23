@@ -136,55 +136,55 @@ Utilisateur
 
 ### Prérequis
 
-- [OpenCode installé](https://opencode.ai/) (v0.10.0+)
-- Python 3.8+ (pour les scripts)
-- Node.js 18+ ou [Bun](https://bun.sh) (pour les plugins)
-- Clés API pour les providers gratuits (voir ci-dessous)
-- `bash` (disponible nativement sur macOS/Linux, via WSL/Git Bash sur Windows)
+- [OpenCode](https://opencode.ai/) installé
+- Node.js 18+ (Linux, macOS ou Windows). Python n'est plus nécessaire.
+- Optionnel : des clés API gratuites (Groq, Google, Zhipu, OpenRouter, Novita…) ; sans clé, les modèles gratuits intégrés à OpenCode fonctionnent déjà.
 
-### Étapes
+### En 3 commandes
 
-1. **Clonez le dépôt** vers `~/.config/opencode` :
-   ```bash
-   git clone https://github.com/digitaleflex/opencode-config.git ~/.config/opencode
-   ```
+```bash
+npm install -g tollfree     # ou : pnpm add -g tollfree
+tollfree init               # installe agents, commandes, skills et garde-fous
+tollfree doctor             # vérifie que tout est en place
+```
 
-2. **Installez les dépendances** :
-   ```bash
-   cd ~/.config/opencode
-   npm install  # ou bun install
-   ```
+> **Statut :** le paquet n'est pas encore publié sur npm. En attendant, depuis un clone :
+> `git clone <ce dépôt> && cd <dossier> && npm install && npm run build && npm link`, puis `tollfree init`.
 
-3. **Créez les fichiers de clés API** dans `~/.config/opencode/` :
-   ```bash
-   # Provider gratuit (requis pour l'orchestration)
-   echo "YOUR_GROQ_KEY" > ~/.config/opencode/.groq-key
-   echo "YOUR_GEMINI_KEY" > ~/.config/opencode/.gemini-key
-   echo "YOUR_OPENROUTER_KEY" > ~/.config/opencode/.openrouter-key
-   echo "YOUR_NOVITA_KEY" > ~/.config/opencode/.novita-key
-   echo "YOUR_ZHIPU_KEY" > ~/.config/opencode/.zhipu-key
-   echo "YOUR_HF_KEY" > ~/.config/opencode/.hf-key
+`tollfree init` **s'adapte à la machine** :
 
-   # Providers optionnels
-   echo "YOUR_MISTRAL_KEY" > ~/.config/opencode/.mistral-key
-   echo "YOUR_TOGETHER_KEY" > ~/.config/opencode/.together-key
-   echo "YOUR_DEEPSEEK_KEY" > ~/.config/opencode/.deepseek-key
-   echo "YOUR_ZENMUX_KEY" > ~/.config/opencode/.zenmux-key
-   echo "YOUR_MAMMOUTH_KEY" > ~/.config/opencode/.mammouth-key
-   ```
+- détecte vos clés (variables d'environnement `GROQ_API_KEY`, `GEMINI_API_KEY`, `ZHIPU_API_KEY`, `OPENROUTER_API_KEY`, `NOVITA_API_KEY`… ou fichiers `.groq-key`…) et n'installe que les workers utilisables ;
+- repère Ollama s'il tourne en local ;
+- remplace le modèle d'un agent dont la clé manque par un modèle gratuit intégré (`--fallback-model` pour en choisir un autre) ;
+- n'écrase jamais un fichier qui existe déjà et que vous avez modifié (`--force` sauvegarde puis remplace) ;
+- ne modifie pas votre `opencode.jsonc` existant (`--set-default` ajoute seulement `"default_agent": "tollfree"`).
 
-4. **Vérifiez la configuration** :
-   ```bash
-   opencode /run "test"
-   ```
+| Commande | Rôle |
+|---|---|
+| `tollfree init [--global \| --project \| --dir <chemin>] [--dry-run]` | Installe (global par défaut, ou dans `./.opencode` pour un seul projet) |
+| `tollfree update` | Met à jour sans toucher à vos modifications ; suit l'ajout ou le retrait de clés |
+| `tollfree uninstall [--purge]` | Retire uniquement ce qui a été installé et restaure vos fichiers d'origine |
+| `tollfree doctor [--json]` | Diagnostic : Node, OpenCode, clés, Ollama, intégrité des fichiers |
 
-### Installation sur différents OS
+Le dossier cible est celui d'OpenCode (`~/.config/opencode`, ou `$XDG_CONFIG_HOME/opencode`) ; `TOLLFREE_DIR` permet d'en choisir un autre.
+Chaque installation écrit `.tollfree/manifest.json` (liste des fichiers et empreintes) : c'est ce qui rend `update` et `uninstall` sûrs.
 
-| OS | Shell | Notes |
-|----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | Le wrapper `tollfree direct` contourne un bug SDK. |
-| **macOS** | bash / zsh | Tout fonctionne nativement. `opencode run` fonctionne sans wrapper. |
-| **Linux** | bash | Tout fonctionne nativement. Aucun workaround nécessaire. |
+> Les agents lancent la commande `tollfree` dans un terminal : elle doit donc être dans le `PATH` (`npm install -g`), pas seulement exécutée avec `npx`.
+
+### Clés API (optionnel)
+
+Le plus simple : exportez la variable d'environnement du fournisseur, puis `tollfree update`. Sinon, un fichier d'une ligne dans le dossier de config :
+
+```bash
+echo "VOTRE_CLE" > ~/.config/opencode/.groq-key     # idem .gemini-key, .zhipu-key, .openrouter-key, .novita-key
+```
+
+### Systèmes
+
+| OS | Notes |
+|----|-------|
+| **Windows** | Node 18+ suffit. Les commandes d'agents utilisent `bash` (Git Bash ou WSL) comme OpenCode. |
+| **macOS / Linux** | Fonctionne nativement. |
 
 ---
 

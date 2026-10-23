@@ -7,6 +7,7 @@ on:
 
 jobs:
   verify:
+    name: verify (ubuntu, bun)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,14 +25,11 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Build CLI
+      - name: Build CLI and plugin bundles
         run: bun run build
 
-      - name: CLI smoke test (plain Node, empty config dir)
-        run: node dist/cli/index.js --help
-
-      - name: Unit tests
-        run: bun test src/core/core.test.ts
+      - name: Unit tests (vitest + bun)
+        run: bun run test
 
       - name: Fuzz tests (canonicalizer + unicode)
         run: bun run test:fuzz
@@ -41,3 +39,33 @@ jobs:
 
       - name: Chaos lab (no-crash gate)
         run: bun run chaos
+
+      - name: End-to-end smoke test (init, doctor, update, uninstall)
+        run: bun run smoke
+
+  cross-os:
+    name: node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [18, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install
+        run: npm ci
+
+      - name: Build CLI and plugin bundles
+        run: npm run build
+
+      - name: Unit tests (vitest)
+        run: npx vitest run
+
+      - name: End-to-end smoke test on plain Node
+        run: npm run smoke

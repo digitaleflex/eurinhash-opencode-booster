@@ -5,6 +5,20 @@
 > `/myfree-eurinhash` → `/free-test`, skills `hash-*` → `tollfree-*`, env vars `EURINHASH_*` →
 > `TOLLFREE_*` (the old `EURINHASH_MODE`, `_PROOFS_DIR`, `_AUDIT_KEY`, `_APPROVAL_KEY` still work as fallback).
 
+## [Unreleased]
+
+### Added
+- `tollfree init | update | uninstall | doctor`: one-command install that adapts to the machine
+  (keys from env vars or key files, Ollama, free built-in model fallback), tracks what it wrote in
+  `.tollfree/manifest.json`, and never overwrites files you edited. `--project` installs into `./.opencode`.
+- Bundled, self-contained plugins (`dist/plugin/*.js`): destructive-command guard, secret redaction, audit log, auto-compact.
+- Key lookup falls back to environment variables (`GROQ_API_KEY`, `GEMINI_API_KEY`, ...) when no key file exists.
+- CI runs on Linux, macOS and Windows (Node 18 and 22) with an end-to-end install/uninstall smoke test.
+
+### Changed
+- All Python scripts were ported to the `tollfree` TypeScript command (`route`, `probe`, `quota`, `direct`/`run`, `free-test`, `models-free`, `audit-log`).
+- Renamed from EURINHASH to Tollfree; MIT license added.
+
 ## [0.10.0] - 2026-09-10 — Modes FREE / PRO : jamais bloqué, jamais de surprise
 
 ### 🔀 Modes explicites (jamais bloqué, jamais de surprise)
