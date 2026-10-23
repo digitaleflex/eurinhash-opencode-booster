@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 
 SCRIPTS_DIR = Path.home() / ".config" / "opencode" / "scripts"
-HASH_DIRECT = SCRIPTS_DIR / "hash-direct.py"
+HASH_DIRECT = SCRIPTS_DIR / "direct.py"
 
 
 def main():
@@ -20,17 +20,17 @@ def main():
         subprocess.run(["opencode"])
         return
 
-    # Si la première commande est "run" ou "r", on redirige vers hash-direct
+    # Si la première commande est "run" ou "r", on redirige vers direct
     if sys.argv[1] in ("run", "r"):
         # Reconstruire le prompt à partir des arguments restants
         prompt = " ".join(sys.argv[2:])
         
-        # Si le prompt est vide, affiche l'aide hash-direct
+        # Si le prompt est vide, affiche l'aide direct
         if not prompt:
             subprocess.run([sys.executable, str(HASH_DIRECT)])
             return
         
-        # Appeler hash-direct.py via subprocess
+        # Appeler direct.py via subprocess
         cmd = [sys.executable, str(HASH_DIRECT), prompt] + sys.argv[3:]
         subprocess.run(cmd)
         return

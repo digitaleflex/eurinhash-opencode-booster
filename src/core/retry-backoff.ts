@@ -4,7 +4,7 @@
  * Exponential backoff with jitter and idempotency store,
  * adapted from reaatech/llm-router-fallback (MIT).
  *
- * Adapted for opencode/EURINHASH: used when retrying a failed worker task.
+ * Adapted for opencode/TOLLFREE: used when retrying a failed worker task.
  */
 
 export interface RetryOptions {

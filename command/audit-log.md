@@ -1,6 +1,6 @@
 ---
 description: View audit logs for agent and tool activity. Use to inspect what agents did, filter by tool, agent, sensitive operations, or errors.
-agent: eurinhash
+agent: tollfree
 ---
 
 `python "$HOME/.config/opencode/scripts/view-audit-log.py" $ARG`

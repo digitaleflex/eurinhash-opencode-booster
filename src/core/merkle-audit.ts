@@ -2,7 +2,7 @@
 // Tamper-evident audit trail using Merkle tree of SHA-256 hashes.
 // Domain separation: 0x00 for leaf hashes, 0x01 for internal nodes (RFC 6962 §2.1).
 // Head anchoring: head() returns latest entry hash, verifyHead() detects truncation.
-// Optional HMAC mode: when a key is supplied (or EURINHASH_AUDIT_KEY / .morph-key
+// Optional HMAC mode: when a key is supplied (or TOLLFREE_AUDIT_KEY / .morph-key
 // is present) every hash is HMAC-SHA256 with prefix "hmac-sha256:"; without a
 // key the trail uses plain SHA-256 with prefix "sha256:".
 
@@ -60,7 +60,7 @@ export class MerkleAuditTrail {
     this.headFile = join(this.logDir, "merkle-head.json");
     if (key === null) {
       // Opt-out explicite : plaine SHA-256 même si une clé ambiante
-      // (EURINHASH_AUDIT_KEY / .morph-key du cwd) existe. Utilisé par
+      // (TOLLFREE_AUDIT_KEY / .morph-key du cwd) existe. Utilisé par
       // les tests pour un mode déterministe indépendant de l'env.
       this.auditKey = undefined;
     } else if (key !== undefined) {
@@ -73,11 +73,11 @@ export class MerkleAuditTrail {
 
   /**
    * Resolve an audit HMAC key from the environment or `.morph-key`.
-   * Priority: explicit constructor key > EURINHASH_AUDIT_KEY env var >
+   * Priority: explicit constructor key > TOLLFREE_AUDIT_KEY env var >
    * file `.morph-key` in cwd > undefined (plain SHA-256 mode).
    */
   private static resolveKey(): Buffer | undefined {
-    const envKey = process.env.EURINHASH_AUDIT_KEY;
+    const envKey = process.env.TOLLFREE_AUDIT_KEY ?? process.env.EURINHASH_AUDIT_KEY; // legacy name kept as fallback
     if (envKey && envKey.trim().length > 0) {
       return Buffer.from(envKey, "utf8");
     }

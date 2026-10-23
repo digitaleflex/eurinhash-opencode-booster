@@ -1,8 +1,8 @@
-# VALUE PROPOSITION VALIDATION — EURINHASH Agent Governance Engine
+# VALUE PROPOSITION VALIDATION — TOLLFREE Agent Governance Engine
 
 ## 1. HYPOTHÈSE À TESTER
 
-EURINHASH peut devenir :
+TOLLFREE peut devenir :
 
 > Une couche de gouvernance indépendante capable de fonctionner au-dessus de plusieurs environnements d'agents IA.
 
@@ -47,7 +47,7 @@ Mais **aucun** ne combine :
 **Notre différenciation réelle :**
 
 ```
-EURINHASH Governance Layer
+TOLLFREE Governance Layer
 =
 Classification L1→L4 + Risk Assessment + Policy Engine + Proof Model
 ```
@@ -80,7 +80,7 @@ Problèmes actuels avec les agents IA :
 
 **→ Le marché est large et en croissance.**
 
-### Q6 : Pourquoi utiliser EURINHASH plutôt qu'un simple prompt ?
+### Q6 : Pourquoi utiliser TOLLFREE plutôt qu'un simple prompt ?
 
 **Réponse :** Un prompt ne peut pas :
 - Classifier la complexité automatiquement
@@ -92,7 +92,7 @@ Problèmes actuels avec les agents IA :
 - Protéger les secrets
 - Respecter une matrice L1→L4
 
-**→ EURINHASH apporte une couche de gouvernance qu'un prompt ne peut pas fournir.**
+**→ TOLLFREE apporte une couche de gouvernance qu'un prompt ne peut pas fournir.**
 
 ### Q7 : Quelle est la plus petite version utile du produit ?
 
@@ -130,13 +130,13 @@ OUTPUT : APPROVED + PROOF CHAIN
 
 **L'hypothèse est VALIDE.**
 
-EURINHASH peut devenir un **Agent Governance Engine** avec une vraie valeur différenciante :
+TOLLFREE peut devenir un **Agent Governance Engine** avec une vraie valeur différenciante :
 
 ```
 CE QUE LES AUTRES OFFRENT :
 → "Voici des agents. Utilisez-les."
 
-CE QUE EURINHASH OFFRE :
+CE QUE TOLLFREE OFFRE :
 → "Voici les RÈGLES qui déterminent QUAND, POURQUOI et COMMENT utiliser ces agents."
 ```
 

@@ -1,5 +1,5 @@
 ---
-description: Worker local du mode free-router (modèles Ollama sur la machine, 100% gratuit, offline). Appelé par @eurinhash, pas directement.
+description: Worker local du mode free-router (modèles Ollama sur la machine, 100% gratuit, offline). Appelé par @tollfree, pas directement.
 mode: subagent
 model: ollama/devstral
 ---

@@ -1,4 +1,4 @@
-// src/core/types.ts — EURINHASH Governance Engine Types
+// src/core/types.ts — TOLLFREE Governance Engine Types
 
 export enum TaskComplexity {
   L1 = "L1",
@@ -89,7 +89,7 @@ export interface TestEvidence {
   outputHash: string;
 }
 
-/** Signed human-approval token (EURINHASH #6 / EU AI Act Art.14). */
+/** Signed human-approval token (TOLLFREE #6 / EU AI Act Art.14). */
 export interface ApprovalToken {
   taskId: string;
   approver: string;

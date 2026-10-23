@@ -1,5 +1,5 @@
 ---
-description: Worker rapide du mode free-router (Qwen 3.8 gratuit via Groq). Appelé par @eurinhash, pas directement.
+description: Worker rapide du mode free-router (Qwen 3.8 gratuit via Groq). Appelé par @tollfree, pas directement.
 mode: subagent
 model: groq/qwen/qwen3.8-27b
 ---

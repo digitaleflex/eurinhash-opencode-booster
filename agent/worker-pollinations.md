@@ -1,5 +1,5 @@
 ---
-description: Worker de secours du mode free-router (sans clé, tier anonyme Pollinations, 1 req/15s). Appelé par @eurinhash en dernier recours, pas directement.
+description: Worker de secours du mode free-router (sans clé, tier anonyme Pollinations, 1 req/15s). Appelé par @tollfree en dernier recours, pas directement.
 mode: subagent
 model: pollinations/openai
 ---

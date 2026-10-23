@@ -4,7 +4,7 @@
  * Per-provider 3-state circuit breaker, adapted from
  * ingridtoulotte/llm-fallback-router (MIT, 0 deps).
  *
- * Adapted for opencode/EURINHASH: each "provider" is a worker agent
+ * Adapted for opencode/TOLLFREE: each "provider" is a worker agent
  * (worker-novita, worker-groq, etc.) and the breaker is keyed by
  * worker ID rather than URL.
  *

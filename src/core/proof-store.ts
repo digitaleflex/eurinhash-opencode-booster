@@ -8,7 +8,7 @@
 // rootHash keeps verifying. By design evidence fields carry hashes and
 // metadata (outputHash, reviewHash, token scope), never raw secrets.
 // Directory defaults to <cwd>/logs/proofs like every other log sink
-// (MerkleAuditTrail, logAuditEntry); override with EURINHASH_PROOFS_DIR.
+// (MerkleAuditTrail, logAuditEntry); override with TOLLFREE_PROOFS_DIR.
 
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
@@ -18,7 +18,7 @@ import type { ProofChain } from "./types";
 export const CHAIN_FILENAME = "_chain.json";
 
 export function defaultProofsDir(): string {
-  const override = process.env.EURINHASH_PROOFS_DIR?.trim();
+  const override = (process.env.TOLLFREE_PROOFS_DIR ?? process.env.EURINHASH_PROOFS_DIR)?.trim();
   if (override) return resolve(override);
   return join(process.cwd(), "logs", "proofs");
 }

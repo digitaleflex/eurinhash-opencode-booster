@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://eurinhash.dev/schemas/issue-contract.json",
-  "title": "EurinHash Canonical Cross-Repository Issue Specification",
+  "title": "Tollfree Canonical Cross-Repository Issue Specification",
   "description": "Defines the canonical GitHub issue contract so an agent can parse an issue as an executable engineering specification without guessing missing requirements.",
   "type": "object",
   "required": [

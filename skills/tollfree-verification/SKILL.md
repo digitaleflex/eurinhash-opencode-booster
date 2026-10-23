@@ -1,5 +1,5 @@
 ---
-name: hash-verification
+name: tollfree-verification
 description: Use after making code changes to validate correctly without wasting tokens or time. Targeted checks only, never full blind re-runs.
 ---
 

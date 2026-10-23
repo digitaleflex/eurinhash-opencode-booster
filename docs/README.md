@@ -1,4 +1,4 @@
-# Documentation Technique — opencode-config EURINHASH
+# Documentation Technique — opencode-config TOLLFREE
 
 ## 📋 Table des matières
 
@@ -41,7 +41,7 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 ├── 📄 README.md                  # Documentation complète
 ├── 📄 .gitignore                 # Exclusions des fichiers sensibles
 ├── 📁 agent/                     # 25 agents spécialisés
-│   ├── eurinhash.md              # Superviseur principal
+│   ├── tollfree.md              # Superviseur principal
 │   ├── planner.md                # Planification de tâches
 │   ├── architect.md              # Architecture technique
 │   ├── design-lead.md            # Direction design
@@ -60,8 +60,8 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 ├── 📁 command/                   # 8 slash commands
 │   ├── audit-log.md              # Journal d'audit
 │   ├── commit.md                 # Commit Git
-│   ├── hash-direct.md            # Appel direct aux providers
-│   ├── myfree-eurinhash.md       # Test des modèles free
+│   ├── direct.md            # Appel direct aux providers
+│   ├── free-test.md       # Test des modèles free
 │   ├── quota.md                  # Gestion des quotas
 │   ├── review.md                 # Revue de code
 │   └── run.md                    # Wrapper opencode run
@@ -70,11 +70,11 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 │   ├── guard.ts                  # Protection destructive (+ redaction secrets)
 │   └── auto-compact.ts           # Compaction intelligente
 ├── 📁 scripts/                   # 12 scripts (Python, Node, TypeScript)
-│   ├── hash-direct.py            # Wrapper principal (circuit breaker + quota)
-│   ├── hash-direct-wrapper.py    # Alias opencode run
+│   ├── direct.py            # Wrapper principal (circuit breaker + quota)
+│   ├── direct-wrapper.py    # Alias opencode run
 │   ├── free-probe.py             # Test de disponibilité des modèles
 │   ├── quota.py                  # Gestion des quotas
-│   ├── myfree-eurinhash.py       # Test complet des modèles
+│   ├── free-test.py       # Test complet des modèles
 │   ├── view-audit-log.py         # Affichage du journal d'audit
 │   ├── route.py                  # Routage EV + feedback bayésien
 │   ├── models-free.py            # Inventaire des modèles free
@@ -86,11 +86,11 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 │       ├── compact-docker-vhdx.ps1
 │       └── finish-cleanup.ps1
 ├── 📁 skills/                    # 30+ compétences
-│   ├── hash-agent-matrix/        # Routage L1-L4
-│   ├── hash-code-navigation/     # Navigation efficace
-│   ├── hash-token-efficiency/    # Optimisation des tokens
-│   ├── hash-verification/        # Vérification proportionnée
-│   └── hash-enterprise-development/ # Développement enterprise
+│   ├── tollfree-agent-matrix/        # Routage L1-L4
+│   ├── tollfree-code-navigation/     # Navigation efficace
+│   ├── tollfree-token-efficiency/    # Optimisation des tokens
+│   ├── tollfree-verification/        # Vérification proportionnée
+│   └── tollfree-enterprise-development/ # Développement enterprise
 ├── 📁 docs/                      # Documentation technique (FR/EN)
 ├── 📁 logs/                      # Journaux d'audit (JSONL)
 └── 📁 node_modules/              # Dépendances installées
@@ -103,15 +103,15 @@ Ce projet fournit une configuration **production-grade** pour OpenCode, un agent
 ```
 Utilisateur
     │
-    ├─ opencode run "prompt" ──► hash-direct-wrapper.py ──► hash-direct.py
+    ├─ opencode run "prompt" ──► direct-wrapper.py ──► direct.py
     │                                                                    │
     │                                                                    ├─► Circuit breaker (provider_circuit.json)
     │                                                                    ├─► Quota tracking (provider_usage.json)
     │                                                                    └─► API calls (Groq, Google, Zhipu, etc.)
     │
-    └─ opencode agent "task" ──► Agent (eurinhash/planner/etc.)
+    └─ opencode agent "task" ──► Agent (tollfree/planner/etc.)
                                     │
-                                    ├─► opencode run (si bug) ──► hash-direct.py
+                                    ├─► opencode run (si bug) ──► direct.py
                                     └─► opencode native (si fonctionnel)
 ```
 
@@ -123,7 +123,7 @@ Utilisateur
 |-----------|---------|--------|
 | Config principale | `opencode.jsonc` | ✅ Actif |
 | Config legacy | `opencode.json` | ⚠️ Backup (`.bak`) |
-| Superviseur | `agent/eurinhash.md` | ✅ Actif |
+| Superviseur | `agent/tollfree.md` | ✅ Actif |
 | 15 agents rôle | `agent/*.md` | ✅ Actifs |
 | 10 workers | `agent/worker-*.md` | ✅ Actifs |
 | 8 commands | `command/*.md` | ✅ Actives |
@@ -155,4 +155,4 @@ Pour une explication complète de chaque composant, consultez les fichiers de do
 ---
 
 *Documentation mise à jour le 2026-09-19*
-*Par l'équipe EURINHASH*
+*Par l'équipe TOLLFREE*

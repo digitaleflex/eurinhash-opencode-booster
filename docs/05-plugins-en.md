@@ -1,4 +1,4 @@
-# Plugins Documentation — opencode-config EURINHASH
+# Plugins Documentation — opencode-config TOLLFREE
 
 ## Table of Contents
 1. [audit-logger.ts](#audit-loggerts)
@@ -32,7 +32,7 @@ Complete logging plugin that traces all tool calls and agent interactions in a r
 ```json
 {
   "timestamp": "2026-09-06T12:00:00Z",
-  "agent": "eurinhash",
+  "agent": "tollfree",
   "tool": "bash",
   "command": "rm -rf /tmp/test",
   "status": "blocked",

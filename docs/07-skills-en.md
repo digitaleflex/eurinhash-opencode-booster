@@ -1,16 +1,16 @@
-# Skills Documentation — opencode-config EURINHASH
+# Skills Documentation — opencode-config TOLLFREE
 
 ## Table of Contents
-1. [hash-agent-matrix](#hash-agent-matrix)
-2. [hash-token-efficiency](#hash-token-efficiency)
-3. [hash-code-navigation](#hash-code-navigation)
-4. [hash-verification](#hash-verification)
-5. [hash-enterprise-development](#hash-enterprise-development)
+1. [tollfree-agent-matrix](#tollfree-agent-matrix)
+2. [tollfree-token-efficiency](#tollfree-token-efficiency)
+3. [tollfree-code-navigation](#tollfree-code-navigation)
+4. [tollfree-verification](#tollfree-verification)
+5. [tollfree-enterprise-development](#tollfree-enterprise-development)
 6. [Creating a New Skill](#creating-a-new-skill)
 
 ---
 
-## 1. hash-agent-matrix — Task Routing L1-L4
+## 1. tollfree-agent-matrix — Task Routing L1-L4
 
 ### Description
 Skill that defines intelligent task routing based on complexity (levels L1 to L4). Determines which agent/pipeline to use.
@@ -56,7 +56,7 @@ opencode /run "Fix the typo"
 ```
 
 ### Configuration
-The matrix is defined in `skills/hash-agent-matrix/SKILL.md`:
+The matrix is defined in `skills/tollfree-agent-matrix/SKILL.md`:
 ```markdown
 # L1-L4 Routing
 
@@ -82,13 +82,13 @@ The system automatically detects the level via:
 
 ### Define a New Level
 ```bash
-# Edit skills/hash-agent-matrix/SKILL.md
+# Edit skills/tollfree-agent-matrix/SKILL.md
 # Add the definition and pipeline
 ```
 
 ---
 
-## 2. hash-token-efficiency — Token Optimization
+## 2. tollfree-token-efficiency — Token Optimization
 
 ### Description
 Skill that optimizes token usage during interactions with AI providers. Reduces costs and improves performance.
@@ -123,14 +123,14 @@ Skill that optimizes token usage during interactions with AI providers. Reduces 
 
 ### Usage
 ```bash
-# Optimization is automatic via EURINHASH
+# Optimization is automatic via TOLLFREE
 # But you can force certain techniques
 
 # View metrics
 /quota --detail
 
 # View token state
-/scripts/hash-direct.py --status
+/scripts/direct.py --status
 ```
 
 ### Optimization Example
@@ -144,7 +144,7 @@ Skill that optimizes token usage during interactions with AI providers. Reduces 
 
 ---
 
-## 3. hash-code-navigation — Efficient Code Navigation
+## 3. tollfree-code-navigation — Efficient Code Navigation
 
 ### Description
 Skill that helps navigate large codebases efficiently. Search, locate, extract code.
@@ -202,7 +202,7 @@ Skill that helps navigate large codebases efficiently. Search, locate, extract c
 
 ---
 
-## 3. hash-verification — Proportional Verification
+## 3. tollfree-verification — Proportional Verification
 
 ### Description
 Skill that defines the verification level required based on task criticality. Balances security and speed.
@@ -229,11 +229,11 @@ Skill that defines the verification level required based on task criticality. Ba
 
 #### V1 - Quick Check
 ```bash
-# Auto via EURINHASH
+# Auto via TOLLFREE
 /run "Fix the typo"
 
 # Manually
-/scripts/hash-direct.py "test"
+/scripts/direct.py "test"
 ```
 
 #### V2 - Full Verification
@@ -279,14 +279,14 @@ Skill that defines the verification level required based on task criticality. Ba
 - **Sensitive data** : V4 (with user approval)
 
 ### Define the Level
-Default level is V1 for EURINHASH agents. Can be forced:
+Default level is V1 for TOLLFREE agents. Can be forced:
 ```bash
 /run --verification-level V3 "Important modification"
 ```
 
 ---
 
-## 4. hash-enterprise-development — Enterprise Development
+## 4. tollfree-enterprise-development — Enterprise Development
 
 ### Description
 Skill for enterprise projects with specific requirements: compliance, audit, multi-team, continuous deployment.
@@ -340,7 +340,7 @@ flowchart LR
 5. **Rollback Plan** : Always have a rollback plan
 6. **Multi-team Approval** : For critical changes
 
-### Usage with EURINHASH
+### Usage with TOLLFREE
 ```bash
 # For enterprise tasks
 /agent architect "Design microservices architecture"
@@ -352,7 +352,7 @@ flowchart LR
 ```
 
 ### Configuration
-The skill is defined in `skills/hash-enterprise-development/SKILL.md` with:
+The skill is defined in `skills/tollfree-enterprise-development/SKILL.md` with:
 - Compliance checklists
 - Approval workflows
 - Security checklists
@@ -437,7 +437,7 @@ When to use:
 EOF
 
 # 3. The skill is available
-# 4. To appear in routing, add it to hash-agent-matrix
+# 4. To appear in routing, add it to tollfree-agent-matrix
 ```
 
 ### Best Practices
@@ -458,7 +458,7 @@ EOF
 /agent builder "/my-skill "Prompt"
 
 # 2. Can be used in L2-L4 routing
-# Modify hash-agent-matrix if needed
+# Modify tollfree-agent-matrix if needed
 ```
 
 ---

@@ -1,18 +1,18 @@
-# Documentation des Scripts — opencode-config EURINHASH
+# Documentation des Scripts — opencode-config TOLLFREE
 
 ## Table des matières
-1. [hash-direct.py](#hash-directpy)
-2. [hash-direct-wrapper.py](#hash-direct-wrapperpy)
+1. [direct.py](#directpy)
+2. [direct-wrapper.py](#direct-wrapperpy)
 3. [free-probe.py](#free-probepy)
 4. [quota.py](#quotapy)
-5. [myfree-eurinhash.py](#myfree-eurinhashpy)
+5. [free-test.py](#free-testpy)
 6. [view-audit-log.py](#view-audit-logpy)
 7. [Fichiers d'état](#fichiers-détat)
 8. [Windows fixes](#windows-fixes)
 
 ---
 
-## 1. hash-direct.py — Wrapper principal
+## 1. direct.py — Wrapper principal
 
 ### Description
 Script central qui contourne le bug `opencode run` sous Windows. Appelle directement les providers via leurs APIs avec fallback automatique, circuit breaker et quota tracking.
@@ -20,13 +20,13 @@ Script central qui contourne le bug `opencode run` sous Windows. Appelle directe
 ### Installation
 ```bash
 # Le script est déjà dans le dépôt
-ls scripts/hash-direct.py
+ls scripts/direct.py
 ```
 
 ### CLI Reference complète
 
 ```
-Usage: python hash-direct.py [prompt] [options]
+Usage: python direct.py [prompt] [options]
 
 Options:
   --model, -m MODEL       Modèle spécifique
@@ -46,31 +46,31 @@ Options:
 
 ```bash
 # Appel automatique avec fallback
-python scripts/hash-direct.py "Explique la loi d'Ohm"
+python scripts/direct.py "Explique la loi d'Ohm"
 
 # Forcer un provider spécifique
-python scripts/hash-direct.py --provider groq "Analyse ce code"
+python scripts/direct.py --provider groq "Analyse ce code"
 
 # Forcer un modèle spécifique
-python scripts/hash-direct.py --model "codestral-latest" "Que fait cette fonction ?"
+python scripts/direct.py --model "codestral-latest" "Que fait cette fonction ?"
 
 # Sortie JSON pour traitement automatique
-python scripts/hash-direct.py --json "test"
+python scripts/direct.py --json "test"
 
 # Voir les modèles disponibles
-python scripts/hash-direct.py --list
+python scripts/direct.py --list
 
 # Voir les providers configurés
-python scripts/hash-direct.py --list-providers
+python scripts/direct.py --list-providers
 
 # État du système
-python scripts/hash-direct.py --status
+python scripts/direct.py --status
 
 # Réinitialiser les quotas
-python scripts/hash-direct.py --reset-quota
+python scripts/direct.py --reset-quota
 
 # Réinitialiser les circuit breakers
-python scripts/hash-direct.py --reset-circuit
+python scripts/direct.py --reset-circuit
 ```
 
 ### Structure du code
@@ -175,10 +175,10 @@ CODE_ORDER.append("newprovider")
 
 ---
 
-## 2. hash-direct-wrapper.py — Alias opencode run
+## 2. direct-wrapper.py — Alias opencode run
 
 ### Description
-Transforme `opencode run "prompt"` en appel direct hash-direct. Contourne le bug Windows SDK.
+Transforme `opencode run "prompt"` en appel direct direct. Contourne le bug Windows SDK.
 
 ### Utilisation
 ```bash
@@ -186,7 +186,7 @@ Transforme `opencode run "prompt"` en appel direct hash-direct. Contourne le bug
 opencode run "Explicate la récursivité"
 
 # Utiliser :
-python scripts/hash-direct-wrapper.py run "Explicate la récursivité"
+python scripts/direct-wrapper.py run "Explicate la récursivité"
 
 # Ou via la commande /run :
 opencode /run "Explicate la récursivité"
@@ -271,18 +271,18 @@ python scripts/quota.py add groq 5
 
 ---
 
-## 5. myfree-eurinhash.py — Test complet des modèles
+## 5. free-test.py — Test complet des modèles
 
 ### Description
-Test complet de tous les modèles gratuits. Génère un rapport `myfree-eurinhash-report.json`.
+Test complet de tous les modèles gratuits. Génère un rapport `free-test-report.json`.
 
 ### Utilisation
 ```bash
-python scripts/myfree-eurinhash.py
+python scripts/free-test.py
 ```
 
 ### Sortie
-Crée `~/.config/opencode/myfree-eurinhash-report.json` avec les résultats détaillés de chaque modèle.
+Crée `~/.config/opencode/free-test-report.json` avec les résultats détaillés de chaque modèle.
 
 ### Structure du rapport
 ```json
@@ -349,7 +349,7 @@ Cache de disponibilité des modèles. Mis à jour par `free-probe.py`.
 ```
 
 ### provider_usage.json
-Compteurs de quota journaliers. Mis à jour automatiquement par `hash-direct.py`.
+Compteurs de quota journaliers. Mis à jour automatiquement par `direct.py`.
 
 ```json
 {
@@ -360,7 +360,7 @@ Compteurs de quota journaliers. Mis à jour automatiquement par `hash-direct.py`
 ```
 
 ### provider_circuit.json
-État des circuit breakers. Mis à jour automatiquement par `hash-direct.py`.
+État des circuit breakers. Mis à jour automatiquement par `direct.py`.
 
 ```json
 {
@@ -370,8 +370,8 @@ Compteurs de quota journaliers. Mis à jour automatiquement par `hash-direct.py`
 }
 ```
 
-### myfree-eurinhash-report.json
-Rapport de test complet des modèles. Génénéré par `myfree-eurinhash.py`.
+### free-test-report.json
+Rapport de test complet des modèles. Génénéré par `free-test.py`.
 
 ### logs/audit-YYYY-MM-DD.jsonl
 Journal d'audit détaillé. Génénéré par le plugin audit-logger.ts.
@@ -397,7 +397,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 ### Problème opencode run hang
 Le bug Windows SDK fait que `opencode run` ne parvient pas à appeler les providers malgré des clés valides.
 
-**Solution** : Utiliser `hash-direct-wrapper.py` ou `/run` ou `/hash-direct`.
+**Solution** : Utiliser `direct-wrapper.py` ou `/run` ou `/direct`.
 
 ### Problème permission task denied
 L'ancien `opencode.json` avait `"permission": {"task": "deny"}` qui bloquait la création de session.

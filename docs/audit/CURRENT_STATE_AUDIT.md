@@ -1,4 +1,4 @@
-# CURRENT STATE AUDIT — EURINHASH / OpenCode Config
+# CURRENT STATE AUDIT — TOLLFREE / OpenCode Config
 
 > **Note (2026-09-10)** : snapshot historique au 2026-09-06, conservé tel quel.
 > État actuel : voir `docs/02-configuration.md` §3 (quotas réels vérifiés),
@@ -6,7 +6,7 @@
 
 ## 1. Project Overview
 - **Goal**: 100% FREE AI agent governance, curation, and orchestration
-- **Default agent**: eurinhash (superviseur FREE)
+- **Default agent**: tollfree (superviseur FREE)
 - **Base**: `C:\Users\PC\.config\opencode`
 - **Philosophy**: KEEP-INTEGRATE-BUILD — garder l'existant, intégrer le meilleur open source, construire uniquement ce qui est unique
 
@@ -31,7 +31,7 @@
   - `@zenobius/opencode-skillful`
   - `oh-my-openagent`
 
-### `agent/eurinhash.md`
+### `agent/tollfree.md`
 - 5 workers gratuits validés :
   - `worker-codestral` (Mistral Codestral, FREE, testé OK)
   - `worker-groq` (Qwen 3.8 27B, FREE, testé OK)
@@ -48,14 +48,14 @@
 - Sécurité multi-OS (Windows/Linux/macOS)
 
 ### `AGENTS.md`
-- Provider : eurinhash (default), zhipu/glm-4.7-flash (small model)
-- EURINHASH Pro : orchestration travailleurs gratuits
+- Provider : tollfree (default), zhipu/glm-4.7-flash (small model)
+- TOLLFREE Pro : orchestration travailleurs gratuits
 - Matrice L1→L4
 - Règles d'activation
 - Modèle d'escalade
 
 ### `agent/*.md`
-- 10 agents : architect, builder, design-lead, docwriter, reviewer, security, tester, git-engineer, quality-engineer, eurinhash
+- 10 agents : architect, builder, design-lead, docwriter, reviewer, security, tester, git-engineer, quality-engineer, tollfree
 
 ## 3. Plugins (14 actifs)
 | Plugin | Rôle |
@@ -74,7 +74,7 @@
 | `./plugin/context-summarizer.ts` | Prune automatiquement le contexte ancien. |
 
 ## 4. Skills (38 + lazy-skills)
-- `hash-*` : hash-*, hash-code-navigation, hash-enterprise-development, hash-token-efficiency, hash-verification
+- `hash-*` : hash-*, tollfree-code-navigation, tollfree-enterprise-development, tollfree-token-efficiency, tollfree-verification
 - `cloudflare` : wrappers Cloudflare Workers
 - `frontend-design` : 12ui-design, design system
 - `review` : systematic-debugging, review
@@ -84,9 +84,9 @@
 | Script | Rôle |
 |---|---|
 | `free-probe.py` | Teste les FREE workers (7 workers) |
-| `hash-direct.py` | Wrapper Windows pour contourner bugs paths |
-| `hash-direct-wrapper.py` | Wrapper Windows avancé |
-| `myfree-eurinhash.py` | Routeur complet FREE + rapport qualité/prix |
+| `direct.py` | Wrapper Windows pour contourner bugs paths |
+| `direct-wrapper.py` | Wrapper Windows avancé |
+| `free-test.py` | Routeur complet FREE + rapport qualité/prix |
 | `quota.py` | Monitoring quota journalier |
 | `view-audit-log.py` | Visualisation logs audit |
 
@@ -127,7 +127,7 @@
 ## 9. Recommandations
 - **Ne pas reconstruire** ce qui existe mieux ailleurs
 - **Intégrer** les meilleurs composants open source
-- **Garder** ce qui est unique à EURINHASH (supervisor, matrice L1→L4, sécurité)
+- **Garder** ce qui est unique à TOLLFREE (supervisor, matrice L1→L4, sécurité)
 - **Construire** uniquement la Governance Layer différenciante
 
 ---

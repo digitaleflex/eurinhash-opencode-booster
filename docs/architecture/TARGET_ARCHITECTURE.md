@@ -1,4 +1,4 @@
-# EURINHASH Target Architecture
+# TOLLFREE Target Architecture
 
 Couche de gouvernance **indépendante** des runtimes d'agents IA. Elle orchestre la prise de décision, le routage multi-provider, et la chaîne de preuve, sans dépendre d'un runtime en particulier (OpenCode, Claude Code, Cursor, etc.).
 
@@ -6,7 +6,7 @@ Couche de gouvernance **indépendante** des runtimes d'agents IA. Elle orchestre
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                       EURINHASH GOVERNANCE ENGINE                    │
+│                       TOLLFREE GOVERNANCE ENGINE                    │
 │                                                                       │
 │  ┌────────────────┐  ┌──────────────┐  ┌──────────────┐             │
 │  │ Task Classifier│  │ Risk Assessor│  │ Policy Engine│             │
@@ -60,7 +60,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - **Sorties** :
   - `TaskSpec { id, type, scope, touched_files[], blast_radius, complexity_hint }`
 - **Dépendances** : vocabulaire `docs/architecture/GOVERNANCE_MODEL.md §2-3` ; heuristiques NLP légères (regex patterns).
-- **Implémentation inspirée de** : `skills/hash-code-navigation` (analyse tree), `plugin/guard.ts` (patterns destructeurs).
+- **Implémentation inspirée de** : `skills/tollfree-code-navigation` (analyse tree), `plugin/guard.ts` (patterns destructeurs).
 
 ### 2.2 Risk Assessor
 
@@ -114,8 +114,8 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - **Invariants** :
   - Staleness > 30 min → trigger `scripts/free-probe.py` (refresh) avant décision.
   - `OPEN` → skip provider ; `HALF_OPEN` → mode test 1 req.
-  - Quota épuisé → skip ; tous KO → signaler `@eurinhash` pour escalade mammouth (nécessite validation explicite).
-- **Dépendances** : `hash-direct.py` wrapper, `scripts/free-probe.py`, `AGENTS.md` protocole (§1-6).
+  - Quota épuisé → skip ; tous KO → signaler `@tollfree` pour escalade mammouth (nécessite validation explicite).
+- **Dépendances** : `direct.py` wrapper, `scripts/free-probe.py`, `AGENTS.md` protocole (§1-6).
 
 ### 2.6 Proof Verifier
 
@@ -143,7 +143,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 - **Implémentations connues** :
   - `adapter/opencode.ts` — OpenCode plugin bridge (`opencode.jsonc`).
   - `adapter/claude-code.ts` — Claude Code SDK bridge.
-  - `adapter/cli.ts` — wrapper `hash-direct-wrapper.py`-like pour CLI.
+  - `adapter/cli.ts` — wrapper `direct-wrapper.py`-like pour CLI.
 
 ---
 
@@ -151,7 +151,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 
 | Module | Source de vérité |
 |---|---|
-| Task Classifier | prompt + `agent/*` + `skills/hash-code-navigation` |
+| Task Classifier | prompt + `agent/*` + `skills/tollfree-code-navigation` |
 | Risk Assessor | `plugin/guard.ts` patterns + `plugin/audit-logger.ts` secrets + env runtime |
 | Policy Engine | `docs/architecture/*` + `policy/*.yaml` + `AGENTS.md` (intelligent routing matrix) |
 | Agent Selector | `agent/*.md` + `skills/*/` + routing matrix `AGENTS.md` |
@@ -164,7 +164,7 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 ## 5. Invariants d'architecture (garanties)
 
 1. **FREE-first** : le Model Router ne sélectionne jamais un provider payant (mammouth) sans validation explicite enregistrée (`logs/approvals/<id>.json`).
-2. **Never-stop** : si tous les workers FREE sont KO, le pipeline signale `@eurinhash` et s'arrête en demandant validation — **jamais d'appel silencieux à un provider payant**.
+2. **Never-stop** : si tous les workers FREE sont KO, le pipeline signale `@tollfree` et s'arrête en demandant validation — **jamais d'appel silencieux à un provider payant**.
 3. **Governance-first** : aucune exécution concrète (outil `bash`, modification production) n'a lieu avant validation de `PolicySpec` et `ProofReport PASS`.
 4. **Chain-of-proof** : un `task_id` est `DONE` ssi toutes les preuves requises sont présentes, valides et chaînées par hash.
 5. **Separation of concerns** : le runtime n'évalue ni ne contredit la classification/risk/policy ; il exécute.
@@ -184,10 +184,10 @@ Les flux traversent d'abord toute la couche **Governance Engine**, puis délègu
 
 ## 7. Annexes
 
-- `AGENTS.md` — protocole EURINHASH, workers FREE, routing matrix.
+- `AGENTS.md` — protocole TOLLFREE, workers FREE, routing matrix.
 - `docs/01-architecture.md` — composants OpenCode existants.
 - `docs/09-security.md` — détection ops sensibles, redaction secrets, permissions.
 - `docs/architecture/GOVERNANCE_MODEL.md` — pipeline décisionnel + matrice TASK→COMPLEXITY→RISK→POLICY.
 - `docs/architecture/PROOF_MODEL.md` — taxonomie & niveaux de preuves, chaîne d'intégrité.
 - `plugin/guard.ts`, `plugin/audit-logger.ts` — implémentations concrètes sécurité/audit.
-- `scripts/free-probe.py`, `scripts/hash-direct.py` — probe disponibilité + fallback.
+- `scripts/free-probe.py`, `scripts/direct.py` — probe disponibilité + fallback.

@@ -1,4 +1,4 @@
-# EURINHASH Governance Engine - Security Audit Report
+# TOLLFREE Governance Engine - Security Audit Report
 
 **Version:** 0.2.0  
 **Audit Date:** 2026-09-06  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The EURINHASH Governance Engine implements a multi-stage pipeline for task classification, risk assessment, policy evaluation, guard checking, and proof verification. This audit identified **23 security findings** across all attack surfaces.
+The TOLLFREE Governance Engine implements a multi-stage pipeline for task classification, risk assessment, policy evaluation, guard checking, and proof verification. This audit identified **23 security findings** across all attack surfaces.
 
 **Key Recommendations:**
 1. Implement Unicode normalization (NFC) before all string matching
@@ -396,7 +396,7 @@ describe("Security: Guard Bypass Prevention", () => {
 
 ## Conclusion
 
-The EURINHASH Governance Engine has solid foundational architecture but contains critical security gaps:
+The TOLLFREE Governance Engine has solid foundational architecture but contains critical security gaps:
 
 1. **Unicode confusable bypass** - Any destructive operation can bypass classification
 2. **Guard pattern bypass** - File deletion protection disabled

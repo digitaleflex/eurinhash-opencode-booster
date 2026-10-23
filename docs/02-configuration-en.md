@@ -1,4 +1,4 @@
-# Configuration Guide — EURINHASH
+# Configuration Guide — TOLLFREE
 
 ## Table of Contents
 1. [Quick Installation](#1-quick-installation)
@@ -33,7 +33,7 @@ echo "your-mistral-key" > .mistral-key
 # ... other keys
 
 # Verify installation
-python scripts/hash-direct.py --list-providers
+python scripts/direct.py --list-providers
 
 # Test
 opencode /run "test"
@@ -46,7 +46,7 @@ opencode /run "test"
 ### opencode.jsonc (main config)
 ```jsonc
 {
-  "default_agent": "eurinhash",
+  "default_agent": "tollfree",
   "small_model": "google/gemini-2.5-flash",
   "plugins": [
     "@felipegenef/opencode-lazy-skills",
@@ -279,7 +279,7 @@ live validation** before routing workers to it.
 ### Agent List
 | Agent | Model | Role |
 |-------|-------|------|
-| eurinhash | google/gemini-2.5-flash | Supervisor, provider rotation |
+| tollfree | google/gemini-2.5-flash | Supervisor, provider rotation |
 | planner | google/gemini-2.5-flash | Planning before action |
 | architect | google/gemini-2.5-flash | Architecture decisions |
 | design-lead | google/gemini-2.5-flash | UI/UX direction |
@@ -387,19 +387,19 @@ cp my-plugin.ts plugin/
 ### Command List
 | Command | Description |
 |---------|-------------|
-| `/run` | hash-direct wrapper with auto fallback |
-| `/hash-direct` | Direct provider access |
+| `/run` | direct wrapper with auto fallback |
+| `/direct` | Direct provider access |
 | `/audit-log` | Audit log display |
 | `/commit` | Git commit with Conventional Commits |
 | `/review` | Code review |
 | `/quota` | Quota management |
-| `/myfree-eurinhash` | Test all free models |
+| `/free-test` | Test all free models |
 
 ### Command Structure
 ```markdown
 ---
 description: Short command description
-agent: eurinhash
+agent: tollfree
 ---
 
 Command to execute
@@ -434,11 +434,11 @@ EOF
 ### Custom Skills
 | Skill | Description |
 |-------|-------------|
-| `hash-agent-matrix` | L1-L4 task routing |
-| `hash-token-efficiency` | Token optimization |
-| `hash-code-navigation` | Efficient code navigation |
-| `hash-verification` | Risk-proportionate verification |
-| `hash-enterprise-development` | Enterprise development |
+| `tollfree-agent-matrix` | L1-L4 task routing |
+| `tollfree-token-efficiency` | Token optimization |
+| `tollfree-code-navigation` | Efficient code navigation |
+| `tollfree-verification` | Risk-proportionate verification |
+| `tollfree-enterprise-development` | Enterprise development |
 
 ### Skill Structure
 ```markdown
@@ -529,7 +529,7 @@ mv opencode.json.bak opencode.jsonc
 ## Post-Installation Checklist
 
 - [ ] API keys created (`.groq-key`, `.mistral-key`, etc.)
-- [ ] `python scripts/hash-direct.py --list-providers` → OK
+- [ ] `python scripts/direct.py --list-providers` → OK
 - [ ] `opencode /run "test"` → OK
 - [ ] `opencode /audit-log` → works
 - [ ] Git initialized (if desired)

@@ -1,5 +1,5 @@
 ---
-description: Garde-fou de quotas du mode free-router. Vérifie l'état des workers (free-models.json), la conso OpenRouter et le budget avant toute délégation externe. Recommande le worker le plus économe. Lecture seule, ne modifie jamais rien. Appelé par @eurinhash avant délégation.
+description: Garde-fou de quotas du mode free-router. Vérifie l'état des workers (free-models.json), la conso OpenRouter et le budget avant toute délégation externe. Recommande le worker le plus économe. Lecture seule, ne modifie jamais rien. Appelé par @tollfree avant délégation.
 mode: subagent
 model: opencode/mimo-v2.5-free
 permission:

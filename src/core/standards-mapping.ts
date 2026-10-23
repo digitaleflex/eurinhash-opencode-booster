@@ -98,7 +98,7 @@ const EU_AI_ACT = [
     riskLevels: ["LOW", "HIGH", "CRITICAL"],
     controls: ["merkle-audit"],
   },
-  // Art.14 Human Oversight — satisfied by signed ApprovalToken (EURINHASH #6) via proof-verifier HUMAN_APPROVAL; unsigned or missing token = gap
+  // Art.14 Human Oversight — satisfied by signed ApprovalToken (TOLLFREE #6) via proof-verifier HUMAN_APPROVAL; unsigned or missing token = gap
   {
     id: "Art.14",
     name: "Human Oversight",

@@ -1,4 +1,4 @@
-# policies/default.yaml — EURINHASH Governance Policies
+# policies/default.yaml — TOLLFREE Governance Policies
 # Format: YAML declarations mapped by PolicyEngine.getDefaultPolicies()
 #
 # Note: The PolicyEngine also has hardcoded fallback policies in TypeScript

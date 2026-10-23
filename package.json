@@ -1,8 +1,9 @@
 {
-  "name": "opencode-config",
+  "name": "tollfree",
   "version": "0.10.0",
-  "description": "EURINHASH governance engine and OpenCode configuration (free-tier models only)",
+  "description": "TOLLFREE governance engine and OpenCode configuration (free-tier models only)",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "test": "vitest run && bun test src/core/core.test.ts",
     "test:watch": "vitest",

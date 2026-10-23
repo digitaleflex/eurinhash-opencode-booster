@@ -1,8 +1,8 @@
-# Guide de ta config OpenCode — Mode EURINHASH (100% FREE)
+# Guide de ta config OpenCode — Mode TOLLFREE (100% FREE)
 
 > Tout est global : actif pour TOUS tes projets. Après chaque modif de config : **quitter + relancer OpenCode**.
 
-> **Mode actuel** : EURINHASH (superviseur FREE) est l'agent par défaut. Aucun modèle payant n'est utilisé par défaut.
+> **Mode actuel** : TOLLFREE (superviseur FREE) est l'agent par défaut. Aucun modèle payant n'est utilisé par défaut.
 
 ## Fichiers (dans `~/.config/opencode/`)
 
@@ -14,10 +14,10 @@
 | `tui.json` | Thème `tokyonight` + bandeau stats live |
 | `AGENTS.md` | Règles globales + matrice de routage intelligent (L1→L4, UI, modèles) |
 | `.env` + `.-key` (15 fichiers) | Clés API hors config — **jamais à committer** (`.gitignore` OK) |
-| `agent/` | `eurinhash` (superviseur FREE) + 10 agents rôle + 11 workers (builder, planner, architect, design-lead, docwriter, reviewer…) |
-| `command/` | `/review`, `/commit`, `/quota`, `/myfree-eurinhash` |
+| `agent/` | `tollfree` (superviseur FREE) + 10 agents rôle + 11 workers (builder, planner, architect, design-lead, docwriter, reviewer…) |
+| `command/` | `/review`, `/commit`, `/quota`, `/free-test` |
 | `skills/` (30 : 14 maison + 16 tierces scannées, `arkcli-*` archivés) | Méthodo hash-*, superpowers, mattpocock, caveman, skill-creator... |
-| `scripts/` | `free-probe.py` (teste les FREE), `quota.py` (monitoring), `myfree-eurinhash.py` (routeur) |
+| `scripts/` | `free-probe.py` (teste les FREE), `quota.py` (monitoring), `free-test.py` (routeur) |
 | `plugin/guard.ts` | Bloque `rm -rf /`, `mkfs`, `dd`, `push --force` |
 | `free-models.json` | Cache d'état des FREE (régénéré si >30 min) |
 
@@ -55,9 +55,9 @@
 | `together` | Kimi-K2.7-Code, Llama-4-Maverick, DeepSeek-V4-Pro | $0.27–$0.95/M, crédits épuisés ❌ (clé valide, ajouter crédit) |
 | `mammouth` | 18 modèles (Claude, GPT, DeepSeek, Qwen...) | Payant crédits — **non utilisé par défaut** |
 
-**Modèle par défaut** : `eurinhash` (superviseur FREE qui route vers les workers gratuits). Petites tâches : `zhipu/glm-4.7-flash` (0 $).
+**Modèle par défaut** : `tollfree` (superviseur FREE qui route vers les workers gratuits). Petites tâches : `zhipu/glm-4.7-flash` (0 $).
 
-### EURINHASH Pro (superviseur des workers gratuits)
+### TOLLFREE Pro (superviseur des workers gratuits)
 
 Ordre de bataille **prioritaire** pour les workers gratuits :
 
@@ -97,21 +97,21 @@ Ordre de bataille **prioritaire** pour les workers gratuits :
 > 10 $/mois suivi dans `/quota` ; `/mode free` revient en arrière. Détails :
 > `docs/02-configuration.md` §3.6, `command/mode.md`.
 
-## Ordre de bataille anti-quota (EURINHASH)
+## Ordre de bataille anti-quota (TOLLFREE)
 
-**EURINHASH Pro** (prioritaire, workers gratuits — statuts live dans `free-models.json`) :
+**TOLLFREE Pro** (prioritaire, workers gratuits — statuts live dans `free-models.json`) :
 `mistral/codestral` → `groq/qwen3.8` → `novita/ling-3.0-flash-sante` (GRATUIT) → `zhipu/glm-4.7-flash` → `google/2.5-flash` → `openrouter/free` → crédits Mammouth (dernier recours).
 
-Ou automatique : `@eurinhash <tâche>` (teste la disponibilité en temps réel, choisit, rebascule seul en cas de 429).
+Ou automatique : `@tollfree <tâche>` (teste la disponibilité en temps réel, choisit, rebascule seul en cas de 429).
 
 ## Commandes utiles
 
 - `/models` : changer de modèle • `/quota` : FREE + usage OpenRouter + dépense du jour
 - `/review` : relecture + verdict • `/commit` : commit propre (jamais de push auto)
-- `/myfree-eurinhash` : scan des modèles FREE + rapport qualité/prix + changement de modèle par défaut
+- `/free-test` : scan des modèles FREE + rapport qualité/prix + changement de modèle par défaut
 - `/thinking` : voir/masquer la réflexion • `ctrl+t` : effort de raisonnement
 - `opencode stats --days 7 --models` (terminal) : historique tokens/coûts
-- `@builder` / `@planner` / `@architect` / `@design-lead` / `@docwriter` / `@reviewer` / `@eurinhash` : agents sur mesure
+- `@builder` / `@planner` / `@architect` / `@design-lead` / `@docwriter` / `@reviewer` / `@tollfree` : agents sur mesure
 
 ## Matrice de routage intelligent (AGENTS.md)
 
@@ -126,13 +126,13 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 
 **UI** : mineur → `@builder` ; nouvelle interface → `@design-lead` → `@builder` ; page majeure → `@design-lead` + `12ui-design` + design review → `@builder`.
 
-**Documentation** : documentation de code/patterns → `@docwriter` (recherche d'abord via `hash-code-navigation`, style tutoriel, vérification via `hash-verification`, modèle rapide gemini-2.5-flash).
+**Documentation** : documentation de code/patterns → `@docwriter` (recherche d'abord via `tollfree-code-navigation`, style tutoriel, vérification via `tollfree-verification`, modèle rapide gemini-2.5-flash).
 
 **Règle d'activation** : avant d'appeler un spécialiste — dépasse-t-il `@builder` ? risque spécifique ? vraie valeur ajoutée ? coût de contexte justifié ? Si NON → ne pas activer.
 
 **Escalade de modèles** : gratuit/flash d'abord → fort raisonnement si besoin → premium uniquement si justifié (critique, erreur coûteuse, ou échec des précédents). Never premium by default.
 
-**Token efficiency** : search before broad reading (`hash-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`hash-verification`); stop when complete. Optimize tokens per completed task, not per response.
+**Token efficiency** : search before broad reading (`tollfree-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`tollfree-verification`); stop when complete. Optimize tokens per completed task, not per response.
 
 **Never** : call all agents, load all skills, add plugins/MCP without real need, use premium models by default, bypass safety protections, modify `plugin/guard.ts` without explicit user authorization, or turn a small task into a complex pipeline.
 
@@ -141,7 +141,7 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 - **Catalogue skills** : chargement sous budget (`maxTokens: 10000`, résumés, minification) via `opencode-plugin-preload-skills` + analytics d'usage réel
 - **Édits de code** : `@f97/opencode-morph-fast-apply` désactivé (clé manquante) — réactiver après avoir posé `MORPH_API_KEY`
 - **Prompt caching** : Novita offre un cache 10x discount sur les prompts répétés
-- **Modèle par défaut** : FREE (eurinhash) → zéro coût
+- **Modèle par défaut** : FREE (tollfree) → zéro coût
 - **Quota** : `opencode stats --days 7 --models` pour suivre l'usage
 
 ## Particularités à connaître
@@ -152,7 +152,7 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 - Z.AI : la doc annonçait `/api/openai/v1` (404) → vraie base `/api/paas/v4` (testée).
 - Clé Gemini `AQ.` : nouveau format valide. Clé MiniMax : pas câblée (même prix que Mammouth, pas de gratuit).
 - Statusline : bandeau informatif en 5 lignes (modèle + conseil, contexte, santé providers + routage + risque, coût + quotas + budget, débit + garde-contexte). Menu de config au clic via `/statusline` (profils, couleurs, FR/EN/中文). Toast automatique à 60% (`/compact` suggéré) et 80% (`/compact` ou `/new`) du contexte, une seule fois par palier.
-- **EURINHASH** : superviseur FREE qui orchestre les workers gratuits. Si un worker KO (429/quota/auth), il rebascule automatiquement sur le suivant sans demander.
+- **TOLLFREE** : superviseur FREE qui orchestre les workers gratuits. Si un worker KO (429/quota/auth), il rebascule automatiquement sur le suivant sans demander.
 - **Keys API** : 15 fichiers `.key` dans `~/.config/opencode/` — voir ci-dessous.
 
 ## Clés API requises (15 fichiers)
@@ -197,7 +197,7 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 
 ## Concurrents et positionnement honnête
 
-**Clause de sincérité :** après vérification approfondie, il existe des projets très similaires et certains sont techniquement plus avancés sur plusieurs aspects. Cette section replace EURINHASH dans son contexte réel.
+**Clause de sincérité :** après vérification approfondie, il existe des projets très similaires et certains sont techniquement plus avancés sur plusieurs aspects. Cette section replace TOLLFREE dans son contexte réel.
 
 ### Les principaux concurrents
 
@@ -211,7 +211,7 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 
 ### Comparaison honnête
 
-| Fonctionnalité | EURINHASH | Oh My OpenAgent | OpenCode Swarm | Rate Limit Fallback |
+| Fonctionnalité | TOLLFREE | Oh My OpenAgent | OpenCode Swarm | Rate Limit Fallback |
 |----------------|-----------|----------------|----------------|---------------------|
 | Agents spécialisés | ✅ 9 agents | ✅ Très avancé | ✅ | ❌ |
 | Multi-modèles | ✅ 4 gratuits | ✅ | ✅ | ✅ |
@@ -221,25 +221,25 @@ Chaque demande est classée AVANT d'agir : type, complexité, risque → **minim
 | Multi-agent parallèle | ⚠️ Limité (1 à la fois) | ✅ 8 agents | ✅ | ❌ |
 | Audit logging | ✅ | ✅ | ✅ | ❌ |
 | Sécurité `.env` | ✅ envsitter-guard | ⚠️ Variable | ✅ | ⚠️ Variable |
-| Windows wrapper | ✅ hash-direct | ❓ | ❓ | ❌ |
+| Windows wrapper | ✅ direct | ❓ | ❓ | ❌ |
 | Simplicité / config | ✅ 1 config unifiée | ❌ Complexe | ❌ Complexe | ✅ Simple |
 | **100% gratuit** | ✅ 10 workers FREE/trial/locaux | ⚠️ Dépend des clés | ⚠️ Dépend des clés | ✅ |
 
 ### Notre positionnement réel
 
-**EURINHASH n'est PAS le seul ni le plus avancé** sur l'orchestration multi-agents. Oh My OpenAgent et OpenCode Swarm sont plus sophistiqués sur plusieurs points.
+**TOLLFREE n'est PAS le seul ni le plus avancé** sur l'orchestration multi-agents. Oh My OpenAgent et OpenCode Swarm sont plus sophistiqués sur plusieurs points.
 
 **Notre valeur ajoutée réelle :**
 
 1. **Assemblage cohérent** : au lieu de configurer 5 plugins séparés, une config unifiée `~/.config/opencode/` qui fonctionne immédiatement
 2. **100% gratuit prêt à l'emploi** : workers gratuits/trial/locaux sondés via `free-probe.py` (statuts dans `free-models.json`), pas de configuration nécessaire au-delà des clés
-3. **Optimisé Windows** : wrapper hash-direct pour contourner les bugs Windows, chemin `%USERPROFILE%`
+3. **Optimisé Windows** : wrapper direct pour contourner les bugs Windows, chemin `%USERPROFILE%`
 4. **Sécurité intégrée** : envsitter-guard + audit-logger + safety guard en une config
 5. **Curated runtime** : sélection des meilleurs composants (better-compact, opencode-mem, preload-skills, oh-my-opencode-slim) intégrés intelligemment — un seul système par rôle
 
 ### Recommandation
 
-**Ne pas réinventer ce qui existe.** EURINHASH évoluerait mieux en intégrant :
+**Ne pas réinventer ce qui existe.** TOLLFREE évoluerait mieux en intégrant :
 - `Oh My OpenAgent` pour l'orchestration avancée
 - `Rate Limit Fallback` pour le fallback sophistiqué
 - `OpenCode Swarm` pour les Circuit Breakers
@@ -248,10 +248,10 @@ plutôt que de développer ces fonctionnalités from scratch.
 
 ## Stratégie KEEP-INTEGRATE-BUILD
 
-EURINHASH évolue selon une stratégie **composition over competition** : utiliser les meilleurs composants open source au lieu de tout reconstruire.
+TOLLFREE évolue selon une stratégie **composition over competition** : utiliser les meilleurs composants open source au lieu de tout reconstruire.
 
 ```
-             EURINHASH
+             TOLLFREE
                  │
       ┌──────────┼──────────┐
       │          │          │
@@ -265,7 +265,7 @@ EURINHASH évolue selon une stratégie **composition over competition** : utilis
 
 | Composant | Raison de le garder |
 |-----------|-------------------|
-| **Superviseur EURINHASH** | Identité unique, orchestration simple mais efficace |
+| **Superviseur TOLLFREE** | Identité unique, orchestration simple mais efficace |
 | **Matrice L1→L4** | Gouvernance claire des tâches, signature du projet |
 | **Sécurité** (`envsitter-guard` + `guard.ts` + audit) | Protection essentielle, pas de doublon open source |
 | **Workers gratuits validés** | Valeur immédiate, free tiers à quotas stricts (sondés via `free-probe.py`, statuts dans `free-models.json`) |
@@ -274,18 +274,18 @@ EURINHASH évolue selon une stratégie **composition over competition** : utilis
 
 | Composant externe | Remplacé / дополнен | Source |
 |-------------------|---------------------|--------|
-| **Fallback EURINHASH** | → `opencode-rate-limit-fallback` | [azumag](https://github.com/azumag/opencode-rate-limit-fallback) |
+| **Fallback TOLLFREE** | → `opencode-rate-limit-fallback` | [azumag](https://github.com/azumag/opencode-rate-limit-fallback) |
 | **Orchestrateur maison** | → `Oh My OpenAgent` (Team Mode, 8 agents) | [docevilOck](https://github.com/docevilOck/oh-my-opencode) |
 | **Circuit Breakers** | → `OpenCode Swarm` (protection comportements) | [ZaxbyHub](https://github.com/ZaxbyHub/opencode-swarm) |
 
 ### BUILD — Ce que nous construisons
 
-**Notre vraie innovation : EURINHASH Governance Layer**
+**Notre vraie innovation : TOLLFREE Governance Layer**
 
 Les autres projets disent :
 > "Voici plusieurs agents. Utilisez-les."
 
-EURINHASH dit :
+TOLLFREE dit :
 > "Voici les **règles** qui déterminent **quand, pourquoi et comment** utiliser ces agents."
 
 ```yaml
@@ -327,7 +327,7 @@ Installer et tester :
 - `Rate Limit Fallback` pour la résilience
 - `OpenCode Swarm` pour les Circuit Breakers
 
-#### Phase 3 — EURINHASH Governance Layer
+#### Phase 3 — TOLLFREE Governance Layer
 Construire uniquement :
 - L1→L4 Classification Engine
 - Policy Engine (règles par type de tâche)
@@ -358,7 +358,7 @@ SESSION
 └──────────────────┬──────────────────┘
                    ↓
 ┌─────────────────────────────────────┐
-│      EURINHASH GOVERNANCE LAYER     │
+│      TOLLFREE GOVERNANCE LAYER     │
 │  • L1→L4 Classification            │
 │  • Policy Engine                   │
 │  • Agent Selection                 │
@@ -397,7 +397,7 @@ SESSION
 └─────────────────────────────────────┘
 ```
 
-**Vision :** EURINHASH = Governance Distribution for Agentic Development
+**Vision :** TOLLFREE = Governance Distribution for Agentic Development
 
 Chaque demande est classée AVANT d'agir : type, complexité, risque → **minimum d'intelligence nécessaire**.
 
@@ -411,7 +411,7 @@ free/flash models for exploration, navigation, docs, simple tasks, standard plan
 
 ## Token efficiency
 
-search before broad reading (`hash-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`hash-verification`); stop when complete. Optimize tokens per completed task, not per response.
+search before broad reading (`tollfree-code-navigation`); read only relevant files; reuse acquired context; batch independent tool calls; make minimal changes; verify proportionally to risk (`tollfree-verification`); stop when complete. Optimize tokens per completed task, not per response.
 
 ## Never
 

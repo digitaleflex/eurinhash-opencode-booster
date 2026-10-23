@@ -1,4 +1,4 @@
-# EURINHASH Governance Engine — Performance Baseline
+# TOLLFREE Governance Engine — Performance Baseline
 
 > **Baseline reference (v2, 2026-09-06).** Future changes to `src/core/` MUST be compared
 > against `bench/results/baseline.json` via `bun run bench:check` (or

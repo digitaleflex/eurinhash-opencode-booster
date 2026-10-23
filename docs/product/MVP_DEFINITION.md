@@ -1,4 +1,4 @@
-# MVP DEFINITION — EURINHASH Agent Governance Engine
+# MVP DEFINITION — TOLLFREE Agent Governance Engine
 
 ## 1. Définition MVP
 
@@ -23,7 +23,7 @@ POLICY ENGINE (agents + model + proofs)
   ↓
 HUMAN APPROVAL (pour L3-L4)
   ↓
-AGENT EXECUTION (via eurinhash)
+AGENT EXECUTION (via tollfree)
   ↓
 PROOF VERIFICATION (tests + review)
   ↓
@@ -135,7 +135,7 @@ Critères d'acceptation :
 ## 5. Architecture MVP
 
 ```
-eurinhash-mvp/
+tollfree-mvp/
 ├── src/
 │   ├── classifier.ts        # Task classification
 │   ├── risk-assessor.ts    # Risk assessment
@@ -171,7 +171,7 @@ eurinhash-mvp/
 
 ### Phase 3 : Integration (1 jour)
 
-- [ ] Intégration eurinhash
+- [ ] Intégration tollfree
 - [ ] Tests end-to-end
 - [ ] Documentation
 

@@ -22,7 +22,7 @@ mode.json
 provider_circuit.json
 provider_usage.json
 models-dev-cache.json
-myfree-eurinhash-report.json
+free-test-report.json
 opencode.json.bak
 logs/
 # Python cache

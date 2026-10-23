@@ -164,7 +164,7 @@ export class ProofVerifier {
             evidence: `Human approval pending for: ${task.description}`,
           };
         }
-        // Structured signed token (preferred — EURINHASH #6 / Art.14)
+        // Structured signed token (preferred — TOLLFREE #6 / Art.14)
         if (typeof a === "object") {
           const token = a as ApprovalToken;
           const taskId = task.id || ("" as string);

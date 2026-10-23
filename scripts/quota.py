@@ -30,7 +30,7 @@ def bold(t): return c("bold", t)
 def dim(t): return c("dim", t)
 
 
-# Ordre de preference (meme ordre que le superviseur @eurinhash)
+# Ordre de preference (meme ordre que le superviseur @tollfree)
 WORKERS = [
     ("worker-codestral", "Codestral", "le meilleur pour le code"),
     ("worker-groq", "Groq", "le plus rapide"),
@@ -59,7 +59,7 @@ def read_key(name):
 
 
 def read_mode():
-    env = (os.environ.get("EURINHASH_MODE") or "").strip().lower()
+    env = (os.environ.get("TOLLFREE_MODE") or os.environ.get("EURINHASH_MODE") or "").strip().lower()
     if env in ("free", "pro"):
         return {"mode": env}
     try:
@@ -134,7 +134,7 @@ try:
     cache_age_min = (int(time.time()) - fm.get("updated", 0)) // 60
     states = fm.get("models", {})
 except FileNotFoundError:
-    print("  " + yellow("pas d'etat enregistre - lance free-probe.py via @eurinhash"))
+    print("  " + yellow("pas d'etat enregistre - lance free-probe.py via @tollfree"))
 for wid, label, role in WORKERS:
     raw = states.get(wid, "unknown")
     base = raw.split(":")[0] if isinstance(raw, str) else "unknown"
@@ -143,7 +143,7 @@ for wid, label, role in WORKERS:
     print(f"  {dot} {c(color, label.ljust(22))} {fr}  {dim('(' + role + ')')}")
 if cache_age_min is not None:
     if cache_age_min > 30:
-        print("  " + yellow(f"⚠ etat vieux de {cache_age_min} min - demande a @eurinhash de re-tester"))
+        print("  " + yellow(f"⚠ etat vieux de {cache_age_min} min - demande a @tollfree de re-tester"))
     else:
         print(f"  {dim(f'etat verifie il y a {cache_age_min} min')}")
 

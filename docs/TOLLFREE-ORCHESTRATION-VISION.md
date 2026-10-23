@@ -1,11 +1,11 @@
-# EURINHASH — Orchestration & Control Plane
+# TOLLFREE — Orchestration & Control Plane
 
 > Version 1.0 — 2026-09-19
 > FR/EN canonical operational document
 
 ## FR
 
-`opencode-config` est le **control plane** d'EurinHash. Il ne doit pas devenir le produit UI ni le runtime de code lui-même. Il coordonne les missions, tâches, ressources, agents, outils, permissions, événements, états, validations et preuves.
+`opencode-config` est le **control plane** d'Tollfree. Il ne doit pas devenir le produit UI ni le runtime de code lui-même. Il coordonne les missions, tâches, ressources, agents, outils, permissions, événements, états, validations et preuves.
 
 ### Flux canonique
 
@@ -100,13 +100,13 @@ Les secrets ne doivent jamais être copiés dans issues, plans, événements, lo
 
 ### Responsabilités des trois repos
 
-- `eurinhash-engineering` : définition et source de vérité produit/architecture.
+- `tollfree-engineering` : définition et source de vérité produit/architecture.
 - `opencode-config` : orchestration et control plane.
-- `eurinhash-opencode` : expérience terminal et intégration produit.
+- `tollfree-opencode` : expérience terminal et intégration produit.
 
 ## EN
 
-`opencode-config` is the **EurinHash control plane**. It must not become the product UI or replace the execution runtime. It coordinates missions, tasks, resources, agents, tools, permissions, events, state, validation and proof.
+`opencode-config` is the **Tollfree control plane**. It must not become the product UI or replace the execution runtime. It coordinates missions, tasks, resources, agents, tools, permissions, events, state, validation and proof.
 
 ### Canonical flow
 
@@ -168,6 +168,6 @@ Every write requires explicit repository, branch, authorized path, actor/agent, 
 
 ### Repository boundaries
 
-- `eurinhash-engineering`: product and architecture authority.
+- `tollfree-engineering`: product and architecture authority.
 - `opencode-config`: orchestration/control-plane authority.
-- `eurinhash-opencode`: terminal/product experience and runtime-facing integration.
+- `tollfree-opencode`: terminal/product experience and runtime-facing integration.

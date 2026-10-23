@@ -1,5 +1,5 @@
 ---
-description: Worker lourd du mode free-router (opencode/glm-5 — raisonnement, 204K ctx, 0 quota abonnement, AUCUNE clause d'entraînement). Pour architecture, revue complexe, analyse profonde. Appelé par @eurinhash, pas directement.
+description: Worker lourd du mode free-router (opencode/glm-5 — raisonnement, 204K ctx, 0 quota abonnement, AUCUNE clause d'entraînement). Pour architecture, revue complexe, analyse profonde. Appelé par @tollfree, pas directement.
 mode: subagent
 model: opencode/glm-5
 ---

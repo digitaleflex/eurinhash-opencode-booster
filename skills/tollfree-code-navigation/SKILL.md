@@ -1,5 +1,5 @@
 ---
-name: hash-code-navigation
+name: tollfree-code-navigation
 description: Use when exploring unfamiliar code, locating files or symbols, or understanding dependencies before editing. Enforces search-first navigation instead of mass reading.
 ---
 

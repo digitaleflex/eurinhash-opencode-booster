@@ -1,12 +1,12 @@
-# EURINHASH Mission OS — Documentation Index
+# TOLLFREE Mission OS — Documentation Index
 
 ## FR
 
-Cette documentation formalise la nouvelle direction d'EurinHash : passer d'un simple système de routage/configuration à une plateforme d'orchestration et de vérification de missions IA.
+Cette documentation formalise la nouvelle direction d'Tollfree : passer d'un simple système de routage/configuration à une plateforme d'orchestration et de vérification de missions IA.
 
 ### Documents canoniques
 
-- `EURINHASH-ORCHESTRATION-VISION.md` — rôle du control plane et flux canonique.
+- `TOLLFREE-ORCHESTRATION-VISION.md` — rôle du control plane et flux canonique.
 - `MODEL-INTELLIGENCE-AND-MISSION-VERIFICATION.md` — intelligence des modèles, économie, résilience et vérification.
 - `ROADMAP-MISSION-OS-FR-EN.md` — ordre de construction et extensions proposées.
 
@@ -44,11 +44,11 @@ PREUVES
 
 ## EN
 
-This documentation formalizes the new EurinHash direction: evolve from a configuration/routing system into an AI mission orchestration and verification platform.
+This documentation formalizes the new Tollfree direction: evolve from a configuration/routing system into an AI mission orchestration and verification platform.
 
 ### Canonical documents
 
-- `EURINHASH-ORCHESTRATION-VISION.md` — control-plane role and canonical workflow.
+- `TOLLFREE-ORCHESTRATION-VISION.md` — control-plane role and canonical workflow.
 - `MODEL-INTELLIGENCE-AND-MISSION-VERIFICATION.md` — model intelligence, economics, resilience and verification.
 - `ROADMAP-MISSION-OS-FR-EN.md` — build order and proposed extensions.
 

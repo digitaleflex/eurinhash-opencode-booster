@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Feature Request — EurinHash Canonical Issue Contract
+        ## Feature Request — Tollfree Canonical Issue Contract
         Fill in all required sections. Missing data is represented as `UNKNOWN`, never guessed.
 
   - type: input

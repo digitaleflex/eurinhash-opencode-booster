@@ -1,7 +1,7 @@
 /**
  * src/core/budget-guard.ts
  *
- * Budget guard + quota tracking for EURINHASH workers, adapted from
+ * Budget guard + quota tracking for TOLLFREE workers, adapted from
  * ingridtoulotte/llm-fallback-router budget.ts (MIT) and
  * historical research/patterns/budget-guard-pattern.ts (see git history).
  *

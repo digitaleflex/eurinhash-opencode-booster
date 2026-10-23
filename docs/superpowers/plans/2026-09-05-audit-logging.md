@@ -303,7 +303,7 @@ if __name__ == "__main__":
 ```markdown
 ---
 description: View audit logs for agent/tool activity
-agent: eurinhash
+agent: tollfree
 ---
 
 `python ~/.config/opencode/scripts/view-audit-log.py` $ARGS
