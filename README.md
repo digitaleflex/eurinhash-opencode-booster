@@ -82,13 +82,8 @@ Tollfree : configuration OpenCode — 100% gratuit, agents spécialisés, circui
 │   ├── view-audit-log.py         # Affichage du journal d'audit
 │   ├── route.py                  # Routage EV + feedback bayésien
 │   ├── models-free.py            # Inventaire des modèles free
-│   ├── patch-better-compact.py   # Patch Windows fsync
 │   ├── session-review.mjs        # Revue de session
-│   ├── cleanup-opencode-db.mjs   # Nettoyage base de données
 │   ├── verify-golden.ts          # Vérification golden tests
-│   └── windows/                  # Scripts PowerShell (Windows-only)
-│       ├── compact-docker-vhdx.ps1
-│       └── finish-cleanup.ps1
 ├── 📁 skills/                    # 20+ compétences
 │   ├── tollfree-agent-matrix/        # Routage L1-L4
 │   ├── tollfree-code-navigation/     # Navigation efficace
@@ -195,7 +190,7 @@ Utilisateur
 
 | OS | Shell | Notes |
 |----|-------|-------|
-| **Windows** | WSL2 / Git Bash / PowerShell | Le wrapper `direct.py` contourne un bug SDK. Scripts PowerShell dans `scripts/windows/`. |
+| **Windows** | WSL2 / Git Bash / PowerShell | Le wrapper `direct.py` contourne un bug SDK. |
 | **macOS** | bash / zsh | Tout fonctionne nativement. `opencode run` fonctionne sans wrapper. |
 | **Linux** | bash | Tout fonctionne nativement. Aucun workaround nécessaire. |
 

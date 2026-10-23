@@ -3,7 +3,7 @@
 """
 HASH Direct Provider Wrapper — avec quota tracking + circuit breaker.
 Contournement pour opencode qui ne parvient pas à appeler les providers.
-Utilise directement les APIs avec les clés configurées dans ~/.config/opencode/.
+Utilise directement les APIs avec les clés configurées dans le dossier de config (TOLLFREE_DIR, par défaut ~/.config/opencode).
 """
 
 import os
@@ -16,6 +16,7 @@ import itertools
 from pathlib import Path
 from typing import Dict, Optional, List
 import requests
+from _paths import config_dir
 
 # ============================================================================
 # PARAMÈTRES GLOBAUX & CHEMINS
@@ -233,7 +234,7 @@ class CliProgress:
         print(_err("   Impossible de générer une réponse."))
         print()
         print(_dim("    💡 Astuce : réessayez dans 1 minute, ou lancez"))
-        print(_dim("       `python ~/.config/opencode/scripts/direct.py --status`"))
+        print(_dim("       `python scripts/direct.py --status`"))
         print(_dim("       pour voir l'état des providers."))
         print()
         
@@ -338,7 +339,7 @@ class GeneratingContextManager:
 
 # ============================================================================
 # CHEMINS
-CONFIG_DIR = Path.home() / ".config" / "opencode"
+CONFIG_DIR = Path(config_dir())
 USAGE_FILE = CONFIG_DIR / "provider_usage.json"
 CIRCUIT_FILE = CONFIG_DIR / "provider_circuit.json"
 

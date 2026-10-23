@@ -16,9 +16,10 @@ import time
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone
+from _paths import config_dir
 
 HOME = os.path.expanduser("~")
-CFG = os.path.join(HOME, ".config", "opencode")
+CFG = config_dir()
 
 # Exchange rates (fixed approximations as required)
 EUR_PER_USD = 0.92

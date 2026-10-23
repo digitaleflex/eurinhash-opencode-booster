@@ -2,9 +2,10 @@
 """Probe les modeles FREE (1 micro-appel chacun, ~15 tokens) et ecrit free-models.json.
 Lance UNIQUEMENT sur activation de @free-router ou echec suspecte (quotas!).
 Ne JAMAIS tester huggingface ici (credit payant $0.10 partage).
-Usage: python ~/.config/opencode/scripts/free-probe.py [--json]
+Usage: python scripts/free-probe.py [--json]
 """
 import json, os, time, urllib.request, urllib.error, argparse, sys
+from _paths import config_dir
 
 # Force UTF-8 sur stdout (Windows cp1252 sinon)
 try:
@@ -14,7 +15,7 @@ except Exception:
     pass
 
 HOME = os.path.expanduser("~")
-CFG = os.path.join(HOME, ".config", "opencode")
+CFG = config_dir()
 
 
 def read_key(name):

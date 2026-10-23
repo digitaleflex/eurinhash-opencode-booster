@@ -2,12 +2,13 @@
 """Tableau de bord lisible : conso du jour, etat des workers gratuits, conseil.
 Langage simple (non-technique), couleurs d'etat, recommandation du modele
 a utiliser maintenant. Lecture seule, zero cout (ne probe pas).
-Usage: python ~/.config/opencode/scripts/quota.py
+Usage: python scripts/quota.py
 """
 import json, os, sys, time, datetime, urllib.request, urllib.error
+from _paths import config_dir, data_dir
 
 HOME = os.path.expanduser("~")
-CFG = os.path.join(HOME, ".config", "opencode")
+CFG = config_dir()
 
 USE_COLOR = sys.stdout.isatty() and not os.environ.get("NO_COLOR")
 
@@ -82,7 +83,7 @@ else:
     print(bold("=== Mode actuel : ") + green(bold("FREE (gratuit uniquement)")))
 
 print(bold("=== Mon argent aujourd'hui ==="))
-dbcands = [os.path.join(HOME, ".local", "share", "opencode", "opencode.db")]
+dbcands = [os.path.join(data_dir(), "opencode.db")]
 dbpath = next((x for x in dbcands if os.path.isfile(x)), None)
 total_cost = 0.0
 per_model = {}

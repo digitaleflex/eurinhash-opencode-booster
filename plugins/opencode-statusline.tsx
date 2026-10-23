@@ -556,7 +556,10 @@ function resolveColor(theme: TuiThemeCurrent, color?: string): RGBA | undefined 
 
 // ─── TOLLFREE runtime state polling ────────────────────────────────────
 
-const TOLLFREE_DIR = join(homedir(), ".config", "opencode")
+const TOLLFREE_DIR =
+  process.env.TOLLFREE_DIR?.trim() ||
+  process.env.OPENCODE_CONFIG_DIR?.trim() ||
+  join(process.env.XDG_CONFIG_HOME?.trim() || join(homedir(), ".config"), "opencode")
 const CIRCUIT_PATH = join(TOLLFREE_DIR, "provider_circuit.json")
 const USAGE_PATH = join(TOLLFREE_DIR, "provider_usage.json")
 
@@ -1043,7 +1046,7 @@ function nextProfileName(profiles: Profiles, locale?: Locale): string {
 // ─── Export / Import ───────────────────────────────────────────────────
 
 function exportPath(): string {
-  return join(homedir(), ".config", "opencode", "statusline-config.json")
+  return join(TOLLFREE_DIR, "statusline-config.json")
 }
 
 interface WidgetItem {
@@ -1070,7 +1073,7 @@ async function tryInstallGlobal(api: TuiPluginApi, locale?: Locale) {
     }
 
     const srcPath = join(projectDir, ".opencode", "plugins", "opencode-statusline.tsx")
-    const configDir = join(homedir(), ".config", "opencode")
+    const configDir = TOLLFREE_DIR
     const pluginDir = join(configDir, "plugins")
     const pluginDest = join(pluginDir, "opencode-statusline.tsx")
 
