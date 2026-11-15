@@ -10,11 +10,10 @@
 
 ## Git workflow (2026-09-12 — leçon de la session EPIC #112)
 
-- **TOUJOURS Already up to date. avant de créer une branche** : les merges
+- **TOUJOURS `git pull` (ou `git fetch` + rebase) avant de créer une branche** : les merges
   GitHub ne sont pas automatiquement tirés localement ; une branche créée sur
   un main périmé perd les fixes déjà mergés (test manquant, conflits).
-- Après chaque merge de PR : Your branch is up to date with 'origin/main'.
-Already up to date. avant la branche suivante.
+- Après chaque merge de PR : `git pull` avant la branche suivante.
 - Ne jamais éditer un fichier avec l'outil edit si le repo est en CRLF et que
   le formateur est actif : préférer les scripts Python ciblés (newline='
 ').
@@ -28,27 +27,27 @@ Already up to date. avant la branche suivante.
 - UI visible to users → `frontend-design` + `web-design-guidelines`; never ship generic AI-looking UI.
 - Never commit secrets (`.env` is git-ignored globally).
 
-## Vérification — le gate obligatoire (2026-09-13)
+## Vérification — le gate obligatoire
 
-**Mesuré sur une session d'unification réelle : 10 bugs trouvés, 0 par les agents qui
-écrivaient le code.** Plusieurs passaient `tsc` ET `eslint` (directive `"use client"`
-supprimée, route privée renvoyant 200, test qui se sautait tout seul).
+**Règle : aucun commit sans passage par le gate.** Un changement qui **compile** n'est pas un
+changement qui **marche** : les bugs trouvés en revue passent souvent `tsc` ET le linter.
 
-**Règle : aucun commit sans passage par le gate.**
+Ce dépôt est un outil CLI TypeScript (Node >= 18 / Bun). Son gate réel :
 
-| Outil | Rôle |
+| Commande | Rôle |
 |---|---|
-| `npm run verify` | Gate déterministe : types → lint → prisma → **sondes HTTP live** → E2E |
-| `npm run verify:fast` | Types + lint + prisma (sans réseau) |
+| `bun run verify` | Gate complet : prettier → tsc → build → vitest + bun → fuzz → golden → chaos → smoke |
+| `bun run typecheck` | Types seuls |
+| `bun run test` | vitest + `src/core/core.test.ts` (Bun) |
+| `bun run test:coverage` | vitest avec seuils de couverture (voir `vitest.config.mts`) |
+| `bun run smoke` | E2E : `init` → `doctor` → `update` → `route` → `uninstall` dans un dossier temporaire |
 | `@verifier` | Agent qui exécute le gate **et** conçoit les sondes runtime propres au changement |
-
-Un changement qui **compile** n'est pas un changement qui **marche**.
 
 - Un test **sauté** doit être annoncé à voix haute — jamais absorbé silencieusement.
 - `@verifier` retourne des **preuves brutes** (commande + sortie), jamais « ça devrait marcher ».
-- **`@integrator`** est le spécialiste de l'absorption inter-repos (encode les pièges Next 16 :
-  `"use client"`, `proxy.ts` vs `middleware.ts`, `params` en Promise, dossiers `_` privés,
-  routes privées hors `PROTECTED_PATHS`).
+- Les sondes HTTP / E2E navigateur / Prisma d'autres projets (Next.js) ne s'appliquent pas ici.
+  Pour le dashboard (`tollfree dashboard`), la preuve runtime est `src/dashboard/dashboard.test.ts`
+  (vrai serveur sur un port libre, jeton, Host, confinement, garde destructive).
 
 ### Modèles — échelle d'escalade par coût croissant (2026-09-14)
 
@@ -155,13 +154,13 @@ Règles non négociables :
 
 Backup des agents : historique git (`git log -- agent/`).
 
-## Cloudflare Workers
+## Cloudflare Workers (autres projets — non applicable à ce dépôt)
 
 - Follow the `cloudflare`, `workers-best-practices` and `wrangler` skills.
 - Use `wrangler` CLI for dev/deploy; validate `wrangler.jsonc` before deploy.
 - Prefer Workers + KV/R2/Durable Objects over external infra when it fits.
 
-## Python / Data
+## Python / Data (autres projets — non applicable à ce dépôt)
 
 - Type hints everywhere, `ruff` clean, no bare `except`.
 - Virtualenv per project, never install packages globally.

@@ -14,7 +14,7 @@
     "test:golden": "bun run scripts/verify-golden.ts",
     "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\" \"plugin/*.ts\" \"tests/**/*.ts\" \"*.json\" \".opencode/*.json\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"scripts/**/*.ts\" \"plugin/*.ts\" \"tests/**/*.ts\" \"*.json\" \".opencode/*.json\"",
-    "verify": "bun run format:check && bun run typecheck && bun run build && bun run test && bun run test:fuzz && bun run test:golden && bun run smoke",
+    "verify": "bun run format:check && bun run typecheck && bun run build && bun run test && bun run test:fuzz && bun run test:golden && bun run chaos && bun run smoke",
     "build": "tsc -p tsconfig.build.json && node scripts/build-plugins.mjs",
     "tollfree": "bun src/cli/index.ts",
     "smoke": "node scripts/smoke.mjs",

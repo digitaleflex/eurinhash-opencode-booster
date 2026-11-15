@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // src/cli/index.ts — `tollfree` command line entry point.
 
+import { runDashboard } from "../dashboard/server";
 import { runAuditLog } from "./audit-log";
 import { runDirect } from "./direct";
 import { runFreeTest } from "./free-test";
@@ -29,6 +30,7 @@ Commands:
   free-test <cmd>   Benchmark the free models in opencode.jsonc (test | report | use <m> | list)
   models-free [p]   List truly free models from models.dev (--code for code models)
   audit-log         View the audit log (--date, --tool, --errors, --statistics, ...)
+  dashboard [dir]   Local web Command Center on 127.0.0.1:4321 (--execute to run workers)
 
 Environment:
   TOLLFREE_DIR      Config directory (default: OpenCode's config dir, ~/.config/opencode)
@@ -61,6 +63,8 @@ export async function main(argv: string[]): Promise<number> {
       return runModelsFree(rest);
     case "audit-log":
       return runAuditLog(rest);
+    case "dashboard":
+      return runDashboard(rest);
     case undefined:
     case "help":
     case "--help":
