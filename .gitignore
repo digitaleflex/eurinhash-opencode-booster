@@ -52,3 +52,4 @@ batch-report.json
 
 # Build output
 dist/
+coverage/
