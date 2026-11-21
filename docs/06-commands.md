@@ -420,3 +420,28 @@ Les commands sont automatiquement détectées par OpenCode via le répertoire `c
 ---
 
 *Documentation commands générée le $(date)*
+
+---
+
+## /dashboard — Command Center local
+
+### Description
+Serveur web local (`tollfree dashboard`) : chat vers le GovernanceOrchestrator, état Git, arborescence,
+terminal protégé, état des workers et métriques système. Sans dépendance, Node >= 18 ou Bun.
+
+### Syntaxe
+```
+tollfree dashboard [répertoire] [--execute]
+TOLLFREE_DASHBOARD_PORT=9999 tollfree dashboard
+```
+La commande imprime `http://localhost:4321/#<jeton>` : ouvrez cette URL complète.
+
+### Sécurité
+- Écoute sur `127.0.0.1` uniquement ; l'en-tête `Host` doit être local (anti DNS-rebinding).
+- Chaque appel `/api/*` exige le jeton aléatoire du processus (anti CSRF) ; il voyage dans le fragment d'URL.
+- Fichiers confinés au projet (`WorkspaceGuard`) ; terminal filtré par le détecteur de commandes destructives.
+- Le chat ne rend qu'un verdict de gouvernance. `--execute` envoie en plus les tâches APPROUVÉES à un worker gratuit (réseau/quota).
+
+### Endpoints
+`GET /api/system` · `GET /api/workers` · `GET /api/git` · `POST /api/git/commit` · `GET /api/tree?path=` ·
+`POST /api/terminal` · `POST /api/chat`

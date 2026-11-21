@@ -417,3 +417,28 @@ Commands are automatically detected by OpenCode via the `command/` directory. Ju
 ---
 
 *Documentation commands generated $(date)*
+
+---
+
+## /dashboard — Local Command Center
+
+### Description
+Local web server (`tollfree dashboard`): chat into the GovernanceOrchestrator, Git state, file tree,
+guarded terminal, worker status and system metrics. Zero dependencies, Node >= 18 or Bun.
+
+### Syntax
+```
+tollfree dashboard [directory] [--execute]
+TOLLFREE_DASHBOARD_PORT=9999 tollfree dashboard
+```
+The command prints `http://localhost:4321/#<token>`: open that full URL.
+
+### Security
+- Binds to `127.0.0.1` only; the `Host` header must be local (anti DNS-rebinding).
+- Every `/api/*` call needs the per-process random token (anti CSRF); it travels in the URL fragment.
+- Files are confined to the project (`WorkspaceGuard`); the terminal goes through the destructive-command detector.
+- Chat only returns a governance verdict. `--execute` additionally sends APPROVED tasks to a free worker (network/quota).
+
+### Endpoints
+`GET /api/system` · `GET /api/workers` · `GET /api/git` · `POST /api/git/commit` · `GET /api/tree?path=` ·
+`POST /api/terminal` · `POST /api/chat`

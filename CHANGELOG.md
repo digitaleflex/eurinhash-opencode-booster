@@ -8,6 +8,11 @@
 ## [Unreleased]
 
 ### Added
+- `tollfree dashboard`: local Command Center (chat → governance verdict, Git, file tree, guarded terminal,
+  workers, system) on 127.0.0.1 with a per-process token, Host check and workspace confinement. Fixes the
+  `/dashboard` command, which pointed to a missing `dashboard/server.ts`.
+- Tests for approval tokens, workspace confinement, egress filter, Merkle audit trail and MCP governance;
+  coverage thresholds enforced in CI (`bun run test:coverage`); `chaos` added to `bun run verify`.
 - `tollfree init | update | uninstall | doctor`: one-command install that adapts to the machine
   (keys from env vars or key files, Ollama, free built-in model fallback), tracks what it wrote in
   `.tollfree/manifest.json`, and never overwrites files you edited. `--project` installs into `./.opencode`.

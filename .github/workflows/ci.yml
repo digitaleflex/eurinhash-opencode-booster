@@ -31,6 +31,9 @@ jobs:
       - name: Unit tests (vitest + bun)
         run: bun run test
 
+      - name: Coverage floor (vitest thresholds)
+        run: bun run test:coverage
+
       - name: Fuzz tests (canonicalizer + unicode)
         run: bun run test:fuzz
 
